@@ -5,10 +5,17 @@ import Magnetic from "../common/Magnetic";
 
 const font = generalSans.bold.className;
 
-const Logo = () => {
+interface LogoProps {
+  className?: string;
+}
+
+const Logo = ({ className }: LogoProps) => {
   return (
     <Magnetic>
-      <Link href={"/"} className={cn(font, "text-4xl text-[#18181A]")}>
+      <Link
+        href={"/"}
+        className={cn(font, "text-4xl text-[#18181A]", className)}
+      >
         TIPEY
       </Link>
     </Magnetic>

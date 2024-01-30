@@ -56,14 +56,14 @@ const Preloader = () => {
         >
           {dimension.width > 0 && (
             <>
-              {/* <motion.div
-                className="flex text-white text-[42px] text-center items-center absolute z-10"
+              <motion.div
+                className="flex items-center absolute z-10"
                 variants={opacity}
                 initial="initial"
                 animate="enter"
               >
-                <Logo />
-              </motion.div> */}
+                <Logo className="text-white" />
+              </motion.div>
               <svg className="absolute bottom-0 w-full h-[calc(100%-300px)]">
                 <motion.path
                   className="fill-black"
