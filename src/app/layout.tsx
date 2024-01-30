@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 
-import Header from "@/components/Header";
 import LoginModal from "@/components/modals/LoginModal";
 import type { Metadata } from "next";
 
@@ -18,7 +17,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <LoginModal />
-        <Header />
         {children}
       </body>
     </html>
