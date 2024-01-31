@@ -1,6 +1,6 @@
 const UserPage = () => {
   return (
-    <section>
+    <section className=" w-full h-full">
       <div>page</div>
     </section>
   );
