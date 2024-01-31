@@ -7,9 +7,14 @@ interface Props {
 
 const Avatar = ({ src }: Props) => {
   return (
-    <div className="bg-[#b1b1b141] w-[60px] h-[60px] rounded-full flex items-center justify-center">
+    <div className="bg-[#b1b1b141] w-[60px] h-[60px] rounded-full flex items-center justify-center overflow-hidden relative">
       {src ? (
-        <Image alt="Avatar" fill src={src} />
+        <Image
+          alt="Avatar"
+          fill
+          className="object-cover object-center"
+          src={src}
+        />
       ) : (
         <UserRound className="w-7 h-7" />
       )}
