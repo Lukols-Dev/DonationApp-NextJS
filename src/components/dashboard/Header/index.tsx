@@ -21,7 +21,7 @@ const font = generalSans.bold.className;
 
 const HeaderDashboard = () => {
   return (
-    <header className="w-full bg-transparent absolute z-10 top-0">
+    <header className="w-full bg-transparent">
       <Container>
         <div className="flex justify-between items-center mt-4 py-2 px-6 bg-white rounded-full">
           <p className={cn(font, "text-2xl text-[#18181A]")}>TIPEY</p>

@@ -38,16 +38,3 @@ const MenuItems = ({ menuItems }: Props) => {
 };
 
 export default MenuItems;
-
-// {menuItems.map((options: any) => (
-//   <li key={options.id} className="relative group cursor-pointer">
-//     <Link
-//       href={options.link}
-//       className="text-zinc-400 text-lg flex hover:text-blue-700"
-//     >
-//       <options.icon className="w-6 h-6" />
-//       {/* <span className="hidden md:block"> {options.name}</span> */}
-//     </Link>
-//     {/* <span className="w-[3px] h-[80%] absolute z-10 -right-[1px] top-1/2 transform scale-0 -translate-y-1/2 transition-transform duration-200 ease-custom bg-blue-700 group-hover:scale-100" /> */}
-//   </li>
-// ))}
