@@ -6,6 +6,7 @@ import { FC } from "react";
 import { generalSans } from "@/fonts";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const font = generalSans.medium.className;
 
@@ -37,6 +38,11 @@ const LoginItems = () => {
             "w-full flex items-center relative justify-center text-[#18181A] text-base py-3 rounded-full border border-[#18181A]"
           )}
           type="button"
+          onClick={() => {
+            signIn("google", {
+              callbackUrl: `${process.env.NEXT_PUBLIC_URL}/user`,
+            });
+          }}
         >
           <Image
             src={"./assets/google-icon.svg"}

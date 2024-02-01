@@ -7,10 +7,10 @@ const CardImage = () => {
       <CardContent>
         <div className="flex gap-4 justify-between">
           <div className="max-w-[135px] flex flex-col gap-2">
-            <p className="text-xl font-bold text-zinc-950">
+            <p className="text-xl font-bold text-[#343C6A]">
               Rozwijamy się dla Ciebie
             </p>
-            <p className="text-sm font-normal text-zinc-950">
+            <p className="text-sm font-normal text-[#343C6A]">
               Wkrótce otrzymasz jeszcze więcej
             </p>
           </div>

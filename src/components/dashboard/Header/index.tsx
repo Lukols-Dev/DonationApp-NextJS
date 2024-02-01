@@ -16,6 +16,7 @@ import { generalSans } from "@/fonts";
 import Avatar from "@/components/ui/avatar";
 import TooltipWrapper from "@/components/ui/tooltip";
 import MailTo from "@/components/ui/mail-to";
+import AvatarDropDown from "@/components/common/Buttons/AvatarDropdown";
 
 const font = generalSans.bold.className;
 
@@ -36,7 +37,8 @@ const HeaderDashboard = () => {
               <TooltipWrapper description="Powiadomienia">
                 <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
               </TooltipWrapper>
-              <Avatar />
+              <AvatarDropDown />
+              {/* <Avatar /> */}
             </div>
           </div>
         </div>

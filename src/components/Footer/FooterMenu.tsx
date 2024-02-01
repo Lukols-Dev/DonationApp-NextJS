@@ -1,4 +1,4 @@
-import { MenuItem } from "@/types/layout";
+import { MenuItem } from "@/types";
 import Link from "next/link";
 
 const FooterMenuItem = ({ item }: { item: MenuItem }) => {

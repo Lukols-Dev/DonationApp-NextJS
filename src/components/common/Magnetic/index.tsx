@@ -1,6 +1,14 @@
 "use client";
 
-import { FC, ReactElement, cloneElement, useEffect, useRef } from "react";
+import {
+  FC,
+  Fragment,
+  ReactElement,
+  cloneElement,
+  forwardRef,
+  useEffect,
+  useRef,
+} from "react";
 import gsap from "gsap";
 
 interface MagneticProps {
@@ -9,6 +17,7 @@ interface MagneticProps {
 
 const Magnetic: FC<MagneticProps> = ({ children }) => {
   const magnetic = useRef<HTMLElement>(null);
+
   useEffect(() => {
     const element = magnetic.current;
     if (!element) return;

@@ -47,9 +47,7 @@ const Header = () => {
       <header className="w-full bg-transparent absolute z-10 top-0">
         <Container>
           <div className="flex justify-between py-4">
-            <Magnetic>
-              <Logo />
-            </Magnetic>
+            <Logo />
             <Menu />
             <LoginBtn />
           </div>

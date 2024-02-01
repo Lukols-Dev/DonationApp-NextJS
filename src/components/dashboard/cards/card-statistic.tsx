@@ -12,7 +12,7 @@ const CardStatistic = ({ title, icon, value, valueDesc }: Props) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-[#343C6A]">{title}</CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
         <p className="text-2xl font-bold text-zinc-950">{value}</p>

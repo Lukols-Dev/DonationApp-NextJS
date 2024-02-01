@@ -1,5 +1,5 @@
 import { MENU } from "@/lib/constans";
-import { MenuItem } from "@/types/layout";
+import { MenuItem } from "@/types";
 import Link from "next/link";
 import Magnetic from "../common/Magnetic";
 import { cn } from "@/lib/utils";
@@ -12,14 +12,14 @@ const Menu = () => {
     <nav className="flex items-center">
       <ul className="text-sm flex items-center">
         {MENU.map((item: MenuItem) => (
-          <Magnetic>
+          <Magnetic key={item.title}>
             <li
               key={item.title}
               className="group flex flex-col relative p-4  bg-transparent"
             >
               <Link
                 href={item.path}
-                className={cn(font, "text-[##18181A] text-base")}
+                className={cn(font, "text-[#18181A] text-base")}
               >
                 {item.title}
               </Link>
