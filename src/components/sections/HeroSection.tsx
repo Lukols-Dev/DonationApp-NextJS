@@ -1,45 +1,77 @@
 import Image from "next/image";
 import Container from "../Container";
-import { client, urlFor } from "@/lib/sanity";
+import { generalSans } from "@/fonts";
+import { cn } from "@/lib/utils";
+
+const font = generalSans.medium.className;
 
 const HeroSection = async () => {
-  const data = await getData();
-
   return (
     <section>
       <Container>
-        <div className="mb-8 flex flex-wrap justify-between md:mb-16">
-          <div className="mb-6 flex w-full flex-col justify-center sm:mb-12 lg:mb-0 lg:w-1/3 lg:pb-24 lg:pt-48">
-            <h1 className="mb-4 text-4xl font-bold text-black sm:text-5xl md:mb-8 md:text-6xl">
-              Top Fashion for a top price!
+        <div className="w-full h-screen max-h-[900px] relative">
+          <div className="flex flex-col w-full max-w-[680px] gap-4 absolute left-0 top-1/3">
+            <h1
+              className={cn(
+                "text-4xl text-black sm:text-5xl md:text-6xl",
+                font
+              )}
+            >
+              Twórz & Monetyzuj
             </h1>
-            <p className="max-w-md leading-relaxed text-gray-500 xl:text-lg">
-              We sell only the most exclusive and high quality products for you.
-              We are the best so come and shop with us.
-            </p>
+            <h1
+              className={cn(
+                "text-4xl text-black sm:text-5xl md:text-6xl",
+                font
+              )}
+            >
+              <span
+                className={cn(
+                  "bg-[#18181A] text-[#70FF4D] py-1 px-3 rounded-lg text-5xl mr-2",
+                  font
+                )}
+              >
+                No-Code
+              </span>
+              Live Stream
+            </h1>
           </div>
-
-          <div className="mb-12 flex w-full md:mb-16 lg:w-2/3">
-            <div className="relative left-12 top-12 z-10 -ml-12 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:left-16 md:top-16 lg:ml-0">
-              <Image
-                src={urlFor(data.image1).url()}
-                alt="Hero Image 1"
-                className="h-full w-full object-cover object-center"
-                priority
-                width={500}
-                height={500}
-              />
+          <div className="w-[452px] h-[452px] flex flex-col gap-4 absolute right-0 top-[20%]">
+            <div className="w-full h-full flex items-end gap-4">
+              <div className="w-full h-full max-w-[248px] max-h-[216px] rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] relative overflow-hidden">
+                <Image
+                  alt="Avatar"
+                  fill
+                  className="object-cover object-center"
+                  src="/assets/images/hero2.png"
+                />
+              </div>
+              <div className="w-full h-full msx-w-[183px] max-h-44 rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px] relative overflow-hidden">
+                <Image
+                  alt="Avatar"
+                  fill
+                  className="object-cover object-center"
+                  src="/assets/images/hero3.png"
+                />
+              </div>
             </div>
-
-            <div className="overflow-hidden rounded-lg bg-gray-100 shadow-lg">
-              <Image
-                src={urlFor(data.image2).url()}
-                alt="Hero Image 2"
-                className="h-full w-full object-cover object-center"
-                width={500}
-                height={500}
-                priority
-              />
+            <div className="w-full h-full flex items-start gap-4">
+              <div className="w-full h-full max-w-[183px] max-h-44 rounded-tl-[20px] rounded-bl-[20px] rounded-br-[20px] relative overflow-hidden">
+                <Image
+                  alt="Avatar"
+                  fill
+                  className="object-cover object-center"
+                  src="/assets/images/hero1.png"
+                />
+              </div>
+              <div className="w-full h-full max-w-[248px] max-h-[216px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] relative overflow-hidden">
+                <Image
+                  alt="Avatar"
+                  fill
+                  className="object-cover object-center"
+                  src="/assets/images/hero4.png"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -49,9 +81,3 @@ const HeroSection = async () => {
 };
 
 export default HeroSection;
-
-async function getData() {
-  const query = "*[_type == 'heroImage'][0]";
-  const data = await client.fetch(query);
-  return data;
-}
