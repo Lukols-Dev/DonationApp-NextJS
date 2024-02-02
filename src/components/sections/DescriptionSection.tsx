@@ -20,7 +20,7 @@ const DescriptionSection = () => {
   return (
     <section>
       <Container>
-        <div className="w-full h-full flex items-center justify-end">
+        <div className="w-full h-full flex items-center justify-end pb-52">
           <div className="flex flex-col gap-8">
             <motion.p
               ref={container}
