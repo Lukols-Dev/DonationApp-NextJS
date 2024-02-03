@@ -1,5 +1,6 @@
 import InfiniteText from "@/components/InfiniteText";
 import Preloader from "@/components/Preloader";
+import ContactSection from "@/components/sections/ContactSection";
 import DescriptionSection from "@/components/sections/DescriptionSection";
 import FeatureSection from "@/components/sections/FeatureSection";
 import HeroSection from "@/components/sections/HeroSection";
@@ -14,7 +15,7 @@ export default function Home() {
       <ImageSection />
       <DescriptionSection />
       <FeatureSection />
-      <section className="w-full h-[1000px] bg-yellow-500">w</section>
+      <ContactSection />
     </main>
   );
 }

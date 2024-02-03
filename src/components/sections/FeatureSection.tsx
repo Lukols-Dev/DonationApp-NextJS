@@ -14,8 +14,8 @@ const FeatureSection = () => {
   });
 
   const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 0, 0]);
-  const opacity2 = useTransform(scrollYProgress, [0.33, 0.6, 0.7], [0, 1, 0]);
-  const opacity3 = useTransform(scrollYProgress, [0.73, 1], [0, 1]);
+  const opacity2 = useTransform(scrollYProgress, [0.3, 0.6, 0.7], [0, 1, 0]);
+  const opacity3 = useTransform(scrollYProgress, [0.7, 1], [0, 1]);
 
   return (
     <section>
