@@ -15,6 +15,33 @@ export const MENU: MenuItem[] = [
   },
 ];
 
+export const FOOTER_MENU: MenuItem[] = [
+  {
+    title: "Strona Główna",
+    path: "/",
+  },
+  {
+    title: "No-Code System",
+    path: "/nocode",
+  },
+  {
+    title: "Uniwersytet",
+    path: "/uniwersytet",
+  },
+  {
+    title: "Kontakt",
+    path: "/kontakt",
+  },
+  {
+    title: "Regulamin aplikacji",
+    path: "/regulamin",
+  },
+  {
+    title: "Polityka prywatności",
+    path: "/polityka",
+  },
+];
+
 export const SOCIAL = [
   {
     title: "linkedin",
