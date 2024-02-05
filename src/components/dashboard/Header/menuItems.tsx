@@ -90,13 +90,13 @@ const menuItems = [
   {
     id: "4",
     name: "Monetyzacja",
-    link: "/monetyzation",
+    link: "/user/monetisation",
     icon: HandCoins,
   },
   {
     id: "5",
     name: "Konfigurator",
-    link: "/configurator",
+    link: "/user/configurator",
     icon: Video,
   },
   {
