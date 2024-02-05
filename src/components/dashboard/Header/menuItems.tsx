@@ -84,7 +84,7 @@ const menuItems = [
   {
     id: "3",
     name: "Portfel",
-    link: "user/wallet",
+    link: "/user/wallet",
     icon: Wallet,
   },
   {
