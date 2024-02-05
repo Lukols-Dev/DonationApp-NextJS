@@ -1,4 +1,5 @@
 import Logo from "@/components/Header/Logo";
+import Magnetic from "@/components/common/Magnetic";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
@@ -8,16 +9,17 @@ const PaymentPage = () => {
   const paymentDescription = true;
 
   return (
-    <main className="w-screen min-h-screen flex flex-col relative bg-red-500">
-      {/* <Image
+    <main className="w-screen min-h-screen flex flex-col relative">
+      <Image
         fill
         alt="Payment background"
         src="/assets/images/payment-bg.png"
-      /> */}
+        className="-z-10"
+      />
       <header className="p-10 w-full flex items-center justify-center sm:justify-start">
         <Logo className="text-white" />
       </header>
-      <section className="bg-red-500 w-full h-full flex items-center justify-center py-10">
+      <section className="w-full h-full flex items-center justify-center pb-10">
         <div className="flex flex-col-reverse sm:flex-row gap-4 mx-2">
           <div className="bg-white w-full max-w-[700px] sm:w-3/4 sm:max-h-screen min-h-[700px] flex flex-col rounded-lg p-4 gap-6 overflow-y-auto">
             {paymentDescription ? (
@@ -69,30 +71,36 @@ const PaymentPage = () => {
               <p>@jannowak</p>
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
-              <a href="/">
-                <Image
-                  alt="Youtube"
-                  width={30}
-                  height={30}
-                  src={"/assets/youtube-icon.svg"}
-                />
-              </a>
-              <a href="/">
-                <Image
-                  alt="Twitch"
-                  width={30}
-                  height={30}
-                  src={"/assets/twitch-icon.svg"}
-                />
-              </a>
-              <a href="/">
-                <Image
-                  alt="Twitter"
-                  width={30}
-                  height={30}
-                  src={"/assets/twitter-icon.svg"}
-                />
-              </a>
+              <Magnetic>
+                <a href="/">
+                  <Image
+                    alt="Youtube"
+                    width={30}
+                    height={30}
+                    src={"/assets/youtube-icon.svg"}
+                  />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a href="/">
+                  <Image
+                    alt="Twitch"
+                    width={30}
+                    height={30}
+                    src={"/assets/twitch-icon.svg"}
+                  />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a href="/">
+                  <Image
+                    alt="Twitter"
+                    width={30}
+                    height={30}
+                    src={"/assets/twitter-icon.svg"}
+                  />
+                </a>
+              </Magnetic>
             </div>
             <div className="bg-white w-full h-full p-4 rounded-lg hidden sm:flex flex-col">
               <div className="relative ml-auto mr-4">
