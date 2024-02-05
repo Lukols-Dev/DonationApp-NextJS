@@ -78,13 +78,13 @@ const menuItems = [
   {
     id: "2",
     name: "Wiadomości",
-    link: "/message",
+    link: "/user/messages",
     icon: MessageCircleMore,
   },
   {
     id: "3",
     name: "Portfel",
-    link: "/wallet",
+    link: "user/wallet",
     icon: Wallet,
   },
   {
