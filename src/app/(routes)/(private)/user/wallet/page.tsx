@@ -8,15 +8,17 @@ const WalletPage = () => {
   return (
     <Container>
       <section className="w-full h-full gap-4 flex flex-col">
-        <div className="flex gap-4 h-[144px]">
-          <CardStatistic
-            title="Aktualny przychód"
-            value="45,231.89"
-            valueDesc="+20.1% ostatni miesiąc"
-            icon="PLN"
-          />
-          <CardStatistic title="W tym roku" value="45,231.89" icon="PLN" />
-          <CardStatistic title="Do wypłaty" value="45,231.89" icon="PLN" />
+        <div className="w-full h-full overflow-x-auto">
+          <div className="flex gap-4 h-[144px]">
+            <CardStatistic
+              title="Aktualny przychód"
+              value="45,231.89"
+              valueDesc="+20.1% ostatni miesiąc"
+              icon="PLN"
+            />
+            <CardStatistic title="W tym roku" value="45,231.89" icon="PLN" />
+            <CardStatistic title="Do wypłaty" value="45,231.89" icon="PLN" />
+          </div>
         </div>
         <div className="flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
           Metody płatności
