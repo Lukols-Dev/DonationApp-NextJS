@@ -9,7 +9,7 @@ const MonetisationPage = () => {
   return (
     <Container>
       <section className="w-full h-full gap-4 flex flex-col py-6">
-        <Card>
+        <Card className="max-w-[300px]">
           <CardContent>
             <InputCopy />
           </CardContent>
@@ -20,7 +20,7 @@ const MonetisationPage = () => {
             Wybierz metody płątności jakich mogą użyć Twoi klienci
           </span>
         </div>
-        <div className="w-full gap-4 grid grid-cols-3">
+        <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <CardPayActive icon="/assets/blik-icon.svg" />
           <CardPayActive icon="/assets/blik-icon.svg" />
           <CardPayActive icon="/assets/blik-icon.svg" />
