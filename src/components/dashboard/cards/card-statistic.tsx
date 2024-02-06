@@ -10,7 +10,7 @@ interface Props {
 
 const CardStatistic = ({ title, icon, value, valueDesc }: Props) => {
   return (
-    <Card>
+    <Card className="min-w-[260px]">
       <CardHeader>
         <CardTitle className="text-[#343C6A]">{title}</CardTitle>
       </CardHeader>
