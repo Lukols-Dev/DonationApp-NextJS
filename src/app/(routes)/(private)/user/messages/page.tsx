@@ -13,10 +13,12 @@ const MessagesPage = () => {
   return (
     <Container>
       <section className="w-full h-full gap-4 flex flex-col">
-        <div className="flex gap-4 h-[144px]">
-          <CardStatistic title="Liczba wiadomości" value="999" icon="?" />
-          <CardStatistic title="W kolejce" value="999" icon="?" />
-          <CardLegend />
+        <div className="w-full h-full overflow-x-auto">
+          <div className="flex gap-4 h-[144px]">
+            <CardStatistic title="Liczba wiadomości" value="999" icon="?" />
+            <CardStatistic title="W kolejce" value="999" icon="?" />
+            <CardLegend />
+          </div>
         </div>
         <div className="w-full h-full">
           <CardTable />
