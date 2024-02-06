@@ -7,7 +7,7 @@ import InputCopy from "@/components/ui/input-copy";
 
 const UserPage = () => {
   return (
-    <section className="pb-20">
+    <section>
       <div className="max-w-[1300px] mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-5 gap-4">
           <div className="col-span-2 sm:col-span-3 lg:col-span-2 flex gap-4 overflow-x-auto">
