@@ -20,7 +20,7 @@ const MenuItems = async () => {
     <nav className="flex items-center">
       <ul className="text-sm flex items-center">
         {menuItems.map((item: any) => (
-          <Item item={item} />
+          <Item key={item.id} item={item} />
         ))}
       </ul>
     </nav>

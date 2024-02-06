@@ -14,22 +14,22 @@ const HeaderDashboard = () => {
     <header className="w-full bg-transparent">
       <Container>
         <div className="flex justify-between items-center mt-4 py-2 px-6 bg-white rounded-full">
-          <p className={cn(font, "text-2xl text-[#18181A]")}>TIPEY</p>
-          <MenuItems />
-          <div>
-            <div className="flex items-center gap-5">
-              <TooltipWrapper description="Pomoc">
-                <MailTo subject="Pomoc" body="Opisz nam swój problem">
-                  <HelpCircle className="w-7 h-7 text-[#343C6A] hover:text-blue-700" />
-                </MailTo>
-              </TooltipWrapper>
-              <TooltipWrapper description="Powiadomienia">
-                <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
-              </TooltipWrapper>
-              <AvatarDropDown />
-              {/* <Avatar /> */}
-            </div>
+          <p className={cn(font, "text-2xl text-[#18181A] p-4")}>TIPEY</p>
+          <div className="hidden md:flex">
+            <MenuItems />
           </div>
+          <div className="hidden md:flex items-center gap-5">
+            <TooltipWrapper description="Pomoc">
+              <MailTo subject="Pomoc" body="Opisz nam swój problem">
+                <HelpCircle className="w-7 h-7 text-[#343C6A] hover:text-blue-700" />
+              </MailTo>
+            </TooltipWrapper>
+            <TooltipWrapper description="Powiadomienia">
+              <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
+            </TooltipWrapper>
+            <AvatarDropDown />
+          </div>
+          <div className="flex md:hidden">{/* <Menu /> */}</div>
         </div>
       </Container>
     </header>
