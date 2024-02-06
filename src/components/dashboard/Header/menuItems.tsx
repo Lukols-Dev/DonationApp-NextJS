@@ -102,7 +102,7 @@ const menuItems = [
   {
     id: "6",
     name: "Cele",
-    link: "/cele",
+    link: "/user/goals",
     icon: Rocket,
   },
 ];
