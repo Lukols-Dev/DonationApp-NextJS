@@ -1,5 +1,6 @@
 import Logo from "@/components/Header/Logo";
 import Magnetic from "@/components/common/Magnetic";
+import CheckoutForm from "@/components/forms/payment/checkout-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
@@ -39,21 +40,8 @@ const PaymentPage = () => {
               <Input id="price" className="pr-9" label="Kwota" />
             </div>
             <Textarea id="message" label="Treść wiadomości" />
-            <div>
-              Metody Płatności
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-                <li className="w-full h-[80px] border-2 rounded-md"></li>
-              </ul>
-            </div>
-            <Input id="email" className="pr-9" label="Email" />
+            <CheckoutForm paymentMethod={methods} />
+            {/* <Input id="email" className="pr-9" label="Email" /> */}
             <button className="w-full sm:w-[160px] py-2 ml-auto mr-0 mt-auto mb-0 flex items-center justify-center gap-4 text-white bg-[#1814F3] rounded-md relative">
               WYŚLIJ <Send className="w-6 h-6 absolute right-2" />
             </button>
@@ -125,3 +113,22 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
+
+const methods = [
+  {
+    icon: "/assets/card-icon.svg",
+    name: "card",
+  },
+  {
+    icon: "/assets/paypal-icon.svg",
+    name: "paypal",
+  },
+  {
+    icon: "/assets/blik-icon.svg",
+    name: "blik",
+  },
+  {
+    icon: "/assets/p24-icon.svg",
+    name: "p24",
+  },
+];
