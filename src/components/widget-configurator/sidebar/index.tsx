@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sheet";
 import TabList from "./tab-list";
 import ComponentsTab from "./tabs/components-tab";
+import StylesTab from "./tabs/styles-tab";
 
 type Props = {
   subaccountId?: string;
@@ -32,7 +33,7 @@ const EditorSidebar = ({ subaccountId }: Props) => {
 
   return (
     <Sheet open={isReady} modal={false}>
-      <Tabs className="w-full" defaultValue="Component">
+      <Tabs className="w-full" defaultValue="Components">
         <SheetContent
           side="right"
           className={clsx(
@@ -48,18 +49,19 @@ const EditorSidebar = ({ subaccountId }: Props) => {
           )}
         >
           <div className="grid gap-4 h-full pb-36 overflow-scroll">
-            <TabsContent value="Settings">
+            <TabsContent value="Styles">
               <SheetHeader className="text-left p-6">
-                <SheetTitle>Styles</SheetTitle>
+                <SheetTitle>Style</SheetTitle>
                 <SheetDescription>
                   Show your creativity! You can customize every component as you
                   like.
                 </SheetDescription>
               </SheetHeader>
+              <StylesTab />
             </TabsContent>
             <TabsContent value="Components">
               <SheetHeader className="text-left p-6 ">
-                <SheetTitle>Components</SheetTitle>
+                <SheetTitle>Komponenty</SheetTitle>
                 <SheetDescription>
                   You can drag and drop components on the canvas
                 </SheetDescription>

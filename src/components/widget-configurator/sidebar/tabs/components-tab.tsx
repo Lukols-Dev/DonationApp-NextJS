@@ -68,7 +68,7 @@ const ComponentsTab = (props: Props) => {
             ))}
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="Więcej" className="px-6 py-4">
+      <AccordionItem value="More" className="px-6 py-4">
         <div className="px-6 py-0 flex flex-col gap-4 text-sm">
           Wkrótce otrzymasz jeszcze więcej zaawansowanych funkcji. Chciałbyś
           jakieś?

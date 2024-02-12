@@ -14,10 +14,10 @@ const TabList = (props: Props) => {
         <MousePointerSquareDashed />
       </TabsTrigger>
       <TabsTrigger
-        value="Settings"
+        value="Styles"
         className="data-[state=active]:bg-muted w-10 h-10 p-0"
       >
-        <Palette />{" "}
+        <Palette />
       </TabsTrigger>
     </TabsList>
   );
