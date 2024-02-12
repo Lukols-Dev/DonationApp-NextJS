@@ -32,7 +32,7 @@ const EditorSidebar = ({ subaccountId }: Props) => {
 
   return (
     <Sheet open={isReady} modal={false}>
-      <Tabs className="w-full " defaultValue="Component">
+      <Tabs className="w-full" defaultValue="Component">
         <SheetContent
           side="right"
           className={clsx(

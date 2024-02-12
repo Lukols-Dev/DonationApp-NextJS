@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 
 import LoginModal from "@/components/modals/LoginModal";
+import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/providers/AuthProvider";
 import type { Metadata } from "next";
 
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <LoginModal />
+        <Toaster />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

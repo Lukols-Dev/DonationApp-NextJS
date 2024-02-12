@@ -4,7 +4,6 @@ import clsx from "clsx";
 import React, { useEffect } from "react";
 import Recursive from "../components/recursive";
 import { useEditor } from "@/hooks/useEditor";
-import { EditorElement } from "@/types/configurator";
 
 type Props = { widgetId: string; liveMode?: boolean };
 
@@ -27,6 +26,43 @@ const WidgetEditor = ({ widgetId, liveMode }: Props) => {
     }
   }, [liveMode]);
 
+  useEffect(() => {
+    const body = {
+      uid: "hXOYYt9NQGw8aW4G2kUR",
+      wid: "FBMmngenBs8dZgS8SU8Z",
+    };
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        const data = await res.json();
+
+        console.log("data content: ", data.content);
+
+        dispatch({
+          type: "LOAD_DATA",
+          payload: {
+            elements: data.content,
+            withLive: !!liveMode,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div
       className={clsx(
@@ -46,17 +82,3 @@ const WidgetEditor = ({ widgetId, liveMode }: Props) => {
 };
 
 export default WidgetEditor;
-
-const testOBJ: EditorElement = {
-  id: "02306",
-  styles: {
-    color: "black",
-    backgroundColor: "red",
-    width: "100px",
-  },
-  name: "Text",
-  type: "text",
-  content: {
-    innerText: "Hello Element Text",
-  },
-};
