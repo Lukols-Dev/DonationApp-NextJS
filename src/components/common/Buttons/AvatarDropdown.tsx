@@ -1,7 +1,7 @@
 import Avatar from "@/components/ui/avatar";
 import DropDownWrapper from "@/components/ui/dropdown-menu";
 import { DropDownMenuItem } from "@/types";
-import { LogOut } from "lucide-react";
+import LogOutBtn from "./LogoutBtn";
 
 const AvatarDropDown = () => {
   return (
@@ -23,10 +23,6 @@ const items: DropDownMenuItem[] = [
   },
   {
     title: "Wyloguj się",
-    element: (
-      <button className="flex gap-2 items-center justify-center">
-        <LogOut className="w-4 h-4 rotate-180" /> Wyloguj się
-      </button>
-    ),
+    element: <LogOutBtn />,
   },
 ];

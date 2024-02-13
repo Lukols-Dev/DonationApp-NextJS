@@ -16,7 +16,9 @@ interface Props {
 const DropDownWrapper = ({ items, children }: Props) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild className="cursor-pointer">
+        {children}
+      </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((item: DropDownMenuItem) => (
           <>
