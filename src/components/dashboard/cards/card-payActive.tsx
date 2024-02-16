@@ -1,13 +1,36 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { PaymentService } from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface Props {
   icon: string;
-  onClick?: () => void;
+  name: string;
+  checked?: boolean;
 }
 
-const CardPayActive = ({ icon, onClick }: Props) => {
+const CardPayActive = ({ icon, name, checked }: Props) => {
+  const [isActive, setIsActive] = useState(checked);
+
+  const onChange = async () => {
+    const newIsActive = !isActive;
+
+    setIsActive(newIsActive);
+
+    const data = {
+      name,
+      isActive: newIsActive,
+    };
+    try {
+      await PaymentService.addPayment(data, "hXOYYt9NQGw8aW4G2kUR");
+    } catch (err) {
+      setIsActive(!newIsActive);
+      console.log("Error add payment method: ", err);
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -20,8 +43,8 @@ const CardPayActive = ({ icon, onClick }: Props) => {
               src={icon}
             />
           </div>
-          <p>Aktywne</p>
-          <Switch />
+          {isActive ? <p>Aktywne</p> : <></>}
+          <Switch checked={isActive} onCheckedChange={onChange} />
         </div>
       </CardContent>
     </Card>

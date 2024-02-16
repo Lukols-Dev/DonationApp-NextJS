@@ -49,6 +49,7 @@ const WalletPage = async () => {
           <div className="flex gap-4">
             {payments.payments.map((item: any, index: any) => (
               <CardPayMethod
+                key={index}
                 icon={`/assets/${item.name}-icon.svg`}
                 value={item.used}
                 descValue={item.current_amount}

@@ -2,7 +2,7 @@ import { firestore } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
-//GET Checkout
+//GET Checkout Id
 export const GET = async (req: Request) => {
   try {
     const checkoutDoc = doc(

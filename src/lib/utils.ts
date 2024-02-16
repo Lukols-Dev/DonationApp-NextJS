@@ -1,3 +1,4 @@
+import { PaymentMethod } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -74,4 +75,23 @@ export const calculateIncomeSummary = (props: any) => {
   } else {
     return { yearly: summaries.yearly };
   }
+};
+
+export const camelToSnake = (input: any): any => {
+  if (typeof input === "string") {
+    return camelToSnakeString(input);
+  } else if (Array.isArray(input)) {
+    return input.map((item) => camelToSnake(item));
+  } else if (typeof input === "object" && input !== null) {
+    const output: { [key: string]: any } = {};
+    Object.entries(input).forEach(([key, value]) => {
+      output[camelToSnakeString(key)] = camelToSnake(value);
+    });
+    return output;
+  }
+  return input;
+};
+
+const camelToSnakeString = (str: string): string => {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 };

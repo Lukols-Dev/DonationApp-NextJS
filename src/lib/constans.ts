@@ -1,4 +1,4 @@
-import { MenuItem } from "@/types";
+import { MenuItem, PaymentMethod } from "@/types";
 
 export const MENU: MenuItem[] = [
   {
@@ -64,3 +64,10 @@ export const defaultStyles: React.CSSProperties = {
   textAlign: "left",
   opacity: "100%",
 };
+
+export const PAYMENT_METHODS: PaymentMethod[] = [
+  { name: "blik", icon: "/assets/blik-icon.svg", isActive: false },
+  { name: "p24", icon: "/assets/p24-icon.svg", isActive: false },
+  { name: "card", icon: "/assets/card-icon.svg", isActive: false },
+  { name: "paypal", icon: "/assets/paypal-icon.svg", isActive: false },
+];

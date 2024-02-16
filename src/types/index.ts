@@ -16,3 +16,9 @@ export type News = {
   description: string;
   data: string;
 };
+
+export type PaymentMethod = {
+  name: string;
+  icon: string;
+  isActive: boolean;
+};

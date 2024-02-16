@@ -14,4 +14,19 @@ export class PaymentService {
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/checkout`)
     ).json();
   }
+
+  static async addPayment(
+    data: { name?: string; isActive?: boolean },
+    uid: string
+  ) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: data, uid }),
+      })
+    ).json();
+  }
 }

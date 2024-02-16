@@ -5,9 +5,22 @@ import MailTo from "@/components/ui/mail-to";
 import { Textarea } from "@/components/ui/textarea";
 import InputCopy from "@/components/ui/input-copy";
 import { PaymentService } from "@/lib/firebase/firebase-actions";
+import { PAYMENT_METHODS } from "@/lib/constans";
+import { PaymentMethod } from "@/types";
 
 const MonetisationPage = async () => {
   const url = await PaymentService.getCheckout();
+  const fetchedPayments: { count: number; payments: any[] } =
+    await PaymentService.getAllPayments();
+
+  const paymentMethods = PAYMENT_METHODS.map((defaultMethod: PaymentMethod) => {
+    const isActive = fetchedPayments.payments.some(
+      (payment: { name: string; isActive: boolean; is_active: boolean }) =>
+        payment.name === defaultMethod.name &&
+        (payment.isActive || payment.is_active)
+    );
+    return { ...defaultMethod, isActive };
+  });
 
   return (
     <Container>
@@ -26,14 +39,14 @@ const MonetisationPage = async () => {
           </span>
         </div>
         <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
-          <CardPayActive icon="/assets/blik-icon.svg" />
+          {paymentMethods.map((item: PaymentMethod) => (
+            <CardPayActive
+              key={item.name}
+              icon={item.icon}
+              name={item.name}
+              checked={item.isActive}
+            />
+          ))}
           <Card className="h-[100px] w-[330px]">
             <CardContent>
               <div className="w-full h-full flex justify-between">
