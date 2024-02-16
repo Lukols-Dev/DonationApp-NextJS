@@ -5,8 +5,11 @@ import Avatar from "@/components/ui/avatar";
 import { Overview } from "@/components/ui/barchart";
 import { Card, CardContent } from "@/components/ui/card";
 import InputCopy from "@/components/ui/input-copy";
+import { PaymentService } from "@/lib/firebase/firebase-actions";
 
-const UserPage = () => {
+const UserPage = async () => {
+  const url = await PaymentService.getCheckout();
+
   return (
     <section className="flex flex-col w-full items-center justify-center px-4">
       <div className="w-full flex flex-col  item-center justify-center gap-4 lg:flex-row">
@@ -54,7 +57,9 @@ const UserPage = () => {
                     <Avatar fill />
                   </div>
                   <p className="text-2xl text-[#343C6A]">Jan Nowak</p>
-                  <InputCopy />
+                  <InputCopy
+                    value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
+                  />
                 </div>
               </CardContent>
             </Card>

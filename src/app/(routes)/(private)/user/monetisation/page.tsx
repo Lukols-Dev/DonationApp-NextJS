@@ -4,14 +4,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import MailTo from "@/components/ui/mail-to";
 import { Textarea } from "@/components/ui/textarea";
 import InputCopy from "@/components/ui/input-copy";
+import { PaymentService } from "@/lib/firebase/firebase-actions";
 
-const MonetisationPage = () => {
+const MonetisationPage = async () => {
+  const url = await PaymentService.getCheckout();
+
   return (
     <Container>
       <section className="w-full h-full gap-4 flex flex-col py-6">
         <Card className="max-w-[300px]">
           <CardContent>
-            <InputCopy />
+            <InputCopy
+              value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
+            />
           </CardContent>
         </Card>
         <div className="w-[320px] flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
