@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
 import { PaymentService } from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const CardPayActive = ({ icon, name, checked }: Props) => {
+  const { toast } = useToast();
   const [isActive, setIsActive] = useState(checked);
 
   const onChange = async () => {
@@ -25,8 +27,19 @@ const CardPayActive = ({ icon, name, checked }: Props) => {
     };
     try {
       await PaymentService.addPayment(data, "hXOYYt9NQGw8aW4G2kUR");
+      toast({
+        variant: "default",
+        title: "Sukces",
+        description: `Metoda płatności "${name}" została zapisana.`,
+      });
     } catch (err) {
       setIsActive(!newIsActive);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          "Wystąpił błąd podczas zapisu. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
+      });
       console.log("Error add payment method: ", err);
     }
   };

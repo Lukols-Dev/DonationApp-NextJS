@@ -47,8 +47,6 @@ const WidgetEditor = ({ widgetId, liveMode }: Props) => {
         }
         const data = await res.json();
 
-        console.log("data content: ", data.content);
-
         dispatch({
           type: "LOAD_DATA",
           payload: {
