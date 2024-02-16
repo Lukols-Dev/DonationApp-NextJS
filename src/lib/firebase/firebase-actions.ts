@@ -16,8 +16,8 @@ export class PaymentService {
   }
 
   static async addPayment(
-    data: { name?: string; isActive?: boolean },
-    uid: string
+    uid: string,
+    data: { name?: string; isActive?: boolean }
   ) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments`, {
@@ -26,6 +26,23 @@ export class PaymentService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ data: data, uid }),
+      })
+    ).json();
+  }
+}
+
+export class PaymentPageService {
+  static async getPaymentPageInfo(id: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/user/${id}`)
+    ).json();
+  }
+
+  static async updatePaymentPageInfo(id: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
       })
     ).json();
   }

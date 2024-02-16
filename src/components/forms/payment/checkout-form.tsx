@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface Props {
-  paymentMethod: { icon: string; name: string }[];
+  paymentMethod: string[];
 }
 
 const CheckoutForm = ({ paymentMethod }: Props) => {
@@ -33,13 +33,18 @@ const CheckoutForm = ({ paymentMethod }: Props) => {
     <div className="flex flex-col">
       Metody Płatności
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-        {paymentMethod.map((item: { icon: string; name: string }) => (
+        {paymentMethod.map((item: string) => (
           <li
-            key={item.name}
-            className="w-full h-[80px] flex items-center justify-center p-2 border-2 rounded-md relative"
-            onClick={() => handleMethod(item.name)}
+            key={item}
+            className="w-full h-[80px] flex items-center justify-center p-2 border-2 rounded-md relative cursor-pointer"
+            onClick={() => handleMethod(item)}
           >
-            <Image alt={item.name} src={item.icon} width={80} height={80} />
+            <Image
+              alt={item}
+              src={`/assets/${item}-icon.svg`}
+              width={80}
+              height={80}
+            />
           </li>
         ))}
       </ul>

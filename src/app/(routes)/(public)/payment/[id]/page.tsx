@@ -3,11 +3,27 @@ import Magnetic from "@/components/common/Magnetic";
 import CheckoutForm from "@/components/forms/payment/checkout-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { PaymentPageService } from "@/lib/firebase/firebase-actions";
+import { isEmpty } from "@/lib/utils";
+import { PaymentPageData } from "@/types";
+import { Page } from "@/types/page";
 import { Send } from "lucide-react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
-const PaymentPage = () => {
-  const paymentDescription = true;
+const PaymentPage = async (props: Page) => {
+  const { params } = props;
+
+  if (isEmpty(params) || !params.id) {
+    return notFound();
+  }
+  const {
+    nick,
+    socials,
+    description,
+    payment_methods,
+    profile_img,
+  }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
 
   return (
     <main className="w-screen min-h-screen flex flex-col relative">
@@ -23,13 +39,11 @@ const PaymentPage = () => {
       <section className="w-full h-full flex items-center justify-center pb-10">
         <div className="flex flex-col-reverse sm:flex-row gap-4 mx-2">
           <div className="bg-white w-full max-w-[700px] sm:w-3/4 sm:max-h-screen min-h-[700px] flex flex-col rounded-lg p-4 gap-6 overflow-y-auto">
-            {paymentDescription ? (
-              <div className="flex flex-col w-full">
+            {description ? (
+              <div className="flex flex-col w-full ">
                 <p className="text-[#18181A] text-lg font-medium">Od twórcy</p>
                 <p className="text-[#18181A] text-sm font-normal">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text
+                  {description}
                 </p>
               </div>
             ) : (
@@ -40,7 +54,7 @@ const PaymentPage = () => {
               <Input id="price" className="pr-9" label="Kwota" />
             </div>
             <Textarea id="message" label="Treść wiadomości" />
-            <CheckoutForm paymentMethod={methods} />
+            <CheckoutForm paymentMethod={payment_methods} />
             {/* <Input id="email" className="pr-9" label="Email" /> */}
             <button className="w-full sm:w-[160px] py-2 ml-auto mr-0 mt-auto mb-0 flex items-center justify-center gap-4 text-white bg-[#1814F3] rounded-md relative">
               WYŚLIJ <Send className="w-6 h-6 absolute right-2" />
@@ -56,39 +70,21 @@ const PaymentPage = () => {
               />
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">
-              <p>@jannowak</p>
+              <p>{nick}</p>
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
-              <Magnetic>
-                <a href="/">
-                  <Image
-                    alt="Youtube"
-                    width={30}
-                    height={30}
-                    src={"/assets/youtube-icon.svg"}
-                  />
-                </a>
-              </Magnetic>
-              <Magnetic>
-                <a href="/">
-                  <Image
-                    alt="Twitch"
-                    width={30}
-                    height={30}
-                    src={"/assets/twitch-icon.svg"}
-                  />
-                </a>
-              </Magnetic>
-              <Magnetic>
-                <a href="/">
-                  <Image
-                    alt="Twitter"
-                    width={30}
-                    height={30}
-                    src={"/assets/twitter-icon.svg"}
-                  />
-                </a>
-              </Magnetic>
+              {Object.entries(socials).map(([key, href]) => (
+                <Magnetic key={key}>
+                  <a href={href} target="_blank" rel="noopener noreferrer">
+                    <Image
+                      alt={key}
+                      width={30}
+                      height={30}
+                      src={`/assets/${key}-icon.svg`}
+                    />
+                  </a>
+                </Magnetic>
+              ))}
             </div>
             <div className="bg-white w-full h-full p-4 rounded-lg hidden sm:flex flex-col">
               <div className="relative ml-auto mr-4">

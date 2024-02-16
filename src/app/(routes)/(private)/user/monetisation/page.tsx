@@ -2,11 +2,11 @@ import Container from "@/components/Container";
 import CardPayActive from "@/components/dashboard/cards/card-payActive";
 import { Card, CardContent } from "@/components/ui/card";
 import MailTo from "@/components/ui/mail-to";
-import { Textarea } from "@/components/ui/textarea";
 import InputCopy from "@/components/ui/input-copy";
 import { PaymentService } from "@/lib/firebase/firebase-actions";
 import { PAYMENT_METHODS } from "@/lib/constans";
 import { PaymentMethod } from "@/types";
+import ConfigurationPageForm from "@/components/forms/payment/configuration-page-form";
 
 const MonetisationPage = async () => {
   const url = await PaymentService.getCheckout();
@@ -42,6 +42,7 @@ const MonetisationPage = async () => {
           {paymentMethods.map((item: PaymentMethod) => (
             <CardPayActive
               key={item.name}
+              pid={url}
               icon={item.icon}
               name={item.name}
               checked={item.isActive}
@@ -66,18 +67,7 @@ const MonetisationPage = async () => {
           <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold">
             <p>Konfiguracja strony z płatnościami</p>
           </div>
-          <Card>
-            <CardContent>
-              <div className="w-full flex justify-between pb-4">
-                <p>Opis strony zamówień</p>
-                <p>0/200</p>
-              </div>
-              <Textarea
-                className="h-[250px]"
-                placeholder="Type your message here."
-              />
-            </CardContent>
-          </Card>
+          <ConfigurationPageForm pid={url} />
         </div>
       </section>
     </Container>

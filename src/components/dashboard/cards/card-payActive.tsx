@@ -2,17 +2,21 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
-import { PaymentService } from "@/lib/firebase/firebase-actions";
+import {
+  PaymentPageService,
+  PaymentService,
+} from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   icon: string;
   name: string;
   checked?: boolean;
+  pid: string;
 }
 
-const CardPayActive = ({ icon, name, checked }: Props) => {
+const CardPayActive = ({ pid, icon, name, checked }: Props) => {
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(checked);
 
@@ -26,7 +30,11 @@ const CardPayActive = ({ icon, name, checked }: Props) => {
       isActive: newIsActive,
     };
     try {
-      await PaymentService.addPayment(data, "hXOYYt9NQGw8aW4G2kUR");
+      await PaymentService.addPayment("hXOYYt9NQGw8aW4G2kUR", data);
+      await PaymentPageService.updatePaymentPageInfo(pid, {
+        paymentMethods: name,
+        isActive: newIsActive,
+      });
       toast({
         variant: "default",
         title: "Sukces",

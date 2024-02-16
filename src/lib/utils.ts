@@ -95,3 +95,7 @@ export const camelToSnake = (input: any): any => {
 const camelToSnakeString = (str: string): string => {
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 };
+
+export const isEmpty = (obj: object): boolean => {
+  return Object.keys(obj).length === 0;
+};

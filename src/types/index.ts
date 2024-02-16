@@ -22,3 +22,13 @@ export type PaymentMethod = {
   icon: string;
   isActive: boolean;
 };
+
+export type PaymentPageData = {
+  profile_img?: string;
+  id: string;
+  uid: string;
+  description?: string;
+  nick: string;
+  payment_methods: string[];
+  socials: Record<string, string>;
+};
