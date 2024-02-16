@@ -15,7 +15,7 @@ export function TooltipWrapper({ description, children }: Props) {
     <TooltipProvider>
       <TooltipRoot>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="max-w-[500px]">
           <p>{description}</p>
         </TooltipContent>
       </TooltipRoot>

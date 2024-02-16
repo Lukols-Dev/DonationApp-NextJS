@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 interface Props {
   title?: string;
   icon?: string | ReactNode;
-  value?: string;
+  value?: string | number;
   valueDesc?: string;
 }
 

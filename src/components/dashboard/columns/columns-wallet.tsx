@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Clock, Eye, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Clock, Eye, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,9 +9,8 @@ import { Payment } from "@/components/ui/table";
 import DropDownWrapper from "@/components/ui/dropdown-menu";
 import { formatTimestamp } from "@/lib/utils";
 import TooltipWrapper from "@/components/ui/tooltip";
-import { DropDownMenuItem } from "@/types";
 
-export const columnsMessage: ColumnDef<Payment>[] = [
+export const columnsWallet: ColumnDef<Payment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -58,7 +57,17 @@ export const columnsMessage: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "create_at",
-    header: "Data",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Data
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="max-w-[100px]">
         {formatTimestamp(row.getValue("create_at"))}
@@ -66,27 +75,14 @@ export const columnsMessage: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      console.log("row: ", row);
-      const statuses: string[] = row.getValue("status");
-
-      return (
-        <div className="flex gap-1 items-center">
-          {statuses.map((status, index) => {
-            switch (status) {
-              case "displayed":
-                return <Eye key={index} className="w-4 h-4" />;
-              case "queue":
-                return <Clock key={index} className="w-4 h-4" />;
-              default:
-                return null;
-            }
-          })}
-        </div>
-      );
-    },
+    accessorKey: "nick",
+    header: "Nick",
+    cell: ({ row }) => <div className="">{row.getValue("nick")}</div>,
+  },
+  {
+    accessorKey: "payment_method",
+    header: "Metoda",
+    cell: ({ row }) => <div className="">{row.getValue("payment_method")}</div>,
   },
   {
     accessorKey: "amount",
@@ -94,6 +90,7 @@ export const columnsMessage: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
 
+      // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "PLN",
@@ -101,27 +98,5 @@ export const columnsMessage: ColumnDef<Payment>[] = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropDownWrapper items={dropdownItems}>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropDownWrapper>
-      );
-    },
-  },
-];
-
-const dropdownItems: DropDownMenuItem[] = [
-  {
-    title: "Wyświetl ponownie",
-    element: <Eye className="w-4 h-4" />,
   },
 ];
