@@ -5,11 +5,11 @@ import Avatar from "@/components/ui/avatar";
 import { Overview } from "@/components/ui/barchart";
 import { Card, CardContent } from "@/components/ui/card";
 import InputCopy from "@/components/ui/input-copy";
-import { PaymentService } from "@/lib/firebase/firebase-actions";
+import { NewsService, PaymentService } from "@/lib/firebase/firebase-actions";
 
 const UserPage = async () => {
   const url = await PaymentService.getCheckout();
-
+  const news = await NewsService.getNews();
   return (
     <section className="flex flex-col w-full items-center justify-center px-4">
       <div className="w-full flex flex-col  item-center justify-center gap-4 lg:flex-row">
@@ -65,7 +65,7 @@ const UserPage = async () => {
             </Card>
           </div>
           <div className="flex w-full h-full">
-            <CardNews title="Aktualności Tipey" />
+            <CardNews title="Aktualności Tipey" items={news} />
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ export type DropDownMenuItem = {
 export type News = {
   title: string;
   description: string;
-  data: string;
+  create_at: { seconds: number; nanoseconds: number };
 };
 
 export type PaymentMethod = {

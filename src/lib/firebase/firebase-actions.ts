@@ -47,3 +47,11 @@ export class PaymentPageService {
     ).json();
   }
 }
+
+export class NewsService {
+  static async getNews() {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/news`)
+    ).json();
+  }
+}
