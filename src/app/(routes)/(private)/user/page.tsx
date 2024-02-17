@@ -2,14 +2,29 @@ import CardImage from "@/components/dashboard/cards/card-image";
 import CardNews from "@/components/dashboard/cards/card-news";
 import CardStatistic from "@/components/dashboard/cards/card-statistic";
 import Avatar from "@/components/ui/avatar";
-import { Overview } from "@/components/ui/barchart";
+import BarChartComponent from "@/components/ui/barchart";
 import { Card, CardContent } from "@/components/ui/card";
 import InputCopy from "@/components/ui/input-copy";
-import { NewsService, PaymentService } from "@/lib/firebase/firebase-actions";
+import {
+  MessagesService,
+  NewsService,
+  PaymentService,
+} from "@/lib/firebase/firebase-actions";
+import { calculateIncomeSummary, formatTimestamp } from "@/lib/utils";
 
 const UserPage = async () => {
+  let summary: any;
+  let barchatSummary: any;
   const url = await PaymentService.getCheckout();
   const news = await NewsService.getNews();
+  const messages: { count: number; messages: any[] } =
+    await MessagesService.getAllMessages();
+
+  if (messages.messages.length > 0) {
+    summary = calculateIncomeSummary({ messages: messages.messages });
+    barchatSummary = barchartData(messages.messages);
+  }
+
   return (
     <section className="flex flex-col w-full items-center justify-center px-4">
       <div className="w-full flex flex-col  item-center justify-center gap-4 lg:flex-row">
@@ -18,7 +33,7 @@ const UserPage = async () => {
             <div className="flex gap-4 w-full h-[140px]">
               <CardStatistic
                 title="Aktualny przychód"
-                value="45,231.89"
+                value={summary.monthly}
                 valueDesc="+20.1% ostatni miesiąc"
                 icon="PLN"
               />
@@ -26,24 +41,32 @@ const UserPage = async () => {
             </div>
           </div>
           <div className="flex w-full h-[330px] bg-white p-6 border rounded-lg shadow-sm">
-            <Overview />
+            <BarChartComponent
+              data={barchatSummary}
+              axis={{ x: "name", y: "total" }}
+            />
           </div>
           <div>
             <p className="my-4 text-[#333B69] font-semibold">Ostatnie Wpłaty</p>
             <div className="flex w-full h-[330px] bg-white p-6 border rounded-lg shadow-sm">
               <ul className="w-full">
-                <li className="w-full flex justify-between items-center text-[#718EBF]">
-                  <div className="w-[50px] h-[50px] flex items-center justify-center rounded-full bg-[#E7EDFF] text-[#718EBF]">
-                    B
-                  </div>
-                  <p>Jan Nowak</p>
-                  <p>21.01.2024</p>
-                  <p>Blik</p>
-                  <p>Completed</p>
-                  <p className="text-green-500">
-                    + 3 <span className="text-xs">PLN</span>
-                  </p>
-                </li>
+                {messages.messages.map((item: any, index: any) => (
+                  <li
+                    key={index}
+                    className="w-full flex justify-between items-center text-[#718EBF]"
+                  >
+                    <div className="w-[50px] h-[50px] flex items-center justify-center rounded-full bg-[#E7EDFF] text-[#718EBF]">
+                      {mapPaymentMethodName(item.payment_method)}
+                    </div>
+                    <p>{item.nick}</p>
+                    <p>{formatTimestamp(item.create_at)}</p>
+                    <p>{item.payment_method}</p>
+                    <p>{item.payment_status}</p>
+                    <p className="text-green-500">
+                      + {item.amount} <span className="text-xs">PLN</span>
+                    </p>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -74,3 +97,34 @@ const UserPage = async () => {
 };
 
 export default UserPage;
+
+const barchartData = (payments: any) => {
+  const monthlyTotals = Array(12).fill(0);
+
+  payments.forEach((payment: any) => {
+    const date = new Date(payment.create_at.seconds * 1000);
+    const month = date.getMonth();
+    monthlyTotals[month] += payment.amount;
+  });
+
+  return monthlyTotals.map((total, index) => ({
+    name:
+      (index + 1).toString().padStart(2, "0") + "." + new Date().getFullYear(),
+    total,
+  }));
+};
+
+const mapPaymentMethodName = (name: string): string => {
+  switch (name.toLowerCase()) {
+    case "blik":
+      return "B";
+    case "paypal":
+      return "PP";
+    case "p24":
+      return "P";
+    case "card":
+      return "C";
+    default:
+      return name;
+  }
+};

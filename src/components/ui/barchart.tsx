@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-const data = [
+const dataTest = [
   {
     name: "Jan",
     total: Math.floor(Math.random() * 5000) + 1000,
@@ -53,12 +53,20 @@ const data = [
   },
 ];
 
-export function Overview() {
+interface Props {
+  axis: {
+    x: string;
+    y: string;
+  };
+  data: any;
+}
+
+const BarChartComponent = ({ axis, data }: Props) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>
         <XAxis
-          dataKey="name"
+          dataKey={axis.x}
           stroke="#888888"
           fontSize={12}
           tickLine={false}
@@ -72,7 +80,7 @@ export function Overview() {
           tickFormatter={(value) => `PLN${value}`}
         />
         <Bar
-          dataKey="total"
+          dataKey={axis.y}
           fill="currentColor"
           radius={[4, 4, 0, 0]}
           className="fill-[#1814F3]"
@@ -80,4 +88,6 @@ export function Overview() {
       </BarChart>
     </ResponsiveContainer>
   );
-}
+};
+
+export default BarChartComponent;
