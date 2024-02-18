@@ -13,7 +13,7 @@ const UserSettingPage = () => {
           {/* card 1 */}
           <Card>
             <CardContent className="flex flex-col gap-y-4">
-              <div className="flex gap-x-9 text-lg">
+              <div className="flex flex-col md:flex-row gap-y-9 md:gap-x-9 text-lg">
                 <div className="w-full flex flex-col gap-4">
                   <p>Dane użytkownika</p>
                   <Input label="Nick" />
