@@ -16,7 +16,7 @@ export default AvatarDropDown;
 const items: DropDownMenuItem[] = [
   {
     title: "Ustawienia konta",
-    path: "/account",
+    path: "/user/settings",
   },
   {
     title: "Zostań partnerem",

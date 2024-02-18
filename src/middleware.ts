@@ -36,5 +36,6 @@ export const config = {
     "/user/monetisation",
     "/user/configurator",
     "/user/golas",
+    "/user/settings",
   ],
 };

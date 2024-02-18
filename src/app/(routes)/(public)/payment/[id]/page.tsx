@@ -49,16 +49,7 @@ const PaymentPage = async (props: Page) => {
             ) : (
               <></>
             )}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Input id="nick" className="pr-9" label="Nick" />
-              <Input id="price" className="pr-9" label="Kwota" />
-            </div>
-            <Textarea id="message" label="Treść wiadomości" />
             <CheckoutForm paymentMethod={payment_methods} />
-            {/* <Input id="email" className="pr-9" label="Email" /> */}
-            <button className="w-full sm:w-[160px] py-2 ml-auto mr-0 mt-auto mb-0 flex items-center justify-center gap-4 text-white bg-[#1814F3] rounded-md relative">
-              WYŚLIJ <Send className="w-6 h-6 absolute right-2" />
-            </button>
           </div>
           <div className="w-full h-auto sm:w-[250px] sm:h-screen sm:min-h-[700px] flex flex-col gap-4 items-center">
             <div className="bg-white w-full h-[200px] sm:w-[250px] sm:h-[350px] rounded-lg overflow-hidden relative">
