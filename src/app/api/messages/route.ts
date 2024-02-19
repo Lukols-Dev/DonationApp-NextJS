@@ -1,5 +1,5 @@
 import { firestore } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 //GET ALL MESSAGES
@@ -27,6 +27,28 @@ export const GET = async (req: Request) => {
         statusText: "OK",
       }
     );
+  } catch (err) {
+    return NextResponse.json(err, { status: 404, statusText: "Not Found" });
+  }
+};
+
+// Add new message
+export const POST = async (req: Request) => {
+  const { uid, data }: { uid: string; data: any } = await req.json();
+
+  if (!uid || !data) {
+    return NextResponse.json("Missing data", { status: 400 });
+  }
+
+  try {
+    const docRef = doc(firestore, "users", uid, "messages", "messages");
+    // const collRef = collection(docRef,"messages")
+    await setDoc(docRef, data);
+
+    return NextResponse.json("Message was sent.", {
+      status: 200,
+      statusText: "OK",
+    });
   } catch (err) {
     return NextResponse.json(err, { status: 404, statusText: "Not Found" });
   }

@@ -100,22 +100,3 @@ const PaymentPage = async (props: Page) => {
 };
 
 export default PaymentPage;
-
-const methods = [
-  {
-    icon: "/assets/card-icon.svg",
-    name: "card",
-  },
-  {
-    icon: "/assets/paypal-icon.svg",
-    name: "paypal",
-  },
-  {
-    icon: "/assets/blik-icon.svg",
-    name: "blik",
-  },
-  {
-    icon: "/assets/p24-icon.svg",
-    name: "p24",
-  },
-];
