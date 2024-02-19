@@ -1,6 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { UserService } from "@/lib/firebase/firebase-actions";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -19,6 +21,7 @@ type UserData = {
 };
 
 const UserDataForm = ({ data }: Props) => {
+  const { toast } = useToast();
   const [values, setValues] = useState<UserData>({
     nick: "",
     email: "",
@@ -45,6 +48,25 @@ const UserDataForm = ({ data }: Props) => {
         ...values,
         socials: { ...values.socials, [field]: e.target.value },
       });
+    }
+  };
+
+  const onSubmit = async () => {
+    try {
+      await UserService.updateUserData("hXOYYt9NQGw8aW4G2kUR", values);
+      toast({
+        variant: "default",
+        title: "Sukces",
+        description: `Dane zostały zaktualizowane.`,
+      });
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          "Wystąpił błąd podczas zapisu. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
+      });
+      console.log("Error update user setting page: ", err);
     }
   };
 
@@ -99,7 +121,10 @@ const UserDataForm = ({ data }: Props) => {
           />
         </div>
       </div>
-      <button className="px-9 py-2 rounded-full bg-[#1814F3] text-white font-semibold text-lg mr-0 ml-auto">
+      <button
+        className="px-9 py-2 rounded-full bg-[#1814F3] text-white font-semibold text-lg mr-0 ml-auto"
+        onClick={onSubmit}
+      >
         ZAPISZ
       </button>
     </>

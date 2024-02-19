@@ -2,6 +2,8 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { UserService } from "@/lib/firebase/firebase-actions";
 import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -24,6 +26,7 @@ type UserBillingData = {
 };
 
 const UserBillingForm = ({ data }: Props) => {
+  const { toast } = useToast();
   const [values, setValues] = useState<UserBillingData>({
     account_type: "",
     name: "",
@@ -42,11 +45,8 @@ const UserBillingForm = ({ data }: Props) => {
     setValues(data);
   };
 
-  const handleAccountTypeChange = (accountType: string) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      account_type: accountType,
-    }));
+  const handleAccountTypeChange = (accountType: "company" | "individual") => {
+    setValues({ ...values, account_type: accountType });
   };
 
   const handleChange = (
@@ -55,6 +55,25 @@ const UserBillingForm = ({ data }: Props) => {
   ) => {
     if (field in values) {
       setValues({ ...values, [field]: e.target.value });
+    }
+  };
+
+  const onSubmit = async () => {
+    try {
+      await UserService.updateUserData("hXOYYt9NQGw8aW4G2kUR", values);
+      toast({
+        variant: "default",
+        title: "Sukces",
+        description: `Dane zostały zaktualizowane.`,
+      });
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          "Wystąpił błąd podczas zapisu. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
+      });
+      console.log("Error update user setting page: ", err);
     }
   };
 
@@ -84,7 +103,7 @@ const UserBillingForm = ({ data }: Props) => {
                 <Checkbox
                   id="company_acc"
                   checked={values.account_type === "company"}
-                  onChange={() => handleAccountTypeChange("company")}
+                  onClick={() => handleAccountTypeChange("company")}
                 />
                 <label
                   htmlFor="company_acc"
@@ -100,7 +119,7 @@ const UserBillingForm = ({ data }: Props) => {
                 <Checkbox
                   id="individual_acc"
                   checked={values.account_type === "individual"}
-                  onChange={() => handleAccountTypeChange("individual")}
+                  onClick={() => handleAccountTypeChange("individual")}
                 />
                 <label
                   htmlFor="individual_acc"
@@ -121,32 +140,32 @@ const UserBillingForm = ({ data }: Props) => {
             <div className="flex flex-col gap-y-2 mx-8">
               <Input
                 label="Imię"
-                value={data.name}
+                value={values.name}
                 onChange={(e) => handleChange(e, "name")}
               />
               <Input
                 label="Nazwisko"
-                value={data.surname}
+                value={values.surname}
                 onChange={(e) => handleChange(e, "surname")}
               />
               <Input
                 label="Kraj"
-                value={data.country}
+                value={values.country}
                 onChange={(e) => handleChange(e, "country")}
               />
               <Input
                 label="Ulica i Numer Lokalu"
-                value={data.address}
+                value={values.address}
                 onChange={(e) => handleChange(e, "address")}
               />
               <Input
                 label="Miasto"
-                value={data.city}
+                value={values.city}
                 onChange={(e) => handleChange(e, "city")}
               />
               <Input
                 label="Kod Pocztowy"
-                value={data.post_code}
+                value={values.post_code}
                 onChange={(e) => handleChange(e, "post_code")}
               />
             </div>
@@ -158,17 +177,17 @@ const UserBillingForm = ({ data }: Props) => {
             <div className="flex flex-col gap-y-2 mx-8">
               <Input
                 label="Nazwa Firmy"
-                value={data.company_name}
+                value={values.company_name}
                 onChange={(e) => handleChange(e, "company_name")}
               />
               <Input
                 label="NIP"
-                value={data.company_nip}
+                value={values.company_nip}
                 onChange={(e) => handleChange(e, "company_nip")}
               />
               <Input
                 label="Adres"
-                value={data.company_address}
+                value={values.company_address}
                 onChange={(e) => handleChange(e, "company_address")}
               />
             </div>
@@ -180,14 +199,17 @@ const UserBillingForm = ({ data }: Props) => {
             <div className="mx-8">
               <Input
                 label="Numer Konta Bankowego (IBAN)"
-                value={data.bank}
+                value={values.bank}
                 onChange={(e) => handleChange(e, "bank")}
               />
             </div>
           </div>
         </div>
       </div>
-      <button className="px-9 py-2 rounded-full bg-[#1814F3] text-white font-semibold text-lg mr-0 ml-auto">
+      <button
+        className="px-9 py-2 rounded-full bg-[#1814F3] text-white font-semibold text-lg mr-0 ml-auto"
+        onClick={onSubmit}
+      >
         ZAPISZ
       </button>
     </>

@@ -5,6 +5,15 @@ export class UserService {
     ).json();
   }
 
+  static async updateUserData(uid: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      })
+    ).json();
+  }
+
   // static async getUserSettings() {}
 }
 
