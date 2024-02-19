@@ -1,3 +1,13 @@
+export class UserService {
+  static async getUserData(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`)
+    ).json();
+  }
+
+  // static async getUserSettings() {}
+}
+
 export class MessagesService {
   static async getAllMessages() {
     return (await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages`)).json();
