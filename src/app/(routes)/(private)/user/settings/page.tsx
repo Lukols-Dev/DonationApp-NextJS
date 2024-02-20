@@ -7,7 +7,7 @@ import getCurrentUser from "@/lib/auth-actions";
 import { UserService } from "@/lib/firebase/firebase-actions";
 
 const UserSettingPage = async () => {
-  const currentUser: { uid: string } = await getCurrentUser();
+  const currentUser: { uid: string; pid: string } = await getCurrentUser();
   const data = await UserService.getUserData(currentUser.uid);
 
   return (
@@ -17,7 +17,11 @@ const UserSettingPage = async () => {
           Ustawienia konta
           <Card>
             <CardContent className="flex flex-col gap-y-4">
-              <UserDataForm data={data} uid={currentUser.uid} />
+              <UserDataForm
+                data={data}
+                uid={currentUser.uid}
+                pid={currentUser.pid}
+              />
             </CardContent>
           </Card>
           <Card>

@@ -24,7 +24,6 @@ const UserPage = async () => {
 
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
-  console.log("messages: ", messages);
   if (messages.messages.length > 0) {
     summary = calculateIncomeSummary({ messages: messages.messages });
     barchatSummary = barchartData(messages.messages);

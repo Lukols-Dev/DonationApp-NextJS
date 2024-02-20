@@ -2,11 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { UserService } from "@/lib/firebase/firebase-actions";
+import {
+  PaymentPageService,
+  UserService,
+} from "@/lib/firebase/firebase-actions";
 import { useEffect, useState } from "react";
 
 interface Props {
   uid: string;
+  pid?: string;
   data: any;
 }
 
@@ -15,14 +19,15 @@ type UserData = {
   email: string;
   picture: string;
   socials: {
-    youtube: string;
-    twitch: string;
-    twitter: string;
+    youtube?: string;
+    twitch?: string;
+    twitter?: string;
   };
 };
 
-const UserDataForm = ({ uid, data }: Props) => {
+const UserDataForm = ({ uid, pid, data }: Props) => {
   const { toast } = useToast();
+  const [changes, setChanges] = useState<Partial<UserData>>({});
   const [values, setValues] = useState<UserData>({
     nick: "",
     email: "",
@@ -44,22 +49,33 @@ const UserDataForm = ({ uid, data }: Props) => {
   ) => {
     if (field in values) {
       setValues({ ...values, [field]: e.target.value });
+      setChanges({ ...changes, [field]: e.target.value });
     } else {
       setValues({
         ...values,
         socials: { ...values.socials, [field]: e.target.value },
+      });
+      setChanges({
+        ...changes,
+        socials: { ...changes.socials, [field]: e.target.value },
       });
     }
   };
 
   const onSubmit = async () => {
     try {
-      await UserService.updateUserData(uid, values);
+      await UserService.updateUserData(uid, changes);
+      if (changes.nick && pid) {
+        await PaymentPageService.updatePaymentPageInfo(pid, {
+          nick: changes.nick,
+        });
+      }
       toast({
         variant: "default",
         title: "Sukces",
         description: `Dane zostały zaktualizowane.`,
       });
+      setChanges({});
     } catch (err) {
       toast({
         variant: "destructive",
