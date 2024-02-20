@@ -99,3 +99,7 @@ const camelToSnakeString = (str: string): string => {
 export const isEmpty = (obj: object): boolean => {
   return Object.keys(obj).length === 0;
 };
+
+export const formatNumber = (number: number) => {
+  return number.toLocaleString("pl-PL");
+};

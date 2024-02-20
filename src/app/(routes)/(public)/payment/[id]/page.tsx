@@ -64,18 +64,21 @@ const PaymentPage = async (props: Page) => {
               <p>{nick}</p>
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
-              {Object.entries(socials).map(([key, href]) => (
-                <Magnetic key={key}>
-                  <a href={href} target="_blank" rel="noopener noreferrer">
-                    <Image
-                      alt={key}
-                      width={30}
-                      height={30}
-                      src={`/assets/${key}-icon.svg`}
-                    />
-                  </a>
-                </Magnetic>
-              ))}
+              {socialOrder.map((key) => {
+                const href = socials[key];
+                return href ? (
+                  <Magnetic key={key}>
+                    <a href={href} target="_blank" rel="noopener noreferrer">
+                      <Image
+                        alt={key}
+                        width={30}
+                        height={30}
+                        src={`/assets/${key}-icon.svg`}
+                      />
+                    </a>
+                  </Magnetic>
+                ) : null;
+              })}
             </div>
             <div className="bg-white w-full h-full p-4 rounded-lg hidden sm:flex flex-col">
               <div className="relative ml-auto mr-4">
@@ -100,3 +103,5 @@ const PaymentPage = async (props: Page) => {
 };
 
 export default PaymentPage;
+
+const socialOrder = ["youtube", "twitch", "twitter"];

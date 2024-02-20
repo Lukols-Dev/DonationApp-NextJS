@@ -7,7 +7,7 @@ import {
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
 import { columnsWallet } from "@/components/dashboard/columns/columns-wallet";
-import { calculateIncomeSummary } from "@/lib/utils";
+import { calculateIncomeSummary, formatNumber } from "@/lib/utils";
 
 const WalletPage = async () => {
   let summary: any;
@@ -27,13 +27,13 @@ const WalletPage = async () => {
           <div className="flex gap-4 h-[144px]">
             <CardStatistic
               title="Aktualny przychód"
-              value={summary.monthly}
+              value={formatNumber(summary.monthly)}
               valueDesc="+20.1% ostatni miesiąc"
               icon="PLN"
             />
             <CardStatistic
               title="W tym roku"
-              value={summary.yearly}
+              value={formatNumber(summary.yearly)}
               icon="PLN"
             />
             <CardStatistic title="Do wypłaty" value="45,231.89" icon="PLN" />

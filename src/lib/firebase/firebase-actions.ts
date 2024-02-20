@@ -20,10 +20,7 @@ export class MessagesService {
     return (await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages`)).json();
   }
 
-  static async addNewMessage(
-    uid: string,
-    data: { name?: string; isActive?: boolean }
-  ) {
+  static async addNewMessage(uid: string, data: any) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages`, {
         method: "POST",

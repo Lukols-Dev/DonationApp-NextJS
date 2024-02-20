@@ -10,7 +10,11 @@ import {
   NewsService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
-import { calculateIncomeSummary, formatTimestamp } from "@/lib/utils";
+import {
+  calculateIncomeSummary,
+  formatNumber,
+  formatTimestamp,
+} from "@/lib/utils";
 
 const UserPage = async () => {
   let summary: any;
@@ -33,7 +37,7 @@ const UserPage = async () => {
             <div className="flex gap-4 w-full h-[140px]">
               <CardStatistic
                 title="Aktualny przychód"
-                value={summary.monthly}
+                value={formatNumber(summary.monthly)}
                 valueDesc="+20.1% ostatni miesiąc"
                 icon="PLN"
               />

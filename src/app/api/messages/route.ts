@@ -1,5 +1,15 @@
 import { firestore } from "@/lib/firebase";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  increment,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 //GET ALL MESSAGES
@@ -41,14 +51,36 @@ export const POST = async (req: Request) => {
   }
 
   try {
-    const docRef = doc(firestore, "users", uid, "messages", "messages");
-    // const collRef = collection(docRef,"messages")
-    await setDoc(docRef, data);
+    const collRef = collection(firestore, "users", uid, "messages");
+    const paymentsColl = collection(firestore, "users", uid, "payment");
 
-    return NextResponse.json("Message was sent.", {
-      status: 200,
-      statusText: "OK",
-    });
+    const messageData = {
+      ...data,
+      ...{ create_at: Timestamp.fromDate(new Date()), mid: collRef.id },
+    };
+
+    const existingPaymentQuery = query(
+      paymentsColl,
+      where("name", "==", data.payment_method)
+    );
+    console.log("existingPayments: ", existingPaymentQuery);
+
+    const existingPayments = await getDocs(existingPaymentQuery);
+    if (!existingPayments.empty) {
+      const paymentDoc = existingPayments.docs[0];
+      await addDoc(collRef, messageData);
+      await updateDoc(doc(firestore, "users", uid, "payment", paymentDoc.id), {
+        used: increment(1),
+        current_amount: increment(data.amount),
+      });
+
+      return NextResponse.json("Message was sent.", {
+        status: 200,
+        statusText: "OK",
+      });
+    } else {
+      return NextResponse.json("Missing payment method", { status: 400 });
+    }
   } catch (err) {
     return NextResponse.json(err, { status: 404, statusText: "Not Found" });
   }
