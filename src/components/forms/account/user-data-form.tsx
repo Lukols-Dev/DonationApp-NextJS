@@ -6,6 +6,7 @@ import { UserService } from "@/lib/firebase/firebase-actions";
 import { useEffect, useState } from "react";
 
 interface Props {
+  uid: string;
   data: any;
 }
 
@@ -20,7 +21,7 @@ type UserData = {
   };
 };
 
-const UserDataForm = ({ data }: Props) => {
+const UserDataForm = ({ uid, data }: Props) => {
   const { toast } = useToast();
   const [values, setValues] = useState<UserData>({
     nick: "",
@@ -34,7 +35,7 @@ const UserDataForm = ({ data }: Props) => {
   });
 
   const initUserData = () => {
-    setValues(data);
+    setValues({ ...values, ...data });
   };
 
   const handleChange = (
@@ -53,7 +54,7 @@ const UserDataForm = ({ data }: Props) => {
 
   const onSubmit = async () => {
     try {
-      await UserService.updateUserData("hXOYYt9NQGw8aW4G2kUR", values);
+      await UserService.updateUserData(uid, values);
       toast({
         variant: "default",
         title: "Sukces",

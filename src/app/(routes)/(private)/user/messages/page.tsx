@@ -4,10 +4,12 @@ import CardLegend from "@/components/dashboard/cards/card-legend";
 import CardTable from "@/components/dashboard/cards/card-table";
 import { MessagesService } from "@/lib/firebase/firebase-actions";
 import { columnsMessage } from "@/components/dashboard/columns/columns-message";
+import getCurrentUser from "@/lib/auth-actions";
 
 const MessagesPage = async () => {
+  const currentUser: { uid: string } = await getCurrentUser();
   const messages: { count: number; messages: any[] } =
-    await MessagesService.getAllMessages();
+    await MessagesService.getAllMessages(currentUser.uid);
 
   return (
     <Container>

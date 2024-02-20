@@ -1,10 +1,11 @@
 import { Input } from "@/components/ui/input";
 
 interface Props {
+  uid: string;
   data: any;
 }
 
-const UserDeleteAccForm = ({ data }: Props) => {
+const UserDeleteAccForm = ({ uid, data }: Props) => {
   return (
     <>
       <div className="flex flex-col gap-y-2 text-sm max-w-[300px]">

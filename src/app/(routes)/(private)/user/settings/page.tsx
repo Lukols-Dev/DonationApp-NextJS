@@ -3,10 +3,12 @@ import UserBillingForm from "@/components/forms/account/user-billing-form";
 import UserDataForm from "@/components/forms/account/user-data-form";
 import UserDeleteAccForm from "@/components/forms/account/user-delete-acc-form";
 import { Card, CardContent } from "@/components/ui/card";
+import getCurrentUser from "@/lib/auth-actions";
 import { UserService } from "@/lib/firebase/firebase-actions";
 
 const UserSettingPage = async () => {
-  const data = await UserService.getUserData("hXOYYt9NQGw8aW4G2kUR");
+  const currentUser: { uid: string } = await getCurrentUser();
+  const data = await UserService.getUserData(currentUser.uid);
 
   return (
     <Container>
@@ -16,17 +18,17 @@ const UserSettingPage = async () => {
           {/* card 1 */}
           <Card>
             <CardContent className="flex flex-col gap-y-4">
-              <UserDataForm data={data} />
+              <UserDataForm data={data} uid={currentUser.uid} />
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex flex-col gap-y-4">
-              <UserBillingForm data={data} />
+              <UserBillingForm data={data} uid={currentUser.uid} />
             </CardContent>
           </Card>
           <Card className="max-w-[500px]">
             <CardContent className="flex flex-col gap-y-4">
-              <UserDeleteAccForm data={data} />
+              <UserDeleteAccForm data={data} uid={currentUser.uid} />
             </CardContent>
           </Card>
         </div>

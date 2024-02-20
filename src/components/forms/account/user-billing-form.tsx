@@ -8,6 +8,7 @@ import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
+  uid: string;
   data: any;
 }
 
@@ -25,7 +26,7 @@ type UserBillingData = {
   bank: string;
 };
 
-const UserBillingForm = ({ data }: Props) => {
+const UserBillingForm = ({ uid, data }: Props) => {
   const { toast } = useToast();
   const [values, setValues] = useState<UserBillingData>({
     account_type: "",
@@ -42,7 +43,7 @@ const UserBillingForm = ({ data }: Props) => {
   });
 
   const initUserData = () => {
-    setValues(data);
+    setValues({ ...values, ...data });
   };
 
   const handleAccountTypeChange = (accountType: "company" | "individual") => {
@@ -60,7 +61,7 @@ const UserBillingForm = ({ data }: Props) => {
 
   const onSubmit = async () => {
     try {
-      await UserService.updateUserData("hXOYYt9NQGw8aW4G2kUR", values);
+      await UserService.updateUserData(uid, values);
       toast({
         variant: "default",
         title: "Sukces",
