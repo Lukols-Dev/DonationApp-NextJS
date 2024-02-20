@@ -4,10 +4,14 @@ import clsx from "clsx";
 import React, { useEffect } from "react";
 import Recursive from "../components/recursive";
 import { useEditor } from "@/hooks/useEditor";
+import { ConfiguratorService } from "@/lib/firebase/firebase-actions";
 
-type Props = { widgetId: string; liveMode?: boolean };
+interface Props {
+  uid: string;
+  liveMode?: boolean;
+}
 
-const WidgetEditor = ({ widgetId, liveMode }: Props) => {
+const WidgetEditor = ({ uid, liveMode }: Props) => {
   const { dispatch, state } = useEditor();
 
   const handleClick = () => {
@@ -27,25 +31,11 @@ const WidgetEditor = ({ widgetId, liveMode }: Props) => {
   }, [liveMode]);
 
   useEffect(() => {
-    const body = {
-      uid: "hXOYYt9NQGw8aW4G2kUR",
-      wid: "FBMmngenBs8dZgS8SU8Z",
-    };
+    if (!uid) return;
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        const data = await res.json();
+        const data = await ConfiguratorService.getWidget(uid);
 
         dispatch({
           type: "LOAD_DATA",

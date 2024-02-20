@@ -21,11 +21,11 @@ const ConfigurationPageForm = ({ pid }: Props) => {
   };
 
   const handleInput = (e: FormEvent<HTMLTextAreaElement>) => {
-    const { value }: any = e.target;
+    const curr: any = e.target;
     if (value.length <= 200) {
-      setValue(value);
+      setValue(curr.value);
     } else if (value.length > 200 && value.slice(0, 200) !== value) {
-      setValue(value.slice(0, 200));
+      setValue(curr.value.slice(0, 200));
     }
   };
 
@@ -60,7 +60,7 @@ const ConfigurationPageForm = ({ pid }: Props) => {
         <CardContent>
           <div className="w-full flex justify-between pb-4">
             <p>Opis strony zamówień</p>
-            <p>{value.length}/200</p>
+            <p>{value ? value.length : 0}/200</p>
           </div>
           <Textarea
             className="h-[250px]"

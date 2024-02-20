@@ -49,7 +49,13 @@ const PaymentPage = async (props: Page) => {
             ) : (
               <></>
             )}
-            <CheckoutForm paymentMethod={payment_methods} />
+            {payment_methods.length > 0 ? (
+              <CheckoutForm paymentMethod={payment_methods} />
+            ) : (
+              <div className="mx-auto my-auto">
+                Dodaj metody płatności na swoim profilu
+              </div>
+            )}
           </div>
           <div className="w-full h-auto sm:w-[250px] sm:h-screen sm:min-h-[700px] flex flex-col gap-4 items-center">
             <div className="bg-white w-full h-[200px] sm:w-[250px] sm:h-[350px] rounded-lg overflow-hidden relative">
@@ -63,23 +69,27 @@ const PaymentPage = async (props: Page) => {
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">
               <p>{nick}</p>
             </div>
-            <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
-              {socialOrder.map((key) => {
-                const href = socials[key];
-                return href ? (
-                  <Magnetic key={key}>
-                    <a href={href} target="_blank" rel="noopener noreferrer">
-                      <Image
-                        alt={key}
-                        width={30}
-                        height={30}
-                        src={`/assets/${key}-icon.svg`}
-                      />
-                    </a>
-                  </Magnetic>
-                ) : null;
-              })}
-            </div>
+            {isEmpty(socials) ? (
+              <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
+                {socialOrder.map((key) => {
+                  const href = socials[key];
+                  return href ? (
+                    <Magnetic key={key}>
+                      <a href={href} target="_blank" rel="noopener noreferrer">
+                        <Image
+                          alt={key}
+                          width={30}
+                          height={30}
+                          src={`/assets/${key}-icon.svg`}
+                        />
+                      </a>
+                    </Magnetic>
+                  ) : null;
+                })}
+              </div>
+            ) : (
+              <></>
+            )}
             <div className="bg-white w-full h-full p-4 rounded-lg hidden sm:flex flex-col">
               <div className="relative ml-auto mr-4">
                 <div className="w-4 h-4 rounded-full bg-red-500 animate-ping absolute top-0 left-0" />

@@ -17,13 +17,16 @@ export const authOptions = {
       ),
       profile(profile: GoogleProfile) {
         return {
-          ...profile,
           id: profile.sub,
-          name: profile.name,
-          user_name: profile.user_name ?? "user" + crypto.randomUUID(),
+          name: "",
+          surname: "",
+          nick: "user" + crypto.randomUUID(),
           email: profile.email,
-          image: "",
+          email_verified: profile.email_verified,
+          picture: "",
           role: "user",
+          pid: "",
+          account_type: "individual",
         };
       },
     }),
@@ -50,50 +53,17 @@ export const authOptions = {
       ),
     }),
   }),
-  //   callbacks: {
-  //     async jwt({
-  //       token,
-  //       user,
-  //       trigger,
-  //       session,
-  //     }: {
-  //       token: any;
-  //       user: any;
-  //       trigger: any;
-  //       session: any;
-  //     }): Promise<any> {
-  //       if (user) {
-  //         token.uid = user.id;
-  //         token.role = user.role;
-  //         token.is_seller = user.is_seller;
-  //         token.seller_acc = user.seller_acc;
-  //         token.user_name = user.user_name;
-  //         token.email_verified = user.email_verified;
-  //       }
+  callbacks: {
+    async session({ session, token }: any): Promise<any> {
+      if (token.sub && session.user) {
+        session.user.uid = token.sub;
+      }
 
-  //       if (
-  //         trigger === "update" &&
-  //         (session.user_name || session.is_seller || session.seller_acc)
-  //       ) {
-  //         token.user_name = session.user_name;
-  //         token.is_seller = session.is_seller;
-  //         token.seller_acc = session.seller_acc;
-  //       }
-
-  //       return token;
-  //     },
-  // async session({ session, token }: any): Promise<any> {
-  //   if (session?.user) {
-  //     session.user.uid = token.uid;
-  //     session.user.role = token.role;
-  //     session.is_seller = token.is_seller;
-  //     session.seller_acc = token.seller_acc;
-  //     session.user.user_name = token.user_name;
-  //     session.email_verified = token.email_verified;
-  //   }
-
-  //   return session;
-  // },
-  //   },
+      return session;
+    },
+    async jwt({ token }: any) {
+      return token;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };

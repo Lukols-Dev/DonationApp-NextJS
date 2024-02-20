@@ -38,10 +38,12 @@
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-spinners": "^0.13.8",
     "recharts": "^2.11.0",
     "stripe": "^14.15.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1",
     "zustand": "^4.5.0"
   },
   "devDependencies": {

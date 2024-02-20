@@ -26,7 +26,7 @@ export const GET = async (
   }
   //TODO:POPRAWIC NAZWE Kolekcji
   try {
-    const docRef = doc(firestore, "paymet", `${id}`);
+    const docRef = doc(firestore, "payments", `${id}`);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
@@ -55,7 +55,7 @@ export const PUT = async (req: Request, { params }: { params: IParams }) => {
   }
 
   try {
-    const docRef = doc(firestore, "paymet", `${id}`);
+    const docRef = doc(firestore, "payments", `${id}`);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {

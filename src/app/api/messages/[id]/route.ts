@@ -12,15 +12,22 @@ import {
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
+interface IParams {
+  id?: string;
+}
 //GET ALL MESSAGES
-export const GET = async (req: Request) => {
+export const GET = async (req: Request, { params }: { params: IParams }) => {
+  const { id } = params;
+
+  if (!id) {
+    return NextResponse.json("Not Found", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
   try {
-    const messagesColl = collection(
-      firestore,
-      "users",
-      "hXOYYt9NQGw8aW4G2kUR",
-      "messages"
-    );
+    const messagesColl = collection(firestore, "users", id, "messages");
     const messagesDocs = await getDocs(messagesColl);
 
     const messages = messagesDocs.docs.map((doc) => ({

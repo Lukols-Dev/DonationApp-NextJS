@@ -7,9 +7,14 @@ import { PaymentService } from "@/lib/firebase/firebase-actions";
 import { PAYMENT_METHODS } from "@/lib/constans";
 import { PaymentMethod } from "@/types";
 import ConfigurationPageForm from "@/components/forms/payment/configuration-page-form";
+import getCurrentUser from "@/lib/auth-actions";
+import CheckoutButton from "@/components/dashboard/buttons/checkout-btn";
+import Link from "next/link";
 
 const MonetisationPage = async () => {
-  const url = await PaymentService.getCheckout();
+  const currentUser: { uid: string; nick: string; picture: string } =
+    await getCurrentUser();
+  const url = await PaymentService.getCheckout(currentUser.uid);
   const fetchedPayments: { count: number; payments: any[] } =
     await PaymentService.getAllPayments();
 
@@ -27,9 +32,13 @@ const MonetisationPage = async () => {
       <section className="w-full h-full gap-4 flex flex-col py-6">
         <Card className="max-w-[300px]">
           <CardContent>
-            <InputCopy
-              value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
-            />
+            {!url ? (
+              <CheckoutButton uid={currentUser.uid} userData={currentUser} />
+            ) : (
+              <InputCopy
+                value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
+              />
+            )}
           </CardContent>
         </Card>
         <div className="w-[320px] flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
@@ -38,7 +47,7 @@ const MonetisationPage = async () => {
             Wybierz metody płątności jakich mogą użyć Twoi klienci
           </span>
         </div>
-        <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative">
           {paymentMethods.map((item: PaymentMethod) => (
             <CardPayActive
               key={item.name}
@@ -62,12 +71,37 @@ const MonetisationPage = async () => {
               </div>
             </CardContent>
           </Card>
+          <div className="w-full h-full flex flex-col items-center justify-center bg-white/80 absolute gap-4 font-bold">
+            Aby odblokować funkcję musisz:
+            {url && (
+              <div className="font-normal">
+                - Wygenerować URL strony z płatnościami.
+              </div>
+            )}
+            {url && (
+              <div className="font-normal">
+                - Uzupełnić wszystkie dane konta.{" "}
+                <Link
+                  href="/user/settings"
+                  className="border-2 border-[#1814F3] text-[#1814F3] rounded-md px-2 py-1"
+                >
+                  Uzupełnij
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
         <div className="w-full h-full">
-          <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold">
-            <p>Konfiguracja strony z płatnościami</p>
-          </div>
-          <ConfigurationPageForm pid={url} />
+          {!url ? (
+            <></>
+          ) : (
+            <>
+              <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold">
+                <p>Konfiguracja strony z płatnościami</p>
+              </div>
+              <ConfigurationPageForm pid={url} />
+            </>
+          )}
         </div>
       </section>
     </Container>

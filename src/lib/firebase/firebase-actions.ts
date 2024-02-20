@@ -16,8 +16,10 @@ export class UserService {
 }
 
 export class MessagesService {
-  static async getAllMessages() {
-    return (await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages`)).json();
+  static async getAllMessages(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages/${uid}`)
+    ).json();
   }
 
   static async addNewMessage(uid: string, data: any) {
@@ -34,13 +36,30 @@ export class MessagesService {
 }
 
 export class PaymentService {
-  static async getAllPayments() {
-    return (await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments`)).json();
+  static async getAllPayments(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/${uid}`)
+    ).json();
   }
 
-  static async getCheckout() {
+  static async getCheckout(uid: string) {
     return (
-      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/checkout`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/checkout/${uid}`)
+    ).json();
+  }
+
+  static async generateCheckout(uid: string, data: any) {
+    return (
+      await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/payments/checkout/${uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: data, uid }),
+        }
+      )
     ).json();
   }
 
@@ -83,4 +102,26 @@ export class NewsService {
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/news`)
     ).json();
   }
+}
+
+export class ConfiguratorService {
+  static async getWidget(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets/${uid}`, {
+        method: "GET",
+      })
+    ).json();
+  }
+
+  // static async createNewWidget(uid: string) {
+  //   return (
+  //     await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ uid }),
+  //     })
+  //   ).json();
+  // }
 }

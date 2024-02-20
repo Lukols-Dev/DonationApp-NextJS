@@ -4,14 +4,19 @@ import { useEditor } from "@/hooks/useEditor";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
-const EditorFooter = () => {
+interface Props {
+  uid: string;
+}
+
+const EditorFooter = ({ uid }: Props) => {
   const { state, dispatch } = useEditor();
   const router = useRouter();
   const { toast } = useToast();
+
   const handleOnSave = async () => {
     const body = {
-      uid: "hXOYYt9NQGw8aW4G2kUR",
-      wid: "FBMmngenBs8dZgS8SU8Z",
+      uid: uid,
+      wid: "widget",
       content: state.editor.elements,
     };
     try {

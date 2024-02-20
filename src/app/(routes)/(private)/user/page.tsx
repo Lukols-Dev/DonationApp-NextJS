@@ -7,28 +7,31 @@ import Avatar from "@/components/ui/avatar";
 import BarChartComponent from "@/components/ui/barchart";
 import { Card, CardContent } from "@/components/ui/card";
 import InputCopy from "@/components/ui/input-copy";
+import getCurrentUser from "@/lib/auth-actions";
 import {
   MessagesService,
   NewsService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
-import {
-  calculateIncomeSummary,
-  formatNumber,
-  formatTimestamp,
-} from "@/lib/utils";
+import { calculateIncomeSummary, formatNumber } from "@/lib/utils";
 
 const UserPage = async () => {
   let summary: any;
   let barchatSummary: any;
-  const url = await PaymentService.getCheckout();
+  const currentUser: { uid: string; nick: string } = await getCurrentUser();
+  const url = await PaymentService.getCheckout(currentUser.uid);
   const news = await NewsService.getNews();
-  const messages: { count: number; messages: any[] } =
-    await MessagesService.getAllMessages();
 
+  const messages: { count: number; messages: any[] } =
+    await MessagesService.getAllMessages(currentUser.uid);
+  console.log("messages: ", messages);
   if (messages.messages.length > 0) {
     summary = calculateIncomeSummary({ messages: messages.messages });
     barchatSummary = barchartData(messages.messages);
+  } else {
+    summary = {
+      monthly: 0,
+    };
   }
 
   return (
@@ -70,7 +73,7 @@ const UserPage = async () => {
                   <div className="h-24 w-24">
                     <Avatar fill />
                   </div>
-                  <p className="text-2xl text-[#343C6A]">Jan Nowak</p>
+                  <p className="text-2xl text-[#343C6A]">{currentUser.nick}</p>
                   <InputCopy
                     value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
                   />
