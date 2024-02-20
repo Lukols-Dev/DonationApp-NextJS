@@ -63,7 +63,6 @@ export const POST = async (req: Request) => {
       paymentsColl,
       where("name", "==", data.payment_method)
     );
-    console.log("existingPayments: ", existingPaymentQuery);
 
     const existingPayments = await getDocs(existingPaymentQuery);
     if (!existingPayments.empty) {

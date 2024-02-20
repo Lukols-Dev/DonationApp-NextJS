@@ -69,7 +69,6 @@ export const columnsMessage: ColumnDef<Payment>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      console.log("row: ", row);
       const statuses: string[] = row.getValue("status");
 
       return (

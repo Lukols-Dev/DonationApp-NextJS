@@ -1,6 +1,8 @@
 import CardImage from "@/components/dashboard/cards/card-image";
 import CardNews from "@/components/dashboard/cards/card-news";
 import CardStatistic from "@/components/dashboard/cards/card-statistic";
+import CardTable from "@/components/dashboard/cards/card-table";
+import { columnsLastMessage } from "@/components/dashboard/columns/columns-last-message";
 import Avatar from "@/components/ui/avatar";
 import BarChartComponent from "@/components/ui/barchart";
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,27 +54,12 @@ const UserPage = async () => {
           </div>
           <div>
             <p className="my-4 text-[#333B69] font-semibold">Ostatnie Wpłaty</p>
-            <div className="flex w-full h-[330px] bg-white p-6 border rounded-lg shadow-sm">
-              <ul className="w-full">
-                {messages.messages.map((item: any, index: any) => (
-                  <li
-                    key={index}
-                    className="w-full flex justify-between items-center text-[#718EBF]"
-                  >
-                    <div className="w-[50px] h-[50px] flex items-center justify-center rounded-full bg-[#E7EDFF] text-[#718EBF]">
-                      {mapPaymentMethodName(item.payment_method)}
-                    </div>
-                    <p>{item.nick}</p>
-                    <p>{formatTimestamp(item.create_at)}</p>
-                    <p>{item.payment_method}</p>
-                    <p>{item.payment_status}</p>
-                    <p className="text-green-500">
-                      + {item.amount} <span className="text-xs">PLN</span>
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <CardTable
+              data={messages.messages}
+              columns={columnsLastMessage}
+              displayHeader
+              displayFooter
+            />
           </div>
         </div>
         <div className="w-full lg:w-[350px] h-full flex flex-col gap-4">
@@ -116,19 +103,4 @@ const barchartData = (payments: any) => {
       (index + 1).toString().padStart(2, "0") + "." + new Date().getFullYear(),
     total,
   }));
-};
-
-const mapPaymentMethodName = (name: string): string => {
-  switch (name.toLowerCase()) {
-    case "blik":
-      return "B";
-    case "paypal":
-      return "PP";
-    case "p24":
-      return "P";
-    case "card":
-      return "C";
-    default:
-      return name;
-  }
 };

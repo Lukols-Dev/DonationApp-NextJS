@@ -4,13 +4,20 @@ import { TableData } from "@/components/ui/table";
 interface Props {
   data?: any[];
   columns: any;
+  displayHeader?: boolean;
+  displayFooter?: boolean;
 }
 
-const CardTable = ({ data, columns }: Props) => {
+const CardTable = ({ data, columns, displayHeader, displayFooter }: Props) => {
   return (
     <Card>
       <CardContent>
-        <TableData data={data || []} columns={columns} />
+        <TableData
+          data={data || []}
+          columns={columns}
+          displayHeader={displayHeader}
+          displayFooter={displayFooter}
+        />
       </CardContent>
     </Card>
   );
