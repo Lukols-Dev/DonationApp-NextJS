@@ -10,13 +10,14 @@ import ConfigurationPageForm from "@/components/forms/payment/configuration-page
 import getCurrentUser from "@/lib/auth-actions";
 import CheckoutButton from "@/components/dashboard/buttons/checkout-btn";
 import Link from "next/link";
+import { validateRequiredData } from "@/lib/utils";
 
 const MonetisationPage = async () => {
   const currentUser: { uid: string; nick: string; picture: string } =
     await getCurrentUser();
   const url = await PaymentService.getCheckout(currentUser.uid);
   const fetchedPayments: { count: number; payments: any[] } =
-    await PaymentService.getAllPayments();
+    await PaymentService.getAllPayments(currentUser.uid);
 
   const paymentMethods = PAYMENT_METHODS.map((defaultMethod: PaymentMethod) => {
     const isActive = fetchedPayments.payments.some(
@@ -51,6 +52,7 @@ const MonetisationPage = async () => {
           {paymentMethods.map((item: PaymentMethod) => (
             <CardPayActive
               key={item.name}
+              uid={currentUser.uid}
               pid={url}
               icon={item.icon}
               name={item.name}
@@ -71,25 +73,29 @@ const MonetisationPage = async () => {
               </div>
             </CardContent>
           </Card>
-          <div className="w-full h-full flex flex-col items-center justify-center bg-white/80 absolute gap-4 font-bold">
-            Aby odblokować funkcję musisz:
-            {url && (
-              <div className="font-normal">
-                - Wygenerować URL strony z płatnościami.
-              </div>
-            )}
-            {url && (
-              <div className="font-normal">
-                - Uzupełnić wszystkie dane konta.{" "}
-                <Link
-                  href="/user/settings"
-                  className="border-2 border-[#1814F3] text-[#1814F3] rounded-md px-2 py-1"
-                >
-                  Uzupełnij
-                </Link>
-              </div>
-            )}
-          </div>
+          {!url || !validateRequiredData(currentUser) ? (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-white/80 absolute gap-4 font-bold">
+              Aby odblokować funkcję musisz:
+              {!url && (
+                <div className="font-normal">
+                  - Wygenerować URL strony z płatnościami.
+                </div>
+              )}
+              {!validateRequiredData(currentUser) && (
+                <div className="font-normal">
+                  - Uzupełnić wszystkie dane konta.{" "}
+                  <Link
+                    href="/user/settings"
+                    className="border-2 border-[#1814F3] text-[#1814F3] rounded-md px-2 py-1"
+                  >
+                    Uzupełnij
+                  </Link>
+                </div>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="w-full h-full">
           {!url ? (

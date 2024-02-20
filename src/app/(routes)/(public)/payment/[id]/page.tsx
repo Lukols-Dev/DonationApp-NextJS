@@ -23,6 +23,7 @@ const PaymentPage = async (props: Page) => {
     description,
     payment_methods,
     profile_img,
+    uid,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
 
   return (
@@ -50,7 +51,7 @@ const PaymentPage = async (props: Page) => {
               <></>
             )}
             {payment_methods.length > 0 ? (
-              <CheckoutForm paymentMethod={payment_methods} />
+              <CheckoutForm paymentMethod={payment_methods} uid={uid} />
             ) : (
               <div className="mx-auto my-auto">
                 Dodaj metody płatności na swoim profilu

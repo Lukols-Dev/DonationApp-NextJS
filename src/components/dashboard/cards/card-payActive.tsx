@@ -14,9 +14,10 @@ interface Props {
   name: string;
   checked?: boolean;
   pid: string;
+  uid: string;
 }
 
-const CardPayActive = ({ pid, icon, name, checked }: Props) => {
+const CardPayActive = ({ pid, uid, icon, name, checked }: Props) => {
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(checked);
 
@@ -30,7 +31,7 @@ const CardPayActive = ({ pid, icon, name, checked }: Props) => {
       isActive: newIsActive,
     };
     try {
-      await PaymentService.addPayment("hXOYYt9NQGw8aW4G2kUR", data);
+      await PaymentService.addPayment(uid, data);
       await PaymentPageService.updatePaymentPageInfo(pid, {
         paymentMethods: name,
         isActive: newIsActive,

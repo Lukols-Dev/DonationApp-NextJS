@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface Props {
+  uid: string;
   paymentMethod: string[];
 }
 
@@ -29,7 +30,7 @@ type MessageData = {
   status: string[];
 };
 
-const CheckoutForm = ({ paymentMethod }: Props) => {
+const CheckoutForm = ({ uid, paymentMethod }: Props) => {
   const { toast } = useToast();
   const [values, setValues] = useState<MessageData>({
     nick: "",
@@ -45,7 +46,7 @@ const CheckoutForm = ({ paymentMethod }: Props) => {
 
   const onSubmit = async () => {
     try {
-      await MessagesService.addNewMessage("hXOYYt9NQGw8aW4G2kUR", values);
+      await MessagesService.addNewMessage(uid, values);
       toast({
         variant: "default",
         title: "Sukces",
@@ -67,7 +68,7 @@ const CheckoutForm = ({ paymentMethod }: Props) => {
         description:
           "Wystąpił błąd podczas wysyłania. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
       });
-      console.log("Error update user setting page: ", err);
+      console.log("Error add message: ", err);
     }
   };
 

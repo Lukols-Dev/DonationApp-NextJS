@@ -103,3 +103,30 @@ export const isEmpty = (obj: object): boolean => {
 export const formatNumber = (number: number) => {
   return number.toLocaleString("pl-PL");
 };
+
+export const validateRequiredData = (curr: any) => {
+  const requiredFields = [
+    "address",
+    "surname",
+    "email",
+    "company_address",
+    "post_code",
+    "name",
+    "nick",
+    "company_nip",
+    "city",
+    "country",
+    "bank",
+    "company_name",
+  ];
+
+  const missingFields = requiredFields.filter(
+    (field) => !curr[field] || curr[field].trim() === ""
+  );
+
+  if (missingFields.length > 0) {
+    return false;
+  } else {
+    return true;
+  }
+};

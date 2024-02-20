@@ -15,7 +15,6 @@ const UserSettingPage = async () => {
       <section className="w-full h-full gap-4 flex flex-col">
         <div className="w-full h-full flex flex-col text-2xl text-[#333B69] font-semibold gap-y-6">
           Ustawienia konta
-          {/* card 1 */}
           <Card>
             <CardContent className="flex flex-col gap-y-4">
               <UserDataForm data={data} uid={currentUser.uid} />
