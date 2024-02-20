@@ -24,7 +24,7 @@ export type PaymentMethod = {
 };
 
 export type PaymentPageData = {
-  profile_img?: string;
+  picture?: string;
   id: string;
   uid: string;
   description?: string;

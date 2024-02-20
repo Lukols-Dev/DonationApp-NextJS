@@ -1,8 +1,10 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import Dropzone from "@/components/ui/input-file";
 import { useToast } from "@/components/ui/use-toast";
 import {
+  FileService,
   PaymentPageService,
   UserService,
 } from "@/lib/firebase/firebase-actions";
@@ -17,7 +19,7 @@ interface Props {
 type UserData = {
   nick: string;
   email: string;
-  picture: string;
+  picture: File | null | undefined;
   socials: {
     youtube?: string;
     twitch?: string;
@@ -31,7 +33,7 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
   const [values, setValues] = useState<UserData>({
     nick: "",
     email: "",
-    picture: "",
+    picture: null,
     socials: {
       youtube: "",
       twitch: "",
@@ -70,6 +72,14 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
           nick: changes.nick,
         });
       }
+
+      if (changes.picture && pid) {
+        const pictureUrl = await FileService.addFile(uid, changes.picture);
+        await UserService.updateUserData(uid, { picture: pictureUrl });
+        await PaymentPageService.updatePaymentPageInfo(pid, {
+          picture: pictureUrl,
+        });
+      }
       toast({
         variant: "default",
         title: "Sukces",
@@ -106,11 +116,29 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
             value={values.email}
             onChange={(e) => handleChange(e, "email")}
           />
-          <Input
+          {/* <Input
             label="Zdjęcie konta"
             value={values.picture}
             onChange={(e) => handleChange(e, "picture")}
-          />
+          /> */}
+          <div className="max-w-[200px]">
+            <Dropzone
+              value={values.picture}
+              dropzoneOptions={{
+                maxSize: 1024 * 1024 * 1, // 1MB
+              }}
+              onChange={(file) => {
+                setValues((prev) => ({
+                  ...prev,
+                  picture: file,
+                }));
+                setChanges((prev) => ({
+                  ...prev,
+                  picture: file,
+                }));
+              }}
+            />
+          </div>
         </div>
         <div className="w-full flex flex-col gap-4">
           <div className="flex flex-col gap-2">

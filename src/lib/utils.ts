@@ -96,6 +96,13 @@ const camelToSnakeString = (str: string): string => {
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 };
 
+export const toSnakeCase = (str: string) => {
+  return str
+    .replace(/([a-z])([A-Z])/g, "$1_$2")
+    .replace(/[\s\-]+/g, "_")
+    .toLowerCase();
+};
+
 export const isEmpty = (obj: object): boolean => {
   return Object.keys(obj).length === 0;
 };

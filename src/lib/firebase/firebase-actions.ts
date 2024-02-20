@@ -1,3 +1,7 @@
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { toSnakeCase } from "../utils";
+import { storage } from ".";
+
 export class UserService {
   static async getUserData(uid: string) {
     return (
@@ -124,4 +128,21 @@ export class ConfiguratorService {
   //     })
   //   ).json();
   // }
+}
+
+export class FileService {
+  static async addFile(uid: string, file: File | null | undefined) {
+    if (!file || !uid) return;
+    const fileName = `${toSnakeCase("profile")}_${uid}`;
+
+    try {
+      const storageRef = ref(storage, `users/${uid}/profile/${fileName}`);
+      const upload = await uploadBytesResumable(storageRef, file);
+      const url = await getDownloadURL(upload.ref);
+      return url;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
 }

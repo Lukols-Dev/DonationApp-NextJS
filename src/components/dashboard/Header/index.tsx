@@ -6,10 +6,12 @@ import { generalSans } from "@/fonts";
 import TooltipWrapper from "@/components/ui/tooltip";
 import MailTo from "@/components/ui/mail-to";
 import AvatarDropDown from "@/components/common/Buttons/AvatarDropdown";
+import getCurrentUser from "@/lib/auth-actions";
 
 const font = generalSans.bold.className;
 
-const HeaderDashboard = () => {
+const HeaderDashboard = async () => {
+  const currentUser: { picture: string } = await getCurrentUser();
   return (
     <header className="w-full bg-transparent">
       <Container>
@@ -27,7 +29,7 @@ const HeaderDashboard = () => {
             <TooltipWrapper description="Powiadomienia">
               <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
             </TooltipWrapper>
-            <AvatarDropDown />
+            <AvatarDropDown src={currentUser.picture} />
           </div>
           <div className="flex md:hidden">{/* <Menu /> */}</div>
         </div>

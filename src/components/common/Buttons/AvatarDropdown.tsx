@@ -3,10 +3,14 @@ import DropDownWrapper from "@/components/ui/dropdown-menu";
 import { DropDownMenuItem } from "@/types";
 import LogOutBtn from "./LogoutBtn";
 
-const AvatarDropDown = () => {
+interface Props {
+  src: string;
+}
+
+const AvatarDropDown = ({ src }: Props) => {
   return (
     <DropDownWrapper items={items}>
-      <Avatar />
+      <Avatar src={src} />
     </DropDownWrapper>
   );
 };

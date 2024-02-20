@@ -18,7 +18,8 @@ import { calculateIncomeSummary, formatNumber } from "@/lib/utils";
 const UserPage = async () => {
   let summary: any;
   let barchatSummary: any;
-  const currentUser: { uid: string; nick: string } = await getCurrentUser();
+  const currentUser: { uid: string; nick: string; picture: string } =
+    await getCurrentUser();
   const url = await PaymentService.getCheckout(currentUser.uid);
   const news = await NewsService.getNews();
 
@@ -70,7 +71,7 @@ const UserPage = async () => {
               <CardContent className="h-full">
                 <div className="w-full h-full flex flex-col items-center justify-between">
                   <div className="h-24 w-24">
-                    <Avatar fill />
+                    <Avatar fill src={currentUser.picture} />
                   </div>
                   <p className="text-2xl text-[#343C6A]">{currentUser.nick}</p>
                   <InputCopy
