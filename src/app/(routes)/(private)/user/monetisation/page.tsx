@@ -82,7 +82,7 @@ const MonetisationPage = async () => {
               </div>
             </CardContent>
           </Card>
-          {!url || !validateRequiredData(currentUser) ? (
+          {!url || validateRequiredData(currentUser) ? (
             <div className="w-full h-full flex flex-col items-center justify-center bg-white/80 absolute gap-4 font-bold">
               Aby odblokować funkcję musisz:
               {!url && (
@@ -90,7 +90,7 @@ const MonetisationPage = async () => {
                   - Wygenerować URL strony z płatnościami.
                 </div>
               )}
-              {!validateRequiredData(currentUser) && (
+              {validateRequiredData(currentUser) && (
                 <div className="font-normal">
                   - Uzupełnić wszystkie dane konta.{" "}
                   <Link

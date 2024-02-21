@@ -113,23 +113,12 @@ export const formatNumber = (number: number) => {
 
 export const validateRequiredData = (curr: any) => {
   const requiredFields = [
-    "address",
-    "surname",
-    "email",
-    "company_address",
-    "post_code",
-    "name",
-    "nick",
-    "company_nip",
-    "city",
-    "country",
-    "bank",
-    "company_name",
+    "charges_enabled",
+    "details_enabled",
+    "payouts_enabled",
   ];
 
-  const missingFields = requiredFields.filter(
-    (field) => !curr[field] || curr[field].trim() === ""
-  );
+  const missingFields = requiredFields.filter((field) => !!curr[field]);
 
   if (missingFields.length > 0) {
     return false;
