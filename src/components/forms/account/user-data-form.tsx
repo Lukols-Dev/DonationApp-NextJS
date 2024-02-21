@@ -73,6 +73,12 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
         });
       }
 
+      if (changes.socials && pid) {
+        await PaymentPageService.updatePaymentPageInfo(pid, {
+          socials: changes.socials,
+        });
+      }
+
       if (changes.picture && pid) {
         const pictureUrl = await FileService.addFile(uid, changes.picture);
         await UserService.updateUserData(uid, { picture: pictureUrl });

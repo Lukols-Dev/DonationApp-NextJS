@@ -70,7 +70,7 @@ const PaymentPage = async (props: Page) => {
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">
               <p>{nick}</p>
             </div>
-            {isEmpty(socials) ? (
+            {!isEmpty(socials) ? (
               <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
                 {socialOrder.map((key) => {
                   const href = socials[key];
