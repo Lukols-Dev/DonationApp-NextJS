@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { UserService } from "@/lib/firebase/firebase-actions";
+import { stripe } from "@/lib/stripe";
 import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -16,14 +17,15 @@ type UserBillingData = {
   account_type: string;
   name: string;
   surname: string;
-  country: string;
-  address: string;
-  city: string;
-  post_code: string;
   company_name: string;
   company_nip: string;
-  company_address: string;
+  city: string;
+  post_code: string;
+  country: string;
+  address: string;
   bank: string;
+  person_id: string;
+  connect_acc: string;
 };
 
 const UserBillingForm = ({ uid, data }: Props) => {
@@ -32,17 +34,50 @@ const UserBillingForm = ({ uid, data }: Props) => {
     account_type: "",
     name: "",
     surname: "",
-    country: "",
     address: "",
     city: "",
-    post_code: "",
     company_name: "",
-    company_address: "",
+    post_code: "",
     company_nip: "",
+    country: "",
     bank: "",
+    person_id: "",
+    connect_acc: "",
   });
 
-  const initUserData = () => {
+  const initUserData = async () => {
+    if (data.connect_acc && data.person_id) {
+      const account = await stripe.accounts.retrieve(data.connect_acc);
+      const person = await stripe.accounts.retrievePerson(
+        data.connect_acc,
+        data.person_id
+      );
+
+      data = {
+        ...data,
+        ...{
+          name: person.first_name,
+          surname: person.last_name,
+          country: account.country,
+          company_name: account.company?.name,
+          address:
+            account.business_type === "company"
+              ? account.company?.address?.line1 +
+                " " +
+                account.company?.address?.line2
+              : person.address?.line1 + " " + person.address?.line2,
+          city:
+            account.business_type === "company"
+              ? account.company?.address?.city
+              : person.address?.city,
+          post_code:
+            account.business_type === "company"
+              ? account.company?.address?.postal_code
+              : person.address?.postal_code,
+          bank: "PL2123",
+        },
+      };
+    }
     setValues({ ...values, ...data });
   };
 
@@ -188,8 +223,8 @@ const UserBillingForm = ({ uid, data }: Props) => {
               />
               <Input
                 label="Adres"
-                value={values.company_address}
-                onChange={(e) => handleChange(e, "company_address")}
+                value={values.address}
+                onChange={(e) => handleChange(e, "address")}
               />
             </div>
           </div>

@@ -32,3 +32,17 @@ export type PaymentPageData = {
   payment_methods: string[];
   socials: Record<string, string>;
 };
+
+export type StripeCustomerType = {
+  email: string;
+  name: string;
+  address: Address;
+};
+
+export type Address = {
+  city: string;
+  country: string;
+  line1: string;
+  postal_code: string;
+  state: string;
+};

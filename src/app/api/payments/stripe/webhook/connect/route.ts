@@ -1,0 +1,109 @@
+import getCurrentUser, { getSession } from "@/lib/auth-actions";
+import { firestore } from "@/lib/firebase";
+import { UserService } from "@/lib/firebase/firebase-actions";
+import { stripe } from "@/lib/stripe";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { headers } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
+
+const stripeWebhookEvents = new Set(["account.updated", "person.created"]);
+
+export async function POST(req: NextRequest) {
+  let stripeEvent: Stripe.Event;
+  const body = await req.text();
+  const sig = headers().get("Stripe-Signature");
+  const webhookSecret =
+    process.env.STRIPE_WEBHOOK_SECRET_LIVE ?? process.env.STRIPE_WEBHOOK_SECRET;
+  try {
+    if (!sig || !webhookSecret) {
+      console.log(
+        "🔴 Error Stripe webhook secret or the signature does not exist."
+      );
+      return;
+    }
+    stripeEvent = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+  } catch (error: any) {
+    console.log(`🔴 Error ${error.message}`);
+    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+  }
+  console.log("stripeEvent: ", stripeEvent.type);
+  //
+  try {
+    if (stripeWebhookEvents.has(stripeEvent.type)) {
+      switch (stripeEvent.type) {
+        case "account.updated": {
+          const accountUpdatedData = stripeEvent.data.object as Stripe.Account;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", accountUpdatedData.id)
+          );
+          const existingUser = await getDocs(existingQuery);
+
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            account_type: accountUpdatedData.business_type,
+            charges_enabled: !!accountUpdatedData.charges_enabled,
+            payouts_enabled: !!accountUpdatedData.payouts_enabled,
+            details_enabled: !!accountUpdatedData.details_submitted,
+          });
+          break;
+        }
+        case "person.created": {
+          const createdPersonData = stripeEvent.data.object as Stripe.Person;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", createdPersonData.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            person_id: createdPersonData.id,
+          });
+          break;
+        }
+
+        case "account.external_account.created": {
+          const createdBankData = stripeEvent.data
+            .object as Stripe.ExternalAccount;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", createdBankData.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            bank_id: createdBankData.id,
+          });
+          break;
+        }
+
+        default:
+          console.log("👉🏻 Unhandled relevant event!", stripeEvent.type);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return new NextResponse("🔴 Webhook Error", { status: 400 });
+  }
+  return NextResponse.json(
+    {
+      webhookActionReceived: true,
+    },
+    {
+      status: 200,
+    }
+  );
+}
