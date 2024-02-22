@@ -10,10 +10,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import StripeCheckoutForm from "./stripe-checkout";
+import { calculateApplicationFeeAmount } from "@/lib/utils";
+import { PaymentMethodFees } from "@/types";
 
 interface Props {
   uid: string;
   connectAcc?: string;
+  appFees: { app_fee: number; fees: PaymentMethodFees };
   paymentMethod: string[];
 }
 
@@ -26,9 +29,18 @@ type MessageData = {
   payment_status: string;
   status: string[];
   summaryPrice: number;
+  amount_fees: {
+    amount_after_app_fee: number;
+    amount_app_fee: number;
+    amount_before_app_fee: number;
+  };
+  fees: {
+    app: number;
+    method: number;
+  };
 };
 
-const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
+const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   const { toast } = useToast();
   const [values, setValues] = useState<MessageData>({
     nick: "",
@@ -39,7 +51,18 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
     payment_status: "pending",
     status: ["queue"],
     summaryPrice: 0,
+    amount_fees: {
+      amount_after_app_fee: 0,
+      amount_app_fee: 0,
+      amount_before_app_fee: 0,
+    },
+    fees: {
+      app: 0,
+      method: 0,
+    },
   });
+
+  const [appFee, setAppFee] = useState<number>(0);
 
   if (!connectAcc) return;
 
@@ -52,7 +75,10 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
     try {
       await MessagesService.addNewMessage(uid, {
         ...values,
-        ...{ payment_intent: intent },
+        ...{
+          payment_intent: intent,
+          amount_after_fees: values.amount_fees.amount_after_app_fee,
+        },
       });
       toast({
         variant: "default",
@@ -68,6 +94,15 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
         payment_status: "",
         status: ["queue"],
         summaryPrice: 0,
+        amount_fees: {
+          amount_after_app_fee: 0,
+          amount_app_fee: 0,
+          amount_before_app_fee: 0,
+        },
+        fees: {
+          app: 0,
+          method: 0,
+        },
       });
     } catch (err) {
       toast({
@@ -102,9 +137,37 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
     }));
   };
 
+  const getAppFees = () => {
+    if (!appFees) return;
+    const value = calculateApplicationFeeAmount(
+      values.summaryPrice,
+      appFees.app_fee,
+      values.payment_method,
+      appFees.fees
+    );
+    setValues((prevValues) => ({
+      ...prevValues,
+      ...{
+        amount_fees: {
+          amount_after_app_fee: value.amountAfterAppFee,
+          amount_app_fee: value.amountAppFee,
+          amount_before_app_fee: value.amountBeforeAppFee,
+        },
+        fees: {
+          app: value.appFee,
+          method: value.methodFee,
+        },
+      },
+    }));
+  };
+
   useEffect(() => {
     getTotalPrice();
   }, [values.amount]);
+
+  useEffect(() => {
+    getAppFees();
+  }, [values.summaryPrice, appFees.app_fee, appFees.fees]);
 
   return (
     <>
@@ -161,6 +224,7 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
                 intent={intent}
                 amount={values.summaryPrice}
                 account={connectAcc}
+                feesAmount={appFee}
                 onSumbit={onSubmit}
               />
             </Elements>

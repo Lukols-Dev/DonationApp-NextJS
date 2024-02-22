@@ -81,6 +81,12 @@ export class PaymentService {
       })
     ).json();
   }
+
+  static async getAppFees(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/fees/${uid}`)
+    ).json();
+  }
 }
 
 export class PaymentPageService {

@@ -23,6 +23,10 @@ export type PaymentMethod = {
   isActive: boolean;
 };
 
+export type PaymentMethodFees = {
+  [method: string]: number;
+};
+
 export type PaymentPageData = {
   picture?: string;
   id: string;

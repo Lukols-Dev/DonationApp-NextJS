@@ -1,4 +1,4 @@
-import { PaymentMethod } from "@/types";
+import { PaymentMethod, PaymentMethodFees } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -125,4 +125,34 @@ export const validateRequiredData = (curr: any) => {
   } else {
     return true;
   }
+};
+interface FeeCalculationResult {
+  amountBeforeAppFee: number;
+  amountAfterAppFee: number;
+  appFee: number;
+  methodFee: number;
+  amountAppFee: number;
+}
+
+export const calculateApplicationFeeAmount = (
+  totalAmount: number,
+  applicationFeePercent: number,
+  paymentMethod: string,
+  paymentMethodFees: PaymentMethodFees
+): FeeCalculationResult => {
+  let feeAmount = totalAmount * (applicationFeePercent / 100);
+
+  if (paymentMethod in paymentMethodFees) {
+    const additionalFeePercent = paymentMethodFees[paymentMethod];
+    feeAmount += totalAmount * (additionalFeePercent / 100);
+  }
+
+  return {
+    amountAppFee: Math.round((feeAmount + Number.EPSILON) * 100) / 100,
+    amountBeforeAppFee: totalAmount,
+    amountAfterAppFee:
+      totalAmount - Math.round((feeAmount + Number.EPSILON) * 100) / 100,
+    appFee: applicationFeePercent,
+    methodFee: paymentMethodFees[paymentMethod],
+  };
 };

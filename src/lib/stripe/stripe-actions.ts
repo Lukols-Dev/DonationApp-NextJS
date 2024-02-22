@@ -1,6 +1,7 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { stripe } from ".";
 import { firestore } from "../firebase";
+import { calculateApplicationFeeAmount } from "../utils";
 
 export const createPaymentIntent = async (method: string, account: string) => {
   try {
@@ -26,13 +27,15 @@ export const createPaymentIntent = async (method: string, account: string) => {
 export const updatePaymentIntent = async (
   intent: string,
   amount: number,
-  account: string
+  account: string,
+  app_fee: number
 ) => {
   try {
     const paymentIntent = await stripe.paymentIntents.update(
       intent,
       {
         amount: amount * 100,
+        application_fee_amount: app_fee,
       },
       { stripeAccount: account }
     );

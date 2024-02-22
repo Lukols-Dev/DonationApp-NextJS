@@ -3,11 +3,13 @@ import Magnetic from "@/components/common/Magnetic";
 import CheckoutForm from "@/components/forms/payment/checkout-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PaymentPageService } from "@/lib/firebase/firebase-actions";
+import {
+  PaymentPageService,
+  PaymentService,
+} from "@/lib/firebase/firebase-actions";
 import { isEmpty } from "@/lib/utils";
 import { PaymentPageData } from "@/types";
 import { Page } from "@/types/page";
-import { Send } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -26,6 +28,8 @@ const PaymentPage = async (props: Page) => {
     uid,
     connect_acc,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
+  const fees = await PaymentService.getAppFees(uid);
+
   return (
     <main className="w-screen min-h-screen flex flex-col relative">
       <Image
@@ -55,6 +59,7 @@ const PaymentPage = async (props: Page) => {
                 paymentMethod={payment_methods}
                 uid={uid}
                 connectAcc={connect_acc}
+                appFees={fees}
               />
             ) : (
               <div className="mx-auto my-auto">

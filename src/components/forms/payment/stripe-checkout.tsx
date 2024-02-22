@@ -1,4 +1,6 @@
 import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
+import { calculateApplicationFeeAmount } from "@/lib/utils";
+import { PaymentMethodFees } from "@/types";
 import {
   PaymentElement,
   useElements,
@@ -11,6 +13,7 @@ interface Props {
   intent?: string;
   amount: number;
   account: string;
+  feesAmount: number;
   onSumbit: () => void;
 }
 
@@ -19,6 +22,7 @@ const StripeCheckoutForm = ({
   intent,
   amount,
   account,
+  feesAmount,
   onSumbit,
 }: Props) => {
   const stripe = useStripe();
@@ -30,7 +34,7 @@ const StripeCheckoutForm = ({
       return;
     }
     await onSumbit();
-    await updatePaymentIntent(intent, amount, account);
+    await updatePaymentIntent(intent, amount, account, feesAmount);
 
     const { error } = await stripe.confirmPayment({
       elements,
