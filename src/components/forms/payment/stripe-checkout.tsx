@@ -40,7 +40,7 @@ const StripeCheckoutForm = ({
       },
     });
 
-    console.log("error: ", error);
+    console.log("Payment Error: ", error);
   };
   return (
     <form onClick={handleSubmit} className="flex flex-col gap-9">

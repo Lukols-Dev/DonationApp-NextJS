@@ -14,7 +14,12 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripeWebhookEvents = new Set(["account.updated", "person.created"]);
+const stripeWebhookEvents = new Set([
+  "account.updated",
+  "person.created",
+  "charge.succeeded",
+  "payment_intent.succeeded",
+]);
 
 export async function POST(req: NextRequest) {
   let stripeEvent: Stripe.Event;
@@ -87,6 +92,79 @@ export async function POST(req: NextRequest) {
           await updateDoc(doc(firestore, "users", paymentDoc.id), {
             bank_id: createdBankData.id,
           });
+          break;
+        }
+
+        case "payment_intent.succeeded": {
+          const dataPaymentIntentSucceeded = stripeEvent.data
+            .object as Stripe.PaymentIntent;
+          console.log(
+            "data payment_intent.succeeded: ",
+            dataPaymentIntentSucceeded
+          );
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where(
+              "connect_acc",
+              "==",
+              dataPaymentIntentSucceeded.metadata.account
+            )
+          );
+          const existingUser = await getDocs(existingQuery);
+          const userDoc = existingUser.docs[0];
+          const messagecColl = collection(
+            firestore,
+            "users",
+            userDoc.id,
+            "messages"
+          );
+          const existingQueryMes = query(
+            messagecColl,
+            where("payment_intent", "==", dataPaymentIntentSucceeded.id)
+          );
+          const existingMes = await getDocs(existingQueryMes);
+          const messDoc = existingMes.docs[0];
+          await updateDoc(
+            doc(firestore, "users", userDoc.id, "messages", messDoc.id),
+            {
+              payment_status: dataPaymentIntentSucceeded.status,
+            }
+          );
+
+          break;
+        }
+
+        case "charge.succeeded": {
+          const dataChargeSucceded = stripeEvent.data.object as Stripe.Charge;
+          console.log("data charge.succeeded: ", dataChargeSucceded);
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", dataChargeSucceded.metadata.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+          const userDoc = existingUser.docs[0];
+          const messagecColl = collection(
+            firestore,
+            "users",
+            userDoc.id,
+            "messages"
+          );
+          const existingQueryMes = query(
+            messagecColl,
+            where("payment_intent", "==", dataChargeSucceded.payment_intent)
+          );
+          const existingMes = await getDocs(existingQueryMes);
+          const messDoc = existingMes.docs[0];
+          await updateDoc(
+            doc(firestore, "users", userDoc.id, "messages", messDoc.id),
+            {
+              charge_id: dataChargeSucceded.id,
+              charge_paid: dataChargeSucceded.paid,
+              recipt_url: dataChargeSucceded.receipt_url,
+            }
+          );
           break;
         }
 

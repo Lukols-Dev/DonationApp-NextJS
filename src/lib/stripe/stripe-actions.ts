@@ -7,7 +7,7 @@ export const createPaymentIntent = async (method: string, account: string) => {
     const intent = await stripe.paymentIntents.create(
       {
         metadata: {
-          // store: store,
+          account: account,
         },
         amount: 5000,
         currency: "pln",

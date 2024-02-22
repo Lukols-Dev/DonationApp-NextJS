@@ -50,7 +50,10 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
 
   const onSubmit = async () => {
     try {
-      await MessagesService.addNewMessage(uid, values);
+      await MessagesService.addNewMessage(uid, {
+        ...values,
+        ...{ payment_intent: intent },
+      });
       toast({
         variant: "default",
         title: "Sukces",
