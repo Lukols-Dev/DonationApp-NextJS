@@ -2,20 +2,44 @@ import { doc, updateDoc } from "firebase/firestore";
 import { stripe } from ".";
 import { firestore } from "../firebase";
 
-export const createPaymentIntent = async (method: string) => {
+export const createPaymentIntent = async (method: string, account: string) => {
   try {
-    const intent = await stripe.paymentIntents.create({
-      metadata: {
-        // store: store,
+    const intent = await stripe.paymentIntents.create(
+      {
+        metadata: {
+          // store: store,
+        },
+        amount: 5000,
+        currency: "pln",
+        description: `Wspardzie na dalszy rozwój działalności.`,
+        payment_method_types: [method],
       },
-      amount: 2000,
-      currency: "pln",
-      description: "payment intent",
-      payment_method_types: [method],
-    });
-    return { clientSecret: intent.client_secret };
+      { stripeAccount: account }
+    );
+    return { secret: intent.client_secret, intent: intent.id };
   } catch (error) {
     console.error("Error creating payment intent: ", error);
+    return null;
+  }
+};
+
+export const updatePaymentIntent = async (
+  intent: string,
+  amount: number,
+  account: string
+) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.update(
+      intent,
+      {
+        amount: amount * 100,
+      },
+      { stripeAccount: account }
+    );
+
+    return paymentIntent;
+  } catch (err) {
+    console.error("Error updating payment intent: ", err);
     return null;
   }
 };

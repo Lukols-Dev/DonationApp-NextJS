@@ -6,17 +6,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { useCheckout } from "@/hooks/useCheckout";
 import { MessagesService } from "@/lib/firebase/firebase-actions";
 import { getStripe } from "@/lib/stripe/stripe-client";
-import {
-  Elements,
-  LinkAuthenticationElement,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
-import { Send } from "lucide-react";
+import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import StripeCheckoutForm from "./stripe-checkout";
 
 interface Props {
   uid: string;
+  connectAcc?: string;
   paymentMethod: string[];
 }
 
@@ -28,9 +25,10 @@ type MessageData = {
   payment_method: string;
   payment_status: string;
   status: string[];
+  summaryPrice: number;
 };
 
-const CheckoutForm = ({ uid, paymentMethod }: Props) => {
+const CheckoutForm = ({ uid, paymentMethod, connectAcc }: Props) => {
   const { toast } = useToast();
   const [values, setValues] = useState<MessageData>({
     nick: "",
@@ -40,9 +38,15 @@ const CheckoutForm = ({ uid, paymentMethod }: Props) => {
     payment_method: "card",
     payment_status: "pending",
     status: ["queue"],
+    summaryPrice: 0,
   });
 
-  const { loading, clientSecret } = useCheckout(values.payment_method);
+  if (!connectAcc) return;
+
+  const { loading, clientSecret, intent } = useCheckout(
+    values.payment_method,
+    connectAcc
+  );
 
   const onSubmit = async () => {
     try {
@@ -60,6 +64,7 @@ const CheckoutForm = ({ uid, paymentMethod }: Props) => {
         payment_method: "card",
         payment_status: "",
         status: ["queue"],
+        summaryPrice: 0,
       });
     } catch (err) {
       toast({
@@ -87,6 +92,17 @@ const CheckoutForm = ({ uid, paymentMethod }: Props) => {
     setValues({ ...values, [field]: value });
   };
 
+  const getTotalPrice = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      summaryPrice: prevValues.amount,
+    }));
+  };
+
+  useEffect(() => {
+    getTotalPrice();
+  }, [values.amount]);
+
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -113,6 +129,7 @@ const CheckoutForm = ({ uid, paymentMethod }: Props) => {
           value={values.description}
           onChange={(e) => handleChange(e, "description")}
         />
+        <div>Podsumowanie: {values.summaryPrice}</div>
         Metody Płatności
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {paymentMethod.map((item: string) => (
@@ -131,28 +148,24 @@ const CheckoutForm = ({ uid, paymentMethod }: Props) => {
           ))}
         </ul>
         <div className="mt-9">
-          {loading ? (
-            <div className="h-[100px] w-full"></div>
-          ) : (
+          {!loading ? (
             <Elements
-              stripe={getStripe()}
+              stripe={getStripe(connectAcc)}
               options={{ clientSecret: clientSecret }}
             >
-              <div id="payment-form">
-                {/* <LinkAuthenticationElement id="link-authentication-element" /> */}
-                <PaymentElement id="payment-element" />
-              </div>
+              <StripeCheckoutForm
+                loadingForm={loading}
+                intent={intent}
+                amount={values.summaryPrice}
+                account={connectAcc}
+                onSumbit={onSubmit}
+              />
             </Elements>
+          ) : (
+            <></>
           )}
         </div>
-        {/* <Input id="email" className="pr-9" label="Email" /> */}
       </div>
-      <button
-        className="w-full sm:w-[160px] py-2 ml-auto mr-0 mt-auto mb-0 flex items-center justify-center gap-4 text-white bg-[#1814F3] rounded-md relative"
-        onClick={onSubmit}
-      >
-        WYŚLIJ <Send className="w-6 h-6 absolute right-2" />
-      </button>
     </>
   );
 };

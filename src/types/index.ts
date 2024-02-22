@@ -31,6 +31,7 @@ export type PaymentPageData = {
   nick: string;
   payment_methods: string[];
   socials: Record<string, string>;
+  connect_acc?: string;
 };
 
 export type StripeCustomerType = {
