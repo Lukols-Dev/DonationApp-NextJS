@@ -72,6 +72,7 @@ export const POST = async (req: Request) => {
         twitter: "",
         youtube: "",
       },
+      connect_acc: data.connect_acc || "",
     });
 
     const dataPayment = {

@@ -82,6 +82,18 @@ export class PaymentService {
     ).json();
   }
 
+  static async addPaymentFees(uid: string, connect_acc: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/fees`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uid, connect_acc }),
+      })
+    ).json();
+  }
+
   static async getAppFees(uid: string) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/fees/${uid}`)

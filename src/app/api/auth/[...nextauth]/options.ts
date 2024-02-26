@@ -54,15 +54,29 @@ export const authOptions = {
     }),
   }),
   callbacks: {
+    async jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: any;
+      user: any;
+      trigger: any;
+      session: any;
+    }): Promise<any> {
+      if (user) {
+        token.uid = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
     async session({ session, token }: any): Promise<any> {
       if (token.sub && session.user) {
         session.user.uid = token.sub;
       }
 
       return session;
-    },
-    async jwt({ token }: any) {
-      return token;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

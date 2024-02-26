@@ -24,7 +24,7 @@ const PaymentPage = async (props: Page) => {
     socials,
     description,
     payment_methods,
-    picture,
+    profile_img,
     uid,
     connect_acc,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
@@ -73,7 +73,7 @@ const PaymentPage = async (props: Page) => {
                 className="object-cover object-center"
                 alt="Payment User"
                 fill
-                src={picture || ""}
+                src={profile_img || ""}
               />
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">

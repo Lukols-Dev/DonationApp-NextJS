@@ -14,8 +14,12 @@ import { validateRequiredData } from "@/lib/utils";
 import ConnectStripeButton from "@/components/dashboard/buttons/connect-stripe-btn";
 
 const MonetisationPage = async () => {
-  const currentUser: { uid: string; nick: string; picture: string } =
-    await getCurrentUser();
+  const currentUser: {
+    uid: string;
+    nick: string;
+    picture: string;
+    connect_acc: string;
+  } = await getCurrentUser();
   const url = await PaymentService.getCheckout(currentUser.uid);
   const fetchedPayments: { count: number; payments: any[] } =
     await PaymentService.getAllPayments(currentUser.uid);
@@ -34,7 +38,7 @@ const MonetisationPage = async () => {
       <section className="w-full h-full gap-4 flex flex-col py-6">
         <Card className="max-w-[300px]">
           <CardContent>
-            {!url ? (
+            {!url && currentUser.connect_acc ? (
               <CheckoutButton uid={currentUser.uid} userData={currentUser} />
             ) : (
               <InputCopy
@@ -43,14 +47,18 @@ const MonetisationPage = async () => {
             )}
           </CardContent>
         </Card>
-        <Card className="max-w-[300px]">
-          <CardContent>
-            <ConnectStripeButton
-              uid={currentUser.uid}
-              userData={currentUser as any}
-            />
-          </CardContent>
-        </Card>
+        {!currentUser.connect_acc ? (
+          <Card className="max-w-[300px]">
+            <CardContent>
+              <ConnectStripeButton
+                uid={currentUser.uid}
+                userData={currentUser as any}
+              />
+            </CardContent>
+          </Card>
+        ) : (
+          <></>
+        )}
         <div className="w-[320px] flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
           Metody płatności
           <span className="text-sm">

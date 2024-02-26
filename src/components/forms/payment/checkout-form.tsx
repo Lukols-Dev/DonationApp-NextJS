@@ -133,17 +133,6 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
     setValues({ ...values, payment_method: method });
   };
 
-  // const handleChange = (
-  //   e:
-  //     | React.ChangeEvent<HTMLInputElement>
-  //     | React.ChangeEvent<HTMLTextAreaElement>,
-  //   field: keyof MessageData
-  // ) => {
-  //   const value =
-  //     field === "amount" ? parseFloat(e.target.value) : e.target.value;
-  //   setValues({ ...values, [field]: value });
-  // };
-
   const handleChange = useCallback(
     (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
