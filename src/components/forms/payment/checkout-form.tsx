@@ -8,10 +8,11 @@ import { MessagesService } from "@/lib/firebase/firebase-actions";
 import { getStripe } from "@/lib/stripe/stripe-client";
 import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import StripeCheckoutForm from "./stripe-checkout";
-import { calculateApplicationFeeAmount } from "@/lib/utils";
+import { calculateApplicationFeeAmount, debounce } from "@/lib/utils";
 import { PaymentMethodFees } from "@/types";
+import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
 
 interface Props {
   uid: string;
@@ -63,16 +64,29 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   });
 
   const [appFee, setAppFee] = useState<number>(0);
+  const [secret, setSecret] = useState<string | null | undefined>("");
 
   if (!connectAcc) return;
 
   const { loading, clientSecret, intent } = useCheckout(
     values.payment_method,
-    connectAcc
+    connectAcc,
+    appFee,
+    values.summaryPrice
   );
 
   const onSubmit = async () => {
+    if (!intent) return;
     try {
+      const newClientSecret = await updatePaymentIntent(
+        intent,
+        values.amount,
+        values.payment_method,
+        appFee
+      );
+
+      await setSecret(newClientSecret?.client_secret);
+
       await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
@@ -119,22 +133,59 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
     setValues({ ...values, payment_method: method });
   };
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-    field: keyof MessageData
-  ) => {
-    const value =
-      field === "amount" ? parseFloat(e.target.value) : e.target.value;
-    setValues({ ...values, [field]: value });
-  };
+  // const handleChange = (
+  //   e:
+  //     | React.ChangeEvent<HTMLInputElement>
+  //     | React.ChangeEvent<HTMLTextAreaElement>,
+  //   field: keyof MessageData
+  // ) => {
+  //   const value =
+  //     field === "amount" ? parseFloat(e.target.value) : e.target.value;
+  //   setValues({ ...values, [field]: value });
+  // };
 
-  const getTotalPrice = () => {
+  const handleChange = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      field: keyof MessageData
+    ) => {
+      const newValue =
+        field === "amount" ? parseFloat(e.target.value) : e.target.value;
+      setValues((prevValues) => ({ ...prevValues, [field]: newValue }));
+    },
+    []
+  );
+
+  const updatePaymentIntentDebounced = useCallback(
+    debounce(async () => {
+      console.log("intent czy dziala: ", intent);
+      if (!connectAcc || !intent) return;
+
+      const newClientSecret = await updatePaymentIntent(
+        intent,
+        values.amount,
+        values.payment_method,
+        appFee
+      );
+      setSecret(newClientSecret?.client_secret);
+    }, 500),
+    []
+  );
+
+  const getTotalPrice = async () => {
     setValues((prevValues) => ({
       ...prevValues,
       summaryPrice: prevValues.amount,
     }));
+    if (intent) {
+      const updateIntent = await updatePaymentIntent(
+        intent,
+        values.amount,
+        values.payment_method,
+        appFee
+      );
+      setSecret(updateIntent?.client_secret);
+    }
   };
 
   const getAppFees = () => {
@@ -159,6 +210,7 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
         },
       },
     }));
+    setAppFee(value.amountAppFee);
   };
 
   useEffect(() => {
@@ -168,6 +220,10 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   useEffect(() => {
     getAppFees();
   }, [values.summaryPrice, appFees.app_fee, appFees.fees]);
+
+  useEffect(() => {
+    updatePaymentIntentDebounced(values.amount);
+  }, [values.amount, updatePaymentIntentDebounced]);
 
   return (
     <>
@@ -214,19 +270,12 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           ))}
         </ul>
         <div className="mt-9">
-          {!loading ? (
+          {clientSecret && !loading ? (
             <Elements
-              stripe={getStripe(connectAcc)}
-              options={{ clientSecret: clientSecret }}
+              stripe={getStripe()}
+              options={{ clientSecret: secret || clientSecret }}
             >
-              <StripeCheckoutForm
-                loadingForm={loading}
-                intent={intent}
-                amount={values.summaryPrice}
-                account={connectAcc}
-                feesAmount={appFee}
-                onSumbit={onSubmit}
-              />
+              <StripeCheckoutForm loadingForm={loading} onSumbit={onSubmit} />
             </Elements>
           ) : (
             <></>

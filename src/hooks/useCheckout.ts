@@ -1,15 +1,21 @@
 import { createPaymentIntent } from "@/lib/stripe/stripe-actions";
 import { useEffect, useState } from "react";
 
-export const useCheckout = (method: string, account: string) => {
+export const useCheckout = (
+  method: string,
+  account: string,
+  appFee: number,
+  amount: number
+) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [clientSecret, setClientSecret] = useState<string | undefined>();
   const [intent, setIntent] = useState<string | undefined>();
 
   const createIntent = async () => {
     setLoading(true);
+
     try {
-      const result = await createPaymentIntent(method, account);
+      const result = await createPaymentIntent(method, account, amount, appFee);
 
       if (result && result.secret && result.intent) {
         setClientSecret(result.secret);
@@ -27,8 +33,9 @@ export const useCheckout = (method: string, account: string) => {
   };
 
   useEffect(() => {
+    if (!appFee || !amount || !method) return;
     createIntent();
-  }, [method]);
+  }, [method, amount, appFee]);
 
   return { loading, clientSecret, intent };
 };

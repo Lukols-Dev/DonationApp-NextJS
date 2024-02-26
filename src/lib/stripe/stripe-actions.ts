@@ -1,22 +1,32 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { stripe } from ".";
 import { firestore } from "../firebase";
-import { calculateApplicationFeeAmount } from "../utils";
 
-export const createPaymentIntent = async (method: string, account: string) => {
+export const createPaymentIntent = async (
+  method: string,
+  account: string,
+  amount: number,
+  appFee: number
+) => {
   try {
-    const intent = await stripe.paymentIntents.create(
-      {
-        metadata: {
-          account: account,
-        },
-        amount: 5000,
-        currency: "pln",
-        description: `Wspardzie na dalszy rozwój działalności.`,
-        payment_method_types: [method],
+    // console.log("method: ", method);
+    // console.log("amount: ", amount);
+    // console.log("appFee: ", Math.round(appFee * 100));
+    if (!method || !amount || !appFee) return null;
+    const intent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100),
+      currency: "pln",
+      description: `Wspardzie na dalszy rozwój działalności.`,
+      payment_method_types: [method],
+      application_fee_amount: Math.round(appFee * 100),
+      metadata: {
+        account: account,
       },
-      { stripeAccount: account }
-    );
+      transfer_data: {
+        destination: account,
+      },
+    });
+
     return { secret: intent.client_secret, intent: intent.id };
   } catch (error) {
     console.error("Error creating payment intent: ", error);
@@ -27,18 +37,19 @@ export const createPaymentIntent = async (method: string, account: string) => {
 export const updatePaymentIntent = async (
   intent: string,
   amount: number,
-  account: string,
-  app_fee: number
+  method: string,
+  appFee: number
 ) => {
+  console.log("intent: ", intent);
+  console.log("amount: ", Math.round(amount * 100));
+  console.log("method: ", method);
+  console.log("app_fee: ", Math.round(appFee * 100));
   try {
-    const paymentIntent = await stripe.paymentIntents.update(
-      intent,
-      {
-        amount: amount * 100,
-        application_fee_amount: app_fee,
-      },
-      { stripeAccount: account }
-    );
+    const paymentIntent = await stripe.paymentIntents.update(intent, {
+      amount: Math.round(amount * 100),
+      application_fee_amount: Math.round(appFee * 100),
+      payment_method_types: [method],
+    });
 
     return paymentIntent;
   } catch (err) {
@@ -46,17 +57,6 @@ export const updatePaymentIntent = async (
     return null;
   }
 };
-
-// export function getStripeOAuthLink(
-//   accountType: "individual" | "company",
-//   state: string
-// ) {
-//   return `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
-//     process.env.NEXT_PUBLIC_STRIPE_CLIEND_ID
-//   }&scope=read_write&redirect_uri=${
-//     process.env.NEXT_PUBLIC_URL
-//   }/${"user/wallet"}&state=${state}`;
-// }
 
 export const getStripeOAuthLink = async (userData: any) => {
   if (!userData) return;
@@ -95,4 +95,26 @@ export const getStripeOAuthLink = async (userData: any) => {
   }
 };
 
-// export const createCustomer = async (customerData)
+export const updateAccPaymentMeth = async () => {
+  // const account = await stripe.accounts.update("acct_1OmKklFafy5qD2Ia", {
+  //   capabilities: {
+  //     blik_payments: { requested: false },
+  //   },
+  // });
+  const capabilities = await stripe.accounts.listCapabilities(
+    "acct_1OmKklFafy5qD2Ia"
+  );
+
+  console.log("acc payment: ", capabilities);
+};
+
+// export function getStripeOAuthLink(
+//   accountType: "individual" | "company",
+//   state: string
+// ) {
+//   return `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
+//     process.env.NEXT_PUBLIC_STRIPE_CLIEND_ID
+//   }&scope=read_write&redirect_uri=${
+//     process.env.NEXT_PUBLIC_URL
+//   }/${"user/wallet"}&state=${state}`;
+// }

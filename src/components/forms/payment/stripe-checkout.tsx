@@ -1,6 +1,3 @@
-import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
-import { calculateApplicationFeeAmount } from "@/lib/utils";
-import { PaymentMethodFees } from "@/types";
 import {
   PaymentElement,
   useElements,
@@ -10,44 +7,38 @@ import { Send } from "lucide-react";
 
 interface Props {
   loadingForm: boolean;
-  intent?: string;
-  amount: number;
-  account: string;
-  feesAmount: number;
   onSumbit: () => void;
 }
 
-const StripeCheckoutForm = ({
-  loadingForm,
-  intent,
-  amount,
-  account,
-  feesAmount,
-  onSumbit,
-}: Props) => {
+const StripeCheckoutForm = ({ loadingForm, onSumbit }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!stripe || !elements || !intent) {
+    if (!stripe || !elements) {
       return;
     }
-    await onSumbit();
-    await updatePaymentIntent(intent, amount, account, feesAmount);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: process.env.NEXT_PUBLIC_URL!,
-      },
-    });
+    try {
+      await onSumbit();
 
-    console.log("Payment Error: ", error);
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_URL}`,
+        },
+      });
+
+      if (error) {
+        console.log("Payment Error: ", error);
+      }
+    } catch (err) {
+      console.log("ERR: ", err);
+    }
   };
   return (
-    <form onClick={handleSubmit} className="flex flex-col gap-9">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-9">
       {loadingForm ? (
         <div className="h-[100px] w-full"></div>
       ) : (

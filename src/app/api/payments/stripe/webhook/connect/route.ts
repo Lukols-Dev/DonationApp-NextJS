@@ -98,10 +98,6 @@ export async function POST(req: NextRequest) {
         case "payment_intent.succeeded": {
           const dataPaymentIntentSucceeded = stripeEvent.data
             .object as Stripe.PaymentIntent;
-          console.log(
-            "data payment_intent.succeeded: ",
-            dataPaymentIntentSucceeded
-          );
           const userColl = collection(firestore, "users");
           const existingQuery = query(
             userColl,
@@ -137,7 +133,6 @@ export async function POST(req: NextRequest) {
 
         case "charge.succeeded": {
           const dataChargeSucceded = stripeEvent.data.object as Stripe.Charge;
-          console.log("data charge.succeeded: ", dataChargeSucceded);
           const userColl = collection(firestore, "users");
           const existingQuery = query(
             userColl,

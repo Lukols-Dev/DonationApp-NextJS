@@ -6,7 +6,9 @@ import {
   PaymentPageService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
+import { updateAccPaymentMeth } from "@/lib/stripe/stripe-actions";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -18,6 +20,7 @@ interface Props {
 }
 
 const CardPayActive = ({ pid, uid, icon, name, checked }: Props) => {
+  const route = useRouter();
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(checked);
 
@@ -31,11 +34,13 @@ const CardPayActive = ({ pid, uid, icon, name, checked }: Props) => {
       isActive: newIsActive,
     };
     try {
+      await updateAccPaymentMeth();
       await PaymentService.addPayment(uid, data);
       await PaymentPageService.updatePaymentPageInfo(pid, {
         paymentMethods: name,
         isActive: newIsActive,
       });
+      route.push("https://dashboard.stripe.com/settings/payment_methods");
       toast({
         variant: "default",
         title: "Sukces",
