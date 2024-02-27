@@ -4,6 +4,7 @@ import Modal from "@/components/modals/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Payment } from "@/components/ui/table";
 import { PaypalPayment } from "@/lib/paypal/paypal-actions";
+import { createPayout } from "@/lib/stripe/stripe-actions";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
@@ -99,11 +100,13 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     setPayouts(payoutSummary);
   }
 
-  const stripePayout = (amount: number) => {
+  const stripePayout = async (amount: number) => {
     if (amount === 0) return;
     setLoading((prev) => ({ ...prev, stripe: true }));
     try {
       // route.push("https://dashboard.stripe.com/test/balance/overview");
+      const resp = await createPayout(5, user.connect_acc);
+      console.log("resp stripe: ", resp);
     } catch (err) {
       setLoading((prev) => ({ ...prev, stripe: false }));
       console.log("Payout error: ", err);

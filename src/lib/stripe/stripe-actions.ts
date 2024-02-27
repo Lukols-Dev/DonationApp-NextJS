@@ -108,6 +108,32 @@ export const updateAccPaymentMeth = async () => {
   console.log("acc payment: ", capabilities);
 };
 
+export const createPayout = async (
+  amount: number,
+  account: string
+  // bankAccountId: string
+) => {
+  try {
+    // const balance = await stripe.balance.retrieve({ stripeAccount: account });
+    // console.log("balance: ", balance);
+
+    const payout = await stripe.payouts.create(
+      {
+        amount: 500,
+        currency: "PLN",
+        // destination: bankAccountId,
+      },
+      {
+        stripeAccount: account,
+      }
+    );
+
+    return payout;
+  } catch (err) {
+    console.log(`Payout failed: `, err);
+  }
+};
+
 // export function getStripeOAuthLink(
 //   accountType: "individual" | "company",
 //   state: string
