@@ -170,3 +170,7 @@ export function debounce(func: any, wait: number) {
     timeout = setTimeout(later, wait);
   };
 }
+
+export const calculateTotalPayout = (payments: any): number => {
+  return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
+};

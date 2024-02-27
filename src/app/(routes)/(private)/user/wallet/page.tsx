@@ -7,13 +7,18 @@ import {
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
 import { columnsWallet } from "@/components/dashboard/columns/columns-wallet";
-import { calculateIncomeSummary, formatNumber } from "@/lib/utils";
+import {
+  calculateIncomeSummary,
+  calculateTotalPayout,
+  formatNumber,
+} from "@/lib/utils";
 import getCurrentUser from "@/lib/auth-actions";
 import { Card } from "@/components/ui/card";
+import CardPayout from "@/components/dashboard/cards/card-payout";
 
 const WalletPage = async () => {
   let summary: any;
-  const currentUser: { uid: string } = await getCurrentUser();
+  const currentUser: { uid: string; email: string } = await getCurrentUser();
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
   const payments: { count: number; payments: any[] } =
@@ -44,7 +49,13 @@ const WalletPage = async () => {
               value={formatNumber(summary.yearly)}
               icon="PLN"
             />
-            <CardStatistic title="Do wypłaty" value="45,231.89" icon="PLN" />
+            <CardPayout
+              title="Do wypłaty"
+              value={calculateTotalPayout(payments.payments)}
+              icon="PLN"
+              payments={payments}
+              user={currentUser}
+            />
           </div>
         </div>
         <div className="flex flex-col text-2xl text-[#333B69] my-2 font-semibold">

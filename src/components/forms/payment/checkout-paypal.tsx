@@ -24,7 +24,7 @@ const PaypalCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
           style={{
             color: "white",
             shape: "rect",
-            label: "donate",
+            label: "paypal",
             height: 50,
           }}
           createOrder={async (data, actions) => {

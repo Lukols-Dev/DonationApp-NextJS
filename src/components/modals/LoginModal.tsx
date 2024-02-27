@@ -17,7 +17,7 @@ const LoginModal: FC = () => {
 
   return (
     <Modal
-      title="ZALOGUJ SIĘ"
+      title="Wypłać pieniądze"
       body={bodyModal}
       isOpen={isOpen}
       onClose={onClose}

@@ -41,6 +41,7 @@ export const POST = async (req: Request) => {
       await updateDoc(doc(firestore, "users", uid, "payment", paymentDoc.id), {
         used: increment(1),
         current_amount: increment(data.amount),
+        payout: increment(data.amount),
       });
 
       return NextResponse.json("Message was sent.", {

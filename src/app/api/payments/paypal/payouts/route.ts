@@ -1,4 +1,14 @@
+import { firestore } from "@/lib/firebase";
 import paypal from "@paypal/payouts-sdk";
+import {
+  collection,
+  doc,
+  getDocs,
+  increment,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 const environment = new paypal.core.SandboxEnvironment(
@@ -7,7 +17,7 @@ const environment = new paypal.core.SandboxEnvironment(
 );
 const client = new paypal.core.PayPalHttpClient(environment);
 
-// Add Paypal order
+// Send paypal money to client acc
 export const POST = async (req: Request) => {
   const { uid, data }: { uid: string; data: any } = await req.json();
   if (!uid && !data.amount && !data.email) {
@@ -30,7 +40,7 @@ export const POST = async (req: Request) => {
             currency: "PLN",
           },
           receiver: data.email,
-          note: "Prowizja za usługę",
+          note: "Wypłata środków z Tipey",
           sender_item_id: "item_1",
         },
       ],
@@ -45,9 +55,23 @@ export const POST = async (req: Request) => {
         message: "Some Error Occured at backend",
       });
     }
-
-    // Your Custom Code for doing something with order
-    // Usually Store an order in the database like MongoDB
+    const paymentsColl = collection(firestore, "users", uid, "payment");
+    const existingPaymentQuery = query(
+      paymentsColl,
+      where("name", "==", "paypal")
+    );
+    const existingPayments = await getDocs(existingPaymentQuery);
+    if (!existingPayments.empty) {
+      const paymentDoc = existingPayments.docs[0];
+      await updateDoc(doc(firestore, "users", uid, "payment", paymentDoc.id), {
+        payout: increment(-data.amount),
+      });
+    } else {
+      return NextResponse.json({
+        status: 404,
+        statusText: "Not Found payment doc",
+      });
+    }
     return NextResponse.json(response, {
       status: 200,
       statusText: "OK",
