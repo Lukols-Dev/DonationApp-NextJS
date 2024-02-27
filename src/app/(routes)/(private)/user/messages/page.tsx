@@ -5,6 +5,7 @@ import CardTable from "@/components/dashboard/cards/card-table";
 import { MessagesService } from "@/lib/firebase/firebase-actions";
 import { columnsMessage } from "@/components/dashboard/columns/columns-message";
 import getCurrentUser from "@/lib/auth-actions";
+import { Clock, MessageCircleMore } from "lucide-react";
 
 const MessagesPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
@@ -19,9 +20,9 @@ const MessagesPage = async () => {
             <CardStatistic
               title="Liczba wiadomości"
               value={messages.count || 0}
-              icon="?"
+              icon={<MessageCircleMore />}
             />
-            <CardStatistic title="W kolejce" value="999" icon="?" />
+            <CardStatistic title="W kolejce" value="999" icon={<Clock />} />
             <CardLegend />
           </div>
         </div>
