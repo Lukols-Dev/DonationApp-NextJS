@@ -13,6 +13,7 @@ import StripeCheckoutForm from "./stripe-checkout";
 import { calculateApplicationFeeAmount, debounce } from "@/lib/utils";
 import { PaymentMethodFees } from "@/types";
 import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
+import PaypalCheckout from "./checkout-paypal";
 
 interface Props {
   uid: string;
@@ -78,19 +79,20 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   const onSubmit = async () => {
     if (!intent) return;
     try {
-      const newClientSecret = await updatePaymentIntent(
-        intent,
-        values.amount,
-        values.payment_method,
-        appFee
-      );
-
-      await setSecret(newClientSecret?.client_secret);
+      if (values.payment_method !== "paypal") {
+        const newClientSecret = await updatePaymentIntent(
+          intent,
+          values.amount,
+          values.payment_method,
+          appFee
+        );
+        await setSecret(newClientSecret?.client_secret);
+      }
 
       await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
-          payment_intent: intent,
+          payment_intent: intent || "",
           amount_after_fees: values.amount_fees.amount_after_app_fee,
         },
       });
@@ -211,6 +213,7 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   }, [values.summaryPrice, appFees.app_fee, appFees.fees]);
 
   useEffect(() => {
+    if (values.payment_method !== "paypal") return;
     updatePaymentIntentDebounced(values.amount);
   }, [values.amount, updatePaymentIntentDebounced]);
 
@@ -259,7 +262,7 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           ))}
         </ul>
         <div className="mt-9">
-          {clientSecret && !loading ? (
+          {clientSecret && !loading && values.payment_method !== "paypal" ? (
             <Elements
               stripe={getStripe()}
               options={{ clientSecret: secret || clientSecret }}
@@ -269,6 +272,17 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           ) : (
             <></>
           )}
+          {values.payment_method === "paypal" ? (
+            <PaypalCheckout
+              uid={uid}
+              amount={values.summaryPrice}
+              appFee={appFee}
+              onSumbit={onSubmit}
+            />
+          ) : (
+            <></>
+          )}
+          {values.payment_method === "sms" ? <div>sms payment</div> : <></>}
         </div>
       </div>
     </>
