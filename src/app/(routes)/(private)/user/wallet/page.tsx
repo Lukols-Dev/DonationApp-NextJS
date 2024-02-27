@@ -26,6 +26,7 @@ const WalletPage = async () => {
 
   if (messages.messages.length > 0) {
     summary = calculateIncomeSummary({ messages: messages.messages });
+    console.log("summ: ", summary);
   } else {
     summary = {
       monthly: 0,
@@ -41,7 +42,7 @@ const WalletPage = async () => {
             <CardStatistic
               title="Aktualny przychód"
               value={formatNumber(summary.monthly)}
-              valueDesc="+20.1% ostatni miesiąc"
+              valueDesc={`${summary.percentageChange} ostatni miesiąc`}
               icon="PLN"
             />
             <CardStatistic

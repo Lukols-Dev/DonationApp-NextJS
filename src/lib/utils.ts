@@ -35,43 +35,102 @@ export const formatTimestamp = ({
   return `${day}.${month}.${year} ${hours}:${minutes}:${secondsStr}`;
 };
 
-export const calculateIncomeSummary = (props: any) => {
+interface Message {
+  create_at: {
+    seconds: number;
+  };
+  amount: number;
+}
+
+interface Props {
+  messages: Message[];
+  year?: number;
+  month?: number;
+}
+
+interface Summaries {
+  monthly: number | null;
+  yearly: number | null;
+  percentageChange: string | null;
+}
+
+export const calculateIncomeSummary = (
+  props: Props
+):
+  | Summaries
+  | { monthly: number; percentageChange: string }
+  | { yearly: number } => {
   const { messages, year, month } = props;
 
-  const summaries = {
+  const summaries: Summaries = {
     monthly: null,
     yearly: null,
+    percentageChange: null,
   };
 
-  const currentYear = year || new Date().getFullYear();
-  const currentMonth = month !== undefined ? month - 1 : new Date().getMonth();
+  const currentYear: number = year || new Date().getFullYear();
+  const currentMonth: number =
+    month !== undefined ? month - 1 : new Date().getMonth();
+  const previousMonth: number = currentMonth === 0 ? 11 : currentMonth - 1;
+  const previousYear: number =
+    currentMonth === 0 ? currentYear - 1 : currentYear;
 
-  const yearlyMessages = messages.filter((message: any) => {
+  const yearlyMessages: Message[] = messages.filter((message: Message) => {
     const messageDate = new Date(message.create_at.seconds * 1000);
     return messageDate.getFullYear() === currentYear;
   });
 
   summaries.yearly = yearlyMessages.reduce(
-    (sum: any, message: any) => sum + message.amount,
+    (sum: number, message: Message) => sum + message.amount,
     0
   );
 
-  if (month !== undefined || year === undefined) {
-    const monthlyMessages = yearlyMessages.filter((message: any) => {
+  const monthlyMessages: Message[] = yearlyMessages.filter(
+    (message: Message) => {
       const messageDate = new Date(message.create_at.seconds * 1000);
       return messageDate.getMonth() === currentMonth;
-    });
+    }
+  );
 
-    summaries.monthly = monthlyMessages.reduce(
-      (sum: any, message: any) => sum + message.amount,
-      0
-    );
+  summaries.monthly = monthlyMessages.reduce(
+    (sum: number, message: Message) => sum + message.amount,
+    0
+  );
+
+  const previousMonthlyMessages: Message[] = messages.filter(
+    (message: Message) => {
+      const messageDate = new Date(message.create_at.seconds * 1000);
+      return (
+        messageDate.getMonth() === previousMonth &&
+        messageDate.getFullYear() === previousYear
+      );
+    }
+  );
+
+  const previousMonthSum: number = previousMonthlyMessages.reduce(
+    (sum: number, message: Message) => sum + message.amount,
+    0
+  );
+
+  if (previousMonthSum > 0) {
+    const change: number =
+      ((summaries.monthly - previousMonthSum) / previousMonthSum) * 100;
+    summaries.percentageChange = `${change >= 0 ? "+" : ""}${Math.round(
+      change
+    )}%`;
+  } else if (summaries.monthly > 0) {
+    summaries.percentageChange = "+100%"; // Jeśli poprzedni miesiąc był równy 0, a ten ma wartość, ustawiamy wzrost na 100%
+  } else {
+    summaries.percentageChange = "0%"; // Jeśli zarówno ten, jak i poprzedni miesiąc mają wartość 0, nie ma zmian procentowych
   }
 
   if (year === undefined && month === undefined) {
     return summaries;
   } else if (month !== undefined) {
-    return { monthly: summaries.monthly };
+    return {
+      monthly: summaries.monthly,
+      percentageChange: summaries.percentageChange,
+    };
   } else {
     return { yearly: summaries.yearly };
   }
@@ -174,3 +233,45 @@ export function debounce(func: any, wait: number) {
 export const calculateTotalPayout = (payments: any): number => {
   return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
 };
+
+// export const calculateIncomeSummary = (props: any) => {
+//   const { messages, year, month } = props;
+
+//   const summaries = {
+//     monthly: null,
+//     yearly: null,
+//   };
+
+//   const currentYear = year || new Date().getFullYear();
+//   const currentMonth = month !== undefined ? month - 1 : new Date().getMonth();
+
+//   const yearlyMessages = messages.filter((message: any) => {
+//     const messageDate = new Date(message.create_at.seconds * 1000);
+//     return messageDate.getFullYear() === currentYear;
+//   });
+
+//   summaries.yearly = yearlyMessages.reduce(
+//     (sum: any, message: any) => sum + message.amount,
+//     0
+//   );
+
+//   if (month !== undefined || year === undefined) {
+//     const monthlyMessages = yearlyMessages.filter((message: any) => {
+//       const messageDate = new Date(message.create_at.seconds * 1000);
+//       return messageDate.getMonth() === currentMonth;
+//     });
+
+//     summaries.monthly = monthlyMessages.reduce(
+//       (sum: any, message: any) => sum + message.amount,
+//       0
+//     );
+//   }
+
+//   if (year === undefined && month === undefined) {
+//     return summaries;
+//   } else if (month !== undefined) {
+//     return { monthly: summaries.monthly };
+//   } else {
+//     return { yearly: summaries.yearly };
+//   }
+// };

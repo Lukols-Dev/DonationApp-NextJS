@@ -43,7 +43,7 @@ const UserPage = async () => {
               <CardStatistic
                 title="Aktualny przychód"
                 value={formatNumber(summary.monthly)}
-                valueDesc="+20.1% ostatni miesiąc"
+                valueDesc={`${summary.percentageChange} ostatni miesiąc`}
                 icon="PLN"
               />
               <CardImage />
