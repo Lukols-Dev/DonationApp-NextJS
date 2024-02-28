@@ -60,7 +60,8 @@ const UserPage = async () => {
           <div>
             <p className="my-4 text-[#333B69] font-semibold">Ostatnie Wpłaty</p>
             <CardTable
-              data={messages.messages.slice(0, 5)}
+              // data={messages.messages.slice(0, 5)}
+              data={getLimitedMessages(messages.messages, 5)}
               columns={columnsLastMessage}
               displayHeader
               displayFooter
@@ -108,4 +109,11 @@ const barchartData = (payments: any) => {
       (index + 1).toString().padStart(2, "0") + "." + new Date().getFullYear(),
     total,
   }));
+};
+
+const getLimitedMessages = (messagesContainer: any, limit: number): any[] => {
+  const sortedMessages = messagesContainer.sort((a: any, b: any) => {
+    return b.create_at.seconds - a.create_at.seconds;
+  });
+  return sortedMessages.slice(0, limit);
 };

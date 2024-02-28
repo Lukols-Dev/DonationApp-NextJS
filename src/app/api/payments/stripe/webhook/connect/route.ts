@@ -1,6 +1,6 @@
 import getCurrentUser, { getSession } from "@/lib/auth-actions";
 import { firestore } from "@/lib/firebase";
-import { UserService } from "@/lib/firebase/firebase-actions";
+import { QueueService, UserService } from "@/lib/firebase/firebase-actions";
 import { stripe } from "@/lib/stripe";
 import {
   collection,
@@ -127,6 +127,14 @@ export async function POST(req: NextRequest) {
               payment_status: dataPaymentIntentSucceeded.status,
             }
           );
+          await QueueService.addToQueue(userDoc.id, {
+            mid: messDoc.id,
+            nick: messDoc.get("nick"),
+            description: messDoc.get("description"),
+            amount: messDoc.get("amount"),
+            amount_after_fees: messDoc.get("amount_after_fees"),
+            currency: messDoc.get("currency"),
+          });
 
           break;
         }

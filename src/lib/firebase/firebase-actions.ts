@@ -70,6 +70,49 @@ export class NotificationService {
   }
 }
 
+export class QueueService {
+  static async getQueue(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`)
+    ).json();
+  }
+
+  static async addToQueue(uid: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: data, uid }),
+      })
+    ).json();
+  }
+
+  static async clearQueue(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  }
+
+  static async deleteFromQueue(uid: string, qid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: { qid: qid }, uid }),
+      })
+    ).json();
+  }
+}
+
 export class PaymentService {
   static async getAllPayments(uid: string) {
     return (
