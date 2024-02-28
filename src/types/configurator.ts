@@ -1,4 +1,5 @@
 export type EditorBtns =
+  | "list"
   | "text"
   | "container"
   | "section"
@@ -12,6 +13,11 @@ export type EditorBtns =
   | "3Col"
   | null;
 
+type ListItem = {
+  id: string;
+  innerText: string;
+};
+
 export type EditorElement = {
   id: string;
   styles: React.CSSProperties;
@@ -19,7 +25,12 @@ export type EditorElement = {
   type: EditorBtns;
   content:
     | EditorElement[]
-    | { href?: string; innerText?: string; src?: string };
+    | {
+        href?: string;
+        innerText?: string | string[];
+        src?: string;
+        number_list_elements?: number;
+      };
 };
 
 export type Editor = {

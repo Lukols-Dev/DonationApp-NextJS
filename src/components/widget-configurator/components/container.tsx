@@ -12,9 +12,10 @@ import { useEditor } from "@/hooks/useEditor";
 
 interface Props {
   element: EditorElement;
+  uid: string;
 }
 
-const Container = ({ element }: Props) => {
+const Container = ({ element, uid }: Props) => {
   const { id, content, name, styles, type } = element;
   const { dispatch, state } = useEditor();
 
@@ -37,6 +38,24 @@ const Container = ({ element }: Props) => {
                 ...defaultStyles,
               },
               type: "text",
+            },
+          },
+        });
+        break;
+      case "list":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: { innerText: "List Element", number_list_elements: 3 },
+              id: v4(),
+              name: "List",
+              styles: {
+                color: "black",
+                ...defaultStyles,
+              },
+              type: "list",
             },
           },
         });
@@ -129,7 +148,7 @@ const Container = ({ element }: Props) => {
 
       {Array.isArray(content) &&
         content.map((childElement) => (
-          <Recursive key={childElement.id} element={childElement} />
+          <Recursive key={childElement.id} element={childElement} uid={uid} />
         ))}
 
       {state.editor.selectedElement.id === element.id &&

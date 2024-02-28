@@ -63,7 +63,7 @@ const WidgetEditor = ({ uid, liveMode }: Props) => {
     >
       {Array.isArray(state.editor.elements) &&
         state.editor.elements.map((childElement) => (
-          <Recursive key={childElement.id} element={childElement} />
+          <Recursive key={childElement.id} element={childElement} uid={uid} />
         ))}
     </div>
   );

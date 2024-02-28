@@ -93,7 +93,32 @@ const StylesTab = (props: Props) => {
       <AccordionItem value="Custom" className="px-6 py-0  ">
         <AccordionTrigger className="!no-underline">Custom</AccordionTrigger>
         <AccordionContent>
-          {state.editor.selectedElement.type === "link" &&
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-4 flex-col">
+                <div className="flex gap-4">
+                  {state.editor.selectedElement.type === "list" &&
+                    !Array.isArray(state.editor.selectedElement.content) && (
+                      <div>
+                        <Label className="text-muted-foreground">
+                          Liczba elementów listy
+                        </Label>
+                        <Input
+                          id="number_list_elements"
+                          placeholder="0"
+                          onChange={handleChangeCustomValues}
+                          value={
+                            state.editor.selectedElement.content
+                              .number_list_elements
+                          }
+                        />
+                      </div>
+                    )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* {state.editor.selectedElement.type === 'link' &&
             !Array.isArray(state.editor.selectedElement.content) && (
               <div className="flex flex-col gap-2">
                 <p className="text-muted-foreground">Link Path</p>
@@ -104,7 +129,7 @@ const StylesTab = (props: Props) => {
                   value={state.editor.selectedElement.content.href}
                 />
               </div>
-            )}
+            )} */}
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="Typography" className="px-6 py-0  border-y-[1px]">

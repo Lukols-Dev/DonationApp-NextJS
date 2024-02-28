@@ -1,6 +1,7 @@
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toSnakeCase } from "../utils";
 import { storage } from ".";
+import { onSnapshot } from "firebase/firestore";
 
 export class UserService {
   static async getUserData(uid: string) {

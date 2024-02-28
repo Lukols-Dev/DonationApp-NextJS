@@ -10,6 +10,7 @@ import { EditorBtns } from "@/types/configurator";
 import TextPlaceholder from "./components/text-placeholder";
 import ContainerPlaceholder from "./components/container-placeholder";
 import MailTo from "@/components/ui/mail-to";
+import ListPlaceholder from "./components/list-placeholder";
 
 type Props = {};
 
@@ -24,6 +25,12 @@ const ComponentsTab = (props: Props) => {
       Component: <TextPlaceholder />,
       label: "Text",
       id: "text",
+      group: "elements",
+    },
+    {
+      Component: <ListPlaceholder />,
+      label: "List",
+      id: "list",
       group: "elements",
     },
     {
