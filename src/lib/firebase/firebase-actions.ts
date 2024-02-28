@@ -39,6 +39,37 @@ export class MessagesService {
   }
 }
 
+export class NotificationService {
+  static async getAllNotifications(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification/${uid}`)
+    ).json();
+  }
+
+  static async addNewNotification(uid: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: data, uid }),
+      })
+    ).json();
+  }
+
+  static async deleteAllNotifications(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification/${uid}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  }
+}
+
 export class PaymentService {
   static async getAllPayments(uid: string) {
     return (

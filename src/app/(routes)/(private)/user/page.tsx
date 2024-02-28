@@ -11,6 +11,7 @@ import getCurrentUser from "@/lib/auth-actions";
 import {
   MessagesService,
   NewsService,
+  NotificationService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
 import { calculateIncomeSummary, formatNumber } from "@/lib/utils";
@@ -25,6 +26,7 @@ const UserPage = async () => {
 
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
+
   if (messages.messages.length > 0) {
     summary = calculateIncomeSummary({ messages: messages.messages });
     barchatSummary = barchartData(messages.messages);
@@ -58,7 +60,7 @@ const UserPage = async () => {
           <div>
             <p className="my-4 text-[#333B69] font-semibold">Ostatnie Wpłaty</p>
             <CardTable
-              data={messages.messages}
+              data={messages.messages.slice(0, 5)}
               columns={columnsLastMessage}
               displayHeader
               displayFooter

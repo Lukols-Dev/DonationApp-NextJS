@@ -7,11 +7,12 @@ import TooltipWrapper from "@/components/ui/tooltip";
 import MailTo from "@/components/ui/mail-to";
 import AvatarDropDown from "@/components/common/Buttons/AvatarDropdown";
 import getCurrentUser from "@/lib/auth-actions";
+import NotificationBtn from "../buttons/notification-dropdown";
 
 const font = generalSans.bold.className;
 
 const HeaderDashboard = async () => {
-  const currentUser: { picture: string } = await getCurrentUser();
+  const currentUser: { picture: string; uid: string } = await getCurrentUser();
   return (
     <header className="w-full bg-transparent">
       <Container>
@@ -26,9 +27,7 @@ const HeaderDashboard = async () => {
                 <HelpCircle className="w-7 h-7 text-[#343C6A] hover:text-blue-700" />
               </MailTo>
             </TooltipWrapper>
-            <TooltipWrapper description="Powiadomienia">
-              <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
-            </TooltipWrapper>
+            <NotificationBtn uid={currentUser.uid} />
             <AvatarDropDown src={currentUser.picture} />
           </div>
           <div className="flex md:hidden">{/* <Menu /> */}</div>

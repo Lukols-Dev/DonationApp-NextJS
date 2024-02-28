@@ -4,7 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useCheckout } from "@/hooks/useCheckout";
-import { MessagesService } from "@/lib/firebase/firebase-actions";
+import {
+  MessagesService,
+  NotificationService,
+} from "@/lib/firebase/firebase-actions";
 import { getStripe } from "@/lib/stripe/stripe-client";
 import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
@@ -95,6 +98,11 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           payment_intent: intent || "",
           amount_after_fees: values.amount_fees.amount_after_app_fee,
         },
+      });
+      await NotificationService.addNewNotification(uid, {
+        amount: values.summaryPrice,
+        mount_after_app_fee: values.amount_fees.amount_after_app_fee,
+        method: values.payment_method,
       });
       toast({
         variant: "default",
