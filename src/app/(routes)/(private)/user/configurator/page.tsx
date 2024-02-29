@@ -8,7 +8,7 @@ const ConfiguratorPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
 
   return (
-    <div className="w-full h-full bg-background overflow-hidden">
+    <div className="w-full h-full bg-white overflow-hidden">
       <EditorProvider subaccountId={"1"} funnelId={"2"} pageDetails={1}>
         <div className="h-full w-full flex justify-center">
           <WidgetEditor uid={currentUser.uid} />

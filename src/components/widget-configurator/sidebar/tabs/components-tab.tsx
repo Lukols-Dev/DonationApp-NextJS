@@ -5,12 +5,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
-// import ContainerPlaceholder from "./container-placeholder";
 import { EditorBtns } from "@/types/configurator";
 import TextPlaceholder from "./components/text-placeholder";
 import ContainerPlaceholder from "./components/container-placeholder";
 import MailTo from "@/components/ui/mail-to";
 import ListPlaceholder from "./components/list-placeholder";
+import DonatePlaceholder from "./components/donate";
 
 type Props = {};
 
@@ -31,6 +31,12 @@ const ComponentsTab = (props: Props) => {
       Component: <ListPlaceholder />,
       label: "Lista Wpłat",
       id: "list",
+      group: "elements",
+    },
+    {
+      Component: <DonatePlaceholder />,
+      label: "Donejt",
+      id: "donate",
       group: "elements",
     },
     {

@@ -1,16 +1,20 @@
 import WidgetEditor from "@/components/widget-configurator/editor";
-import getCurrentUser from "@/lib/auth-actions";
+import { isEmpty } from "@/lib/utils";
 import EditorProvider from "@/providers/widget-configurator/configurator-provider";
+import { Page } from "@/types/page";
+import { notFound } from "next/navigation";
 
-const WidgetPage = async () => {
-  const currentUser: { uid: string } = await getCurrentUser();
+const WidgetPage = async (props: Page) => {
+  const { params } = props;
 
-  if (!currentUser.uid) return;
+  if (isEmpty(params) || !params.id) {
+    return notFound();
+  }
 
   return (
     <div className="h-screen w-screen">
       <EditorProvider subaccountId={"1"} funnelId={"2"} pageDetails={1}>
-        <WidgetEditor uid={currentUser.uid} liveMode={true} />
+        <WidgetEditor uid={params.id} liveMode={true} />
       </EditorProvider>
     </div>
   );

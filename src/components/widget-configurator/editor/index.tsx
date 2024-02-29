@@ -54,7 +54,7 @@ const WidgetEditor = ({ uid, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        "use-automation-zoom-in w-full h-full overflow-scroll mr-[385px] bg-background transition-all rounded-md",
+        "use-automation-zoom-in w-full h-full overflow-scroll mr-[385px] bg-transparent transition-all rounded-md",
         {
           "!p-0 !mr-0": state.editor.liveMode === true,
         }

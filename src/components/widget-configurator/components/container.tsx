@@ -65,6 +65,32 @@ const Container = ({ element, uid }: Props) => {
           },
         });
         break;
+      case "donate":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: {
+                innerText: "Powiadomienie Donejt",
+                amount_type: "amount",
+                list_data_setting: "amount",
+                donate_url:
+                  "https://media1.tenor.com/m/qESlt1Lvj7cAAAAC/ponke-ponkesol.gif",
+                donate_delay: 1000,
+                donate_activation_amount: 1,
+              },
+              id: v4(),
+              name: "Donate",
+              styles: {
+                color: "black",
+                ...defaultStyles,
+              },
+              type: "donate",
+            },
+          },
+        });
+        break;
       case "container":
         dispatch({
           type: "ADD_ELEMENT",
@@ -159,7 +185,7 @@ const Container = ({ element, uid }: Props) => {
       {state.editor.selectedElement.id === element.id &&
         !state.editor.liveMode &&
         state.editor.selectedElement.type !== "__body" && (
-          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold  -top-[25px] -right-[1px] rounded-none rounded-t-lg ">
+          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold text-white -top-[25px] -right-[1px] rounded-none rounded-t-lg z-50">
             <Trash size={16} onClick={handleDeleteElement} />
           </div>
         )}

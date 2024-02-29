@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useEditor } from "@/hooks/useEditor";
+import { Switch } from "@/components/ui/switch";
 
 type Props = {};
 
@@ -146,8 +147,57 @@ const StylesTab = (props: Props) => {
                   </div>
                 </>
               )}
+            {state.editor.selectedElement.type === "donate" &&
+              !Array.isArray(state.editor.selectedElement.content) && (
+                <>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Grafika Donejta
+                    </Label>
+                    <Input
+                      id="donate_url"
+                      placeholder="url()"
+                      onChange={handleChangeCustomValues}
+                      value={state.editor.selectedElement.content.donate_url}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Opóźnienie między donejtami
+                    </Label>
+                    <Input
+                      id="donate_delay"
+                      placeholder="1s"
+                      onChange={handleChangeCustomValues}
+                      value={state.editor.selectedElement.content.donate_delay}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Kwota aktywująca
+                    </Label>
+                    <Input
+                      id="donate_activation_amount"
+                      placeholder="1"
+                      onChange={handleChangeCustomValues}
+                      value={
+                        state.editor.selectedElement.content
+                          .donate_activation_amount
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center gap-x-6">
+                    <Label className="text-muted-foreground">Lektor</Label>
+                    <Switch checked={true} />
+                  </div>
+                  <div className="flex items-center gap-x-6">
+                    <Label className="text-muted-foreground">Kontroler</Label>
+                    <Switch checked={true} />
+                  </div>
+                </>
+              )}
             {(state.editor.selectedElement.type === "list" ||
-              state.editor.selectedElement.type === "text") &&
+              state.editor.selectedElement.type === "donate") &&
               !Array.isArray(state.editor.selectedElement.content) && (
                 <>
                   <div>
