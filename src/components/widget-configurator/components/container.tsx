@@ -30,7 +30,7 @@ const Container = ({ element, uid }: Props) => {
           payload: {
             containerId: id,
             elementDetails: {
-              content: { innerText: "Text Element" },
+              content: { innerText: "Text Element", amount_type: "amount" },
               id: v4(),
               name: "Text",
               styles: {
@@ -48,7 +48,12 @@ const Container = ({ element, uid }: Props) => {
           payload: {
             containerId: id,
             elementDetails: {
-              content: { innerText: "List Element", number_list_elements: 3 },
+              content: {
+                innerText: "List Element",
+                number_list_elements: 3,
+                amount_type: "amount",
+                list_data_setting: "amount",
+              },
               id: v4(),
               name: "List",
               styles: {

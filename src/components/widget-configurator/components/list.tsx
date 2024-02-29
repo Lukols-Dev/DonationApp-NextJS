@@ -6,7 +6,6 @@ import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { EditorElement } from "@/types/configurator";
 import { useEditor } from "@/hooks/useEditor";
-import { MessagesService } from "@/lib/firebase/firebase-actions";
 import {
   collection,
   limit,
@@ -46,36 +45,12 @@ const ListComponent = (props: Props) => {
   const numberOfItems = !Array.isArray(props.element.content)
     ? props.element.content.number_list_elements
     : 0;
-
-  // const getListItem = async () => {
-  //   let fetchItems: { count: number; messages: [] } = {
-  //     count: 0,
-  //     messages: [],
-  //   };
-
-  //   if (state.editor.liveMode) {
-  //     try {
-
-  //       // fetchItems = await MessagesService.getAllMessages(props.uid);
-  //     } catch (err) {
-  //       console.log("Widget list error fetch message: ", err);
-  //     }
-  //   }
-
-  //   const defaultNumberOfItems = !state.editor.liveMode
-  //     ? numberOfItems
-  //     : fetchItems.count;
-  //   const defaultItems = Array.from(
-  //     { length: Number(defaultNumberOfItems) },
-  //     (_, index) => ({
-  //       id: String(index + 1),
-  //       text: `Item ${index + 1}`,
-  //     })
-  //   );
-
-  //   const items = !state.editor.liveMode ? defaultItems : fetchItems.messages;
-  //   setListItems(items);
-  // };
+  const amountType = !Array.isArray(props.element.content)
+    ? props.element.content.amount_type
+    : "amount";
+  const listDataSetting = !Array.isArray(props.element.content)
+    ? props.element.content.list_data_setting
+    : "amount";
 
   const getListItem = async () => {
     const defaultNumberOfItems = !state.editor.liveMode ? numberOfItems : 0;
@@ -94,7 +69,7 @@ const ListComponent = (props: Props) => {
 
     const messagesQuery = query(
       collection(firestore, "users", props.uid, "messages"),
-      orderBy("amount", "desc"),
+      orderBy(String(listDataSetting), "desc"),
       limit(Number(numberOfItems))
     );
 
@@ -152,6 +127,8 @@ const ListComponent = (props: Props) => {
                 content: {
                   innerText: spanElement.innerText,
                   number_list_elements: Number(numberOfItems),
+                  amount_type: String(amountType),
+                  list_data_setting: String(listDataSetting),
                 },
               },
             },
@@ -163,11 +140,11 @@ const ListComponent = (props: Props) => {
       </span>
       {listItems &&
         listItems.map((item: any, index: any) => (
-          <div key={item.id} className="flex justify-between items-center">
+          <div key={item.id}>
             <span>
               {!state.editor.liveMode
                 ? item.text
-                : `${index + 1}. ${item.nick} ${item.amount}`}
+                : `${index + 1}. ${item.nick} ${item[String(amountType)]}`}
             </span>
           </div>
         ))}

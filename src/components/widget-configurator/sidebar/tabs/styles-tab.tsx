@@ -44,7 +44,10 @@ const StylesTab = (props: Props) => {
 
   const handleOnChanges = (e: any) => {
     const styleSettings = e.target.id;
-    let value = e.target.value;
+    let value =
+      styleSettings === "backgroundImage"
+        ? `url(${e.target.value})`
+        : e.target.value;
     const styleObject = {
       [styleSettings]: value,
     };
@@ -93,43 +96,95 @@ const StylesTab = (props: Props) => {
       <AccordionItem value="Custom" className="px-6 py-0  ">
         <AccordionTrigger className="!no-underline">Custom</AccordionTrigger>
         <AccordionContent>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-4 flex-col">
-                <div className="flex gap-4">
-                  {state.editor.selectedElement.type === "list" &&
-                    !Array.isArray(state.editor.selectedElement.content) && (
-                      <div>
-                        <Label className="text-muted-foreground">
-                          Liczba elementów listy
-                        </Label>
-                        <Input
-                          id="number_list_elements"
-                          placeholder="0"
-                          onChange={handleChangeCustomValues}
-                          value={
-                            state.editor.selectedElement.content
-                              .number_list_elements
-                          }
-                        />
-                      </div>
-                    )}
-                </div>
-              </div>
-            </div>
+          <div className="flex gap-4 flex-col">
+            {state.editor.selectedElement.type === "list" &&
+              !Array.isArray(state.editor.selectedElement.content) && (
+                <>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Liczba elementów listy
+                    </Label>
+                    <Input
+                      id="number_list_elements"
+                      placeholder="0"
+                      onChange={handleChangeCustomValues}
+                      value={
+                        state.editor.selectedElement.content
+                          .number_list_elements
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Rodzaj danych
+                    </Label>
+                    <Select
+                      defaultValue={
+                        state.editor.selectedElement.content.list_data_setting
+                      }
+                      onValueChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "list_data_setting",
+                            value: e,
+                          },
+                        })
+                      }
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Wybierz dane" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="amount">Top Wpłaty</SelectItem>
+                          <SelectItem value="create_at">
+                            Ostatnie Wpłaty
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
+            {(state.editor.selectedElement.type === "list" ||
+              state.editor.selectedElement.type === "text") &&
+              !Array.isArray(state.editor.selectedElement.content) && (
+                <>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Wyświetlana kwota
+                    </Label>
+                    <Select
+                      defaultValue={
+                        state.editor.selectedElement.content.amount_type
+                      }
+                      onValueChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "amount_type",
+                            value: e,
+                          },
+                        })
+                      }
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Rodzaj kwoty" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="amount">
+                            Kwota bez prowizji
+                          </SelectItem>
+                          <SelectItem value="amount_after_fees">
+                            Kwota z prowizją
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
           </div>
-          {/* {state.editor.selectedElement.type === 'link' &&
-            !Array.isArray(state.editor.selectedElement.content) && (
-              <div className="flex flex-col gap-2">
-                <p className="text-muted-foreground">Link Path</p>
-                <Input
-                  id="href"
-                  placeholder="https:domain.example.com/pathname"
-                  onChange={handleChangeCustomValues}
-                  value={state.editor.selectedElement.content.href}
-                />
-              </div>
-            )} */}
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="Typography" className="px-6 py-0  border-y-[1px]">
@@ -179,20 +234,22 @@ const StylesTab = (props: Props) => {
             </Tabs>
           </div>
           <div className="flex flex-col gap-2">
-            <p className="text-muted-foreground">Font Family</p>
-            <Input
-              id="DM Sans"
-              onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.fontFamily}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <p className="text-muted-foreground">Color</p>
-            <Input
-              id="color"
-              onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.color}
-            />
+            <Label className="text-muted-foreground">Color</Label>
+            <div className="flex  border-[1px] rounded-md overflow-clip">
+              <div
+                className="w-12"
+                style={{
+                  backgroundColor: state.editor.selectedElement.styles.color,
+                }}
+              />
+              <Input
+                placeholder="black"
+                className="!border-y-0 rounded-none !border-r-0 mr-2"
+                id="color"
+                onChange={handleOnChanges}
+                value={state.editor.selectedElement.styles.color}
+              />
+            </div>
           </div>
           <div className="flex gap-4">
             <div>
@@ -353,6 +410,89 @@ const StylesTab = (props: Props) => {
           </div>
         </AccordionContent>
       </AccordionItem>
+      <AccordionItem value="Positions" className=" px-6 py-0 ">
+        <AccordionTrigger className="!no-underline">Positions</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-4 flex-col">
+                <div>
+                  <Label className="text-muted-foreground">Type</Label>
+                  <Select
+                    onValueChange={(e) =>
+                      handleOnChanges({
+                        target: {
+                          id: "position",
+                          value: e,
+                        },
+                      })
+                    }
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a position" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="relative">Relative</SelectItem>
+                        <SelectItem value="absolute">Absolute</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Top</Label>
+                    <Input
+                      id="top"
+                      placeholder="px/%"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.top}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Bottom</Label>
+                    <Input
+                      placeholder="px/%"
+                      id="bottom"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.bottom}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Left</Label>
+                    <Input
+                      placeholder="px/%"
+                      id="left"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.left}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Right</Label>
+                    <Input
+                      placeholder="px/%"
+                      id="right"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.right}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Z-Index</Label>
+                  <Input
+                    placeholder=""
+                    id="z-index"
+                    onChange={handleOnChanges}
+                    value={state.editor.selectedElement.styles.zIndex}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
       <AccordionItem value="Decorations" className="px-6 py-0 ">
         <AccordionTrigger className="!no-underline">
           Decorations
@@ -456,18 +596,29 @@ const StylesTab = (props: Props) => {
             <Label className="text-muted-foreground">Background Image</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
               <div
-                className="w-12 "
+                className="w-12 bg-center bg-cover"
                 style={{
-                  backgroundImage:
-                    state.editor.selectedElement.styles.backgroundImage,
+                  backgroundPosition: "center",
+                  backgroundSize: "100%",
+                  backgroundImage: `url(${
+                    state.editor.selectedElement.styles.backgroundImage &&
+                    String(state.editor.selectedElement.styles.backgroundImage)
+                      .replace("url(", "")
+                      .replace(")", "")
+                  })`,
                 }}
-              />
+              ></div>
               <Input
                 placeholder="url()"
                 className="!border-y-0 rounded-none !border-r-0 mr-2"
                 id="backgroundImage"
                 onChange={handleOnChanges}
-                value={state.editor.selectedElement.styles.backgroundImage}
+                value={
+                  state.editor.selectedElement.styles.backgroundImage &&
+                  String(state.editor.selectedElement.styles.backgroundImage)
+                    .replace("url(", "")
+                    .replace(")", "")
+                }
               />
             </div>
           </div>

@@ -23,19 +23,19 @@ const ComponentsTab = (props: Props) => {
   }[] = [
     {
       Component: <TextPlaceholder />,
-      label: "Text",
+      label: "Tekst",
       id: "text",
       group: "elements",
     },
     {
       Component: <ListPlaceholder />,
-      label: "List",
+      label: "Lista Wpłat",
       id: "list",
       group: "elements",
     },
     {
       Component: <ContainerPlaceholder />,
-      label: "Container",
+      label: "Kontener",
       id: "container",
       group: "layout",
     },

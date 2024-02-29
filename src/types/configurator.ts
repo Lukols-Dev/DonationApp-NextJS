@@ -30,6 +30,8 @@ export type EditorElement = {
         innerText?: string | string[];
         src?: string;
         number_list_elements?: number;
+        list_data_setting?: string;
+        amount_type?: string;
       };
 };
 
