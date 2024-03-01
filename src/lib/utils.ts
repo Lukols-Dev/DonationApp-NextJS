@@ -234,6 +234,41 @@ export const calculateTotalPayout = (payments: any): number => {
   return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
 };
 
+interface SpeakOptions {
+  text: string;
+  rate?: number; // speed
+  volume?: number; // volume
+  voice?: SpeechSynthesisVoice | string; // voice type
+  pitch?: number; // pitch
+  onEnd?: () => void; // callback
+}
+
+export const speakText = (options: SpeakOptions) => {
+  const synth = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance(options.text);
+
+  utterance.rate = options.rate || 1;
+  utterance.volume = options.volume || 1;
+  utterance.pitch = options.pitch || 1;
+  utterance.lang = "pl-PL";
+
+  if (typeof options.voice === "string") {
+    const voice = synth
+      .getVoices()
+      .find((voice) => voice.name === options.voice);
+    utterance.voice = voice || null;
+  } else if (options.voice instanceof SpeechSynthesisVoice) {
+    utterance.voice = options.voice;
+  }
+
+  if (options.onEnd) {
+    utterance.onend = options.onEnd;
+  }
+
+  console.log("Speech synthesis triggered");
+  synth.speak(utterance);
+};
+
 // export const calculateIncomeSummary = (props: any) => {
 //   const { messages, year, month } = props;
 

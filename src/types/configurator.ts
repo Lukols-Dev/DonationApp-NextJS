@@ -2,6 +2,7 @@ export type EditorBtns =
   | "list"
   | "text"
   | "donate"
+  | "goal"
   | "container"
   | "section"
   | "contactForm"
@@ -36,6 +37,9 @@ export type EditorElement = {
         donate_url?: string;
         donate_delay?: number;
         donate_activation_amount?: number;
+        donate_lector?: boolean;
+        goal_activation?: boolean;
+        goal_max_value?: number;
       };
 };
 

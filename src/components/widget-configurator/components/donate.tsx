@@ -8,6 +8,7 @@ import { EditorElement } from "@/types/configurator";
 import { useEditor } from "@/hooks/useEditor";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
+import { speakText } from "@/lib/utils";
 
 interface Props {
   element: EditorElement;
@@ -16,8 +17,10 @@ interface Props {
 
 const DonateComponent = (props: Props) => {
   const { dispatch, state } = useEditor();
-  const [listItems, setListItems] = useState<any[]>();
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [listItems, setListItems] = useState<any[]>([]);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState<number | null>(
+    null
+  );
   const [isVisible, setIsVisible] = useState(true);
 
   const handleDeleteElement = () => {
@@ -46,63 +49,101 @@ const DonateComponent = (props: Props) => {
   const donateActivationAmount = !Array.isArray(props.element.content)
     ? props.element.content.donate_activation_amount
     : 1;
+  const donateLector = !Array.isArray(props.element.content)
+    ? props.element.content.donate_lector
+    : false;
   const amountType = !Array.isArray(props.element.content)
     ? props.element.content.amount_type
     : "amount";
 
-  const getListItem = async () => {
-    if (!state.editor.liveMode) {
-      return;
-    }
-
-    const messagesQuery = query(
-      collection(firestore, "users", props.uid, "queue"),
-      orderBy("create_at", "desc")
-      // limit(Number(numberOfItems))
-    );
-
-    const unsubscribe = onSnapshot(
-      messagesQuery,
-      (snapshot) => {
-        const fetchedItems = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setListItems(fetchedItems);
-      },
-      (error) => {
-        console.error("Error fetching live messages: ", error);
+  useEffect(() => {
+    if (!donateLector) return;
+    const speechSynthesisSupported = "speechSynthesis" in window;
+    if (!speechSynthesisSupported) {
+      console.warn("Synteza mowy nie jest dostępna w tej przeglądarce.");
+    } else {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        console.warn("Nie znaleziono głosów syntezy mowy.");
       }
-    );
-
-    return unsubscribe;
-  };
+    }
+  }, [donateLector]);
 
   useEffect(() => {
-    getListItem();
+    if (state.editor.liveMode) {
+      const messagesQuery = query(
+        collection(firestore, "users", props.uid, "queue"),
+        orderBy("create_at", "desc")
+      );
+      const unsubscribe = onSnapshot(
+        messagesQuery,
+        (snapshot) => {
+          const fetchedItems = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setListItems(fetchedItems);
+          setCurrentMessageIndex(0);
+        },
+        (error) => {
+          console.error("Error fetching live messages: ", error);
+        }
+      );
+
+      return () => unsubscribe();
+    } else {
+      setListItems(testMessages);
+      setCurrentMessageIndex(0);
+    }
   }, [state.editor.liveMode, props.uid]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setIsVisible((prev) => !prev);
-    }, Number(donateDelay) * 1000);
+    const readMessage = () => {
+      if (
+        currentMessageIndex !== null &&
+        currentMessageIndex < listItems.length
+      ) {
+        const message = listItems[currentMessageIndex];
 
-    return () => clearInterval(intervalId);
-  }, []);
+        if (message[String(amountType)] >= Number(donateActivationAmount)) {
+          speakText({
+            text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
+            rate: 0.9,
+            volume: 0.8,
+            pitch: 1.2,
+            voice: "Google polski",
+            onEnd: () => {
+              setCurrentMessageIndex((currentIndex) =>
+                currentIndex !== null && currentIndex + 1 < listItems.length
+                  ? currentIndex + 1
+                  : null
+              );
+            },
+          });
+        }
+      }
+    };
+
+    if (donateLector && state.editor.liveMode && listItems.length > 0) {
+      readMessage();
+    }
+  }, [currentMessageIndex, listItems, state.editor.liveMode]);
 
   useEffect(() => {
-    const messageChangeInterval = setInterval(() => {
-      setCurrentMessageIndex(
-        (prevIndex) =>
-          (prevIndex + 1) %
-          (!state.editor.liveMode || !listItems
-            ? testMessages.length
-            : listItems.length)
-      );
-    }, Number(donateDelay) * 1000 * (!state.editor.liveMode || !listItems ? testMessages.length : listItems.length));
-
-    return () => clearInterval(messageChangeInterval);
-  }, []);
+    if (
+      currentMessageIndex !== null &&
+      currentMessageIndex < listItems.length
+    ) {
+      const timeoutId = setTimeout(() => {
+        setCurrentMessageIndex((currentIndex) =>
+          currentIndex !== null && currentIndex + 1 < listItems.length
+            ? currentIndex + 1
+            : null
+        );
+      }, 3000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [currentMessageIndex, listItems]);
 
   return (
     <div
@@ -125,60 +166,50 @@ const DonateComponent = (props: Props) => {
             {state.editor.selectedElement.name}
           </Badge>
         )}
-      <span
-        contentEditable={!state.editor.liveMode}
-        className={`transition-opacity duration-700 ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
-      >
+      <div className="text-center relative z-10">
         {!state.editor.liveMode ? (
-          <div className="text-center relative z-10">
+          <>
             <h1 className="font-bold text-4xl text-green-500">500 PLN</h1>
             <h2 className="font-bold text-xl">Nick</h2>
             <p className="font-bold text-lg">Opis wpłaty</p>
             {donateUrl && (
               <img
-                className="absolute transform left-1/2 -translate-x-1/2 "
-                alt={"GIF DONATE"}
+                className="absolute transform left-1/2 -translate-x-1/2"
+                alt="GIF DONATE"
                 width={200}
                 height={200}
                 src={donateUrl}
               />
             )}
-          </div>
+          </>
+        ) : currentMessageIndex !== null ? (
+          <>
+            <h1 className="font-bold text-4xl text-green-500">
+              {amountType
+                ? listItems[currentMessageIndex][amountType]
+                : listItems[currentMessageIndex].amount}{" "}
+              PLN
+            </h1>
+            <h2 className="font-bold text-xl text-black">
+              {listItems[currentMessageIndex].nick}
+            </h2>
+            <p className="font-bold text-lg text-black">
+              {listItems[currentMessageIndex].description}
+            </p>
+            {donateUrl && (
+              <img
+                className="absolute transform left-1/2 -translate-x-1/2"
+                alt="GIF DONATE"
+                width={200}
+                height={200}
+                src={donateUrl}
+              />
+            )}
+          </>
         ) : (
-          listItems &&
-          listItems.map(
-            (message: any, index: any) =>
-              index === currentMessageIndex && (
-                <div key={index} className="text-center relative z-10">
-                  <h1 className="font-bold text-4xl text-green-500">
-                    {!state.editor.liveMode ? 500 : message[String(amountType)]}{" "}
-                    PLN
-                  </h1>
-                  <h2 className="font-bold text-xl">
-                    {!state.editor.liveMode ? "Nick" : message.nick}
-                  </h2>
-                  <p className="font-bold text-lg">
-                    {!state.editor.liveMode
-                      ? "Opis wpłaty"
-                      : message.description}
-                  </p>
-                  {donateUrl && (
-                    <img
-                      className="absolute transform left-1/2 -translate-x-1/2 "
-                      alt={"GIF DONATE"}
-                      width={200}
-                      height={200}
-                      src={donateUrl}
-                    />
-                  )}
-                </div>
-              )
-          )
+          <></>
         )}
-      </span>
-
+      </div>
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
           <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
@@ -200,42 +231,5 @@ const testMessages: any = [
     nick: "User1",
     description: "Dziękuję za stream!",
     amount: 50,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User2",
-    description: "Super robota!",
-    amount: 500,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User3",
-    description: "Super robota!",
-    amount: 1000,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User4",
-    description: "Super robota!",
-    amount: 200,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User5",
-    description: "Super robota!",
-    amount: 500,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User6",
-    description: "Super robota!",
-    amount: 100,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
-  },
-  {
-    nick: "User7",
-    description: "Super robota!",
-    amount: 100,
-    gif: "https://media.tenor.com/CW2KRhVyPJoAAAAi/asd88bet-daftar-gif.gif",
   },
 ];

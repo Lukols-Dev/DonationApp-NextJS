@@ -188,16 +188,48 @@ const StylesTab = (props: Props) => {
                   </div>
                   <div className="flex items-center gap-x-6">
                     <Label className="text-muted-foreground">Lektor</Label>
-                    <Switch checked={true} />
+                    <Switch
+                      id="donate_lector"
+                      checked={
+                        state.editor.selectedElement.content.donate_lector
+                      }
+                      onCheckedChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "donate_lector",
+                            value: e,
+                          },
+                        })
+                      }
+                    />
                   </div>
                   <div className="flex items-center gap-x-6">
                     <Label className="text-muted-foreground">Kontroler</Label>
-                    <Switch checked={true} />
+                    <Switch id="donate_controller" checked={true} />
+                  </div>
+                </>
+              )}
+            {state.editor.selectedElement.type === "goal" &&
+              !Array.isArray(state.editor.selectedElement.content) && (
+                <>
+                  <div>
+                    <Label className="text-muted-foreground">
+                      Docelowa kwota PLN
+                    </Label>
+                    <Input
+                      id="goal_max_value"
+                      placeholder="100"
+                      onChange={handleChangeCustomValues}
+                      value={
+                        state.editor.selectedElement.content.goal_max_value
+                      }
+                    />
                   </div>
                 </>
               )}
             {(state.editor.selectedElement.type === "list" ||
-              state.editor.selectedElement.type === "donate") &&
+              state.editor.selectedElement.type === "donate" ||
+              state.editor.selectedElement.type === "goal") &&
               !Array.isArray(state.editor.selectedElement.content) && (
                 <>
                   <div>

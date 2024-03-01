@@ -79,6 +79,7 @@ const Container = ({ element, uid }: Props) => {
                   "https://media1.tenor.com/m/qESlt1Lvj7cAAAAC/ponke-ponkesol.gif",
                 donate_delay: 1000,
                 donate_activation_amount: 1,
+                donate_lector: false,
               },
               id: v4(),
               name: "Donate",
@@ -87,6 +88,28 @@ const Container = ({ element, uid }: Props) => {
                 ...defaultStyles,
               },
               type: "donate",
+            },
+          },
+        });
+        break;
+      case "goal":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: {
+                innerText: "Cel",
+                amount_type: "amount",
+                list_data_setting: "amount",
+              },
+              id: v4(),
+              name: "Goal",
+              styles: {
+                color: "black",
+                ...defaultStyles,
+              },
+              type: "goal",
             },
           },
         });

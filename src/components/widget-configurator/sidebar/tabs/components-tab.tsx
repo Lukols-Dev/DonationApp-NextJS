@@ -11,6 +11,7 @@ import ContainerPlaceholder from "./components/container-placeholder";
 import MailTo from "@/components/ui/mail-to";
 import ListPlaceholder from "./components/list-placeholder";
 import DonatePlaceholder from "./components/donate";
+import GoalsPlaceholder from "./components/goals-placeholder";
 
 type Props = {};
 
@@ -37,6 +38,12 @@ const ComponentsTab = (props: Props) => {
       Component: <DonatePlaceholder />,
       label: "Donejt",
       id: "donate",
+      group: "elements",
+    },
+    {
+      Component: <GoalsPlaceholder />,
+      label: "Cel Napiwków",
+      id: "goal",
       group: "elements",
     },
     {

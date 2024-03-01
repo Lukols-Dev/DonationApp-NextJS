@@ -4,6 +4,7 @@ import Container from "./container";
 import { EditorElement } from "@/types/configurator";
 import ListComponent from "./list";
 import DonateComponent from "./donate";
+import GoalsComponent from "./goals";
 
 interface Props {
   element: EditorElement;
@@ -18,6 +19,8 @@ const Recursive = ({ element, uid }: Props) => {
       return <ListComponent element={element} uid={uid} />;
     case "donate":
       return <DonateComponent element={element} uid={uid} />;
+    case "goal":
+      return <GoalsComponent element={element} uid={uid} />;
     case "container":
       return <Container element={element} uid={uid} />;
     case "__body":
