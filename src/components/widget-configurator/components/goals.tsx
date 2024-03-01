@@ -9,6 +9,7 @@ import { useEditor } from "@/hooks/useEditor";
 import {
   Timestamp,
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
@@ -25,6 +26,7 @@ interface Props {
 const GoalsComponent = (props: Props) => {
   const { dispatch, state } = useEditor();
   const [value, setValue] = useState<any>();
+  const [goalActive, setGoalActive] = useState<boolean>(false);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -97,6 +99,25 @@ const GoalsComponent = (props: Props) => {
     return () => unsubscribe();
   }, [state.editor.liveMode, props.uid, goalActivation]);
 
+  useEffect(() => {
+    const controllerRef = doc(
+      firestore,
+      "users",
+      props.uid,
+      "controller",
+      "controller"
+    );
+
+    const unsubscribe = onSnapshot(controllerRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setGoalActive(data.goal_active ?? false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [props.uid]);
+
   return (
     <div
       style={styles}
@@ -136,15 +157,17 @@ const GoalsComponent = (props: Props) => {
           });
         }}
       >
-        {!Array.isArray(props.element.content) &&
+        {!goalActive &&
+          !Array.isArray(props.element.content) &&
           props.element.content.innerText}
       </span>
-      <Progress
-        value={!state.editor.liveMode ? 10 : value}
-        maxValue={goalMaxValue}
-        className="h-[40px]"
-      />
-
+      {!goalActive && (
+        <Progress
+          value={!state.editor.liveMode ? 10 : value}
+          maxValue={goalMaxValue}
+          className="h-[40px]"
+        />
+      )}
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
           <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">

@@ -228,7 +228,7 @@ const StylesTab = (props: Props) => {
                       }
                     />
                   </div>
-                  <div>
+                  <div className="flex items-center gap-x-6">
                     <Label className="text-muted-foreground">Start celu</Label>
                     <Switch
                       id="goal_activation"

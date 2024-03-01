@@ -114,6 +114,20 @@ export class QueueService {
   }
 }
 
+export class ControllerService {
+  static async updateController(uid: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/controller`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: data, uid }),
+      })
+    ).json();
+  }
+}
+
 export class PaymentService {
   static async getAllPayments(uid: string) {
     return (
