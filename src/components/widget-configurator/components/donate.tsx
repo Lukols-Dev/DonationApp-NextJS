@@ -21,7 +21,8 @@ const DonateComponent = (props: Props) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState<number | null>(
     null
   );
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [isRead, setRead] = useState<boolean>(false);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -44,7 +45,7 @@ const DonateComponent = (props: Props) => {
     ? props.element.content.donate_url
     : "";
   const donateDelay = !Array.isArray(props.element.content)
-    ? props.element.content.donate_delay
+    ? Number(props.element.content.donate_delay) * 1000
     : 1000;
   const donateActivationAmount = !Array.isArray(props.element.content)
     ? props.element.content.donate_activation_amount
@@ -106,6 +107,7 @@ const DonateComponent = (props: Props) => {
         const message = listItems[currentMessageIndex];
 
         if (message[String(amountType)] >= Number(donateActivationAmount)) {
+          setRead(true);
           speakText({
             text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
             rate: 0.9,
@@ -113,6 +115,7 @@ const DonateComponent = (props: Props) => {
             pitch: 1.2,
             voice: "Google polski",
             onEnd: () => {
+              setRead(false);
               setCurrentMessageIndex((currentIndex) =>
                 currentIndex !== null && currentIndex + 1 < listItems.length
                   ? currentIndex + 1
@@ -131,6 +134,7 @@ const DonateComponent = (props: Props) => {
 
   useEffect(() => {
     if (
+      !isRead &&
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
@@ -140,10 +144,10 @@ const DonateComponent = (props: Props) => {
             ? currentIndex + 1
             : null
         );
-      }, 3000);
+      }, donateDelay || 2000);
       return () => clearTimeout(timeoutId);
     }
-  }, [currentMessageIndex, listItems]);
+  }, [currentMessageIndex, listItems, isRead]);
 
   return (
     <div
