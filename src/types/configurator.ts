@@ -40,6 +40,7 @@ export type EditorElement = {
         donate_lector?: boolean;
         goal_activation?: boolean;
         goal_max_value?: number;
+        goal_start_date?: any;
       };
 };
 

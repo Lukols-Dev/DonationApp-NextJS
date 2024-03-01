@@ -210,6 +210,18 @@ export class ConfiguratorService {
     ).json();
   }
 
+  static async updateWidget(uid: string, content: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uid, wid: "widget", content: content }),
+      })
+    ).json();
+  }
+
   // static async createNewWidget(uid: string) {
   //   return (
   //     await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {

@@ -24,6 +24,7 @@ import {
   ChevronsLeftRightIcon,
   LucideImageDown,
 } from "lucide-react";
+
 import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import {
   Select,
@@ -37,6 +38,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useEditor } from "@/hooks/useEditor";
 import { Switch } from "@/components/ui/switch";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 type Props = {};
 
@@ -70,6 +72,7 @@ const StylesTab = (props: Props) => {
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
     let value = e.target.value;
+    console.log("value: ", value);
     const styleObject = {
       [settingProperty]: value,
     };
@@ -222,6 +225,23 @@ const StylesTab = (props: Props) => {
                       onChange={handleChangeCustomValues}
                       value={
                         state.editor.selectedElement.content.goal_max_value
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Start celu</Label>
+                    <Switch
+                      id="goal_activation"
+                      checked={
+                        state.editor.selectedElement.content.goal_activation
+                      }
+                      onCheckedChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "goal_activation",
+                            value: e,
+                          },
+                        })
                       }
                     />
                   </div>

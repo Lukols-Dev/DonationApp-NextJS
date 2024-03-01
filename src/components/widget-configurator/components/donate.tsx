@@ -61,11 +61,11 @@ const DonateComponent = (props: Props) => {
     if (!donateLector) return;
     const speechSynthesisSupported = "speechSynthesis" in window;
     if (!speechSynthesisSupported) {
-      console.warn("Synteza mowy nie jest dostępna w tej przeglądarce.");
+      console.warn("Speech synthesis is not available in this browser.");
     } else {
       const voices = window.speechSynthesis.getVoices();
       if (voices.length === 0) {
-        console.warn("Nie znaleziono głosów syntezy mowy.");
+        console.warn("No speech synthesis voices found.");
       }
     }
   }, [donateLector]);

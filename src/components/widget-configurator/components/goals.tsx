@@ -6,9 +6,15 @@ import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { EditorElement } from "@/types/configurator";
 import { useEditor } from "@/hooks/useEditor";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
-import { speakText } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
 interface Props {
@@ -18,9 +24,7 @@ interface Props {
 
 const GoalsComponent = (props: Props) => {
   const { dispatch, state } = useEditor();
-  const [goalItem, setGoalItem] = useState<any>();
-
-  const [isVisible, setIsVisible] = useState(true);
+  const [value, setValue] = useState<any>();
 
   const handleDeleteElement = () => {
     dispatch({
@@ -47,37 +51,51 @@ const GoalsComponent = (props: Props) => {
   const goalActivation = !Array.isArray(props.element.content)
     ? props.element.content.goal_activation
     : false;
+
   const amountType = !Array.isArray(props.element.content)
     ? props.element.content.amount_type
     : "amount";
 
-  // useEffect(() => {
-  //   if (state.editor.liveMode) {
-  //     const messagesQuery = query(
-  //       collection(firestore, "users", props.uid, "queue"),
-  //       orderBy("create_at", "desc")
-  //     );
-  //     const unsubscribe = onSnapshot(
-  //       messagesQuery,
-  //       (snapshot) => {
-  //         const fetchedItems = snapshot.docs.map((doc) => ({
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         }));
-  //         setListItems(fetchedItems);
-  //         setCurrentMessageIndex(0);
-  //       },
-  //       (error) => {
-  //         console.error("Error fetching live messages: ", error);
-  //       }
-  //     );
+  useEffect(() => {
+    if (!state.editor.liveMode || !goalActivation) return;
 
-  //     return () => unsubscribe();
-  //   } else {
-  //     setListItems(testMessages);
-  //     setCurrentMessageIndex(0);
-  //   }
-  // }, [state.editor.liveMode, props.uid]);
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate());
+    const dateTime = Timestamp.fromDate(currentDate);
+
+    const messagesQuery = query(
+      collection(firestore, "users", props.uid, "messages"),
+      where("create_at", ">=", dateTime),
+      where("payment_status", "==", "succeeded"),
+      orderBy("create_at", "desc")
+    );
+
+    const unsubscribe = onSnapshot(
+      messagesQuery,
+      (snapshot) => {
+        const fetchedItems = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            amount: data.amount,
+            amount_after_fees: data.amount_after_fees,
+            // create_at: data.create_at
+          };
+        });
+        const amountValue: "amount" | "amount_after_fees" = amountType
+          ? (amountType as "amount" | "amount_after_fees")
+          : "amount";
+
+        const summary = sumAmounts(fetchedItems, amountValue);
+        setValue(summary);
+      },
+      (error) => {
+        console.error("Error fetching live messages: ", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [state.editor.liveMode, props.uid, goalActivation]);
 
   return (
     <div
@@ -122,7 +140,7 @@ const GoalsComponent = (props: Props) => {
           props.element.content.innerText}
       </span>
       <Progress
-        value={!state.editor.liveMode ? 10 : 0}
+        value={!state.editor.liveMode ? 10 : value}
         maxValue={goalMaxValue}
         className="h-[40px]"
       />
@@ -143,10 +161,12 @@ const GoalsComponent = (props: Props) => {
 
 export default GoalsComponent;
 
-const testMessages: any = [
-  {
-    nick: "User1",
-    description: "Dziękuję za stream!",
-    amount: 50,
-  },
-];
+interface Transaction {
+  id: string;
+  amount: number;
+  amount_after_fees: number;
+}
+
+const sumAmounts = (data: Transaction[], key: keyof Transaction): number => {
+  return data.reduce((total, item) => total + Number(item[key]), 0);
+};
