@@ -11,9 +11,10 @@ import { DropDownMenuItem } from "@/types";
 interface Props {
   children: React.ReactNode;
   items: DropDownMenuItem[];
+  row?: any;
 }
 
-const DropDownWrapper = ({ items, children }: Props) => {
+const DropDownWrapper = ({ items, row, children }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
@@ -29,7 +30,10 @@ const DropDownWrapper = ({ items, children }: Props) => {
                 </DropdownMenuItem>
               </Link>
             ) : (
-              <DropdownMenuItem key={item.title}>
+              <DropdownMenuItem
+                key={item.title}
+                onSelect={() => item.action(row)}
+              >
                 {item.element}
               </DropdownMenuItem>
             )}

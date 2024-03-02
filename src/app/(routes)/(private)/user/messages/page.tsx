@@ -3,9 +3,10 @@ import CardStatistic from "@/components/dashboard/cards/card-statistic";
 import CardLegend from "@/components/dashboard/cards/card-legend";
 import CardTable from "@/components/dashboard/cards/card-table";
 import { MessagesService } from "@/lib/firebase/firebase-actions";
-import { columnsMessage } from "@/components/dashboard/columns/columns-message";
+import { getColumnsMessage } from "@/components/dashboard/columns/columns-message";
 import getCurrentUser from "@/lib/auth-actions";
 import { Clock, MessageCircleMore } from "lucide-react";
+import CustomTable from "./table";
 
 const MessagesPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
@@ -26,9 +27,7 @@ const MessagesPage = async () => {
             <CardLegend />
           </div>
         </div>
-        <div className="w-full h-full">
-          <CardTable data={messages.messages} columns={columnsMessage} />
-        </div>
+        <CustomTable uid={currentUser.uid} messages={messages} />
       </section>
     </Container>
   );

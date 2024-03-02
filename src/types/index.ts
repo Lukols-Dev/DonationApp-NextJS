@@ -9,6 +9,7 @@ export type DropDownMenuItem = {
   title: string;
   path?: string;
   element?: ReactNode;
+  action?: any;
 };
 
 export type News = {
