@@ -2,7 +2,11 @@ import Container from "@/components/Container";
 import CardStatistic from "@/components/dashboard/cards/card-statistic";
 import getCurrentUser from "@/lib/auth-actions";
 import CustomAdminTable from "./table";
-import { AdminUsersService } from "@/lib/firebase/firebase-admin-actions";
+import {
+  AdminMessagesService,
+  AdminUsersService,
+} from "@/lib/firebase/firebase-admin-actions";
+import { MessageCircleMore } from "lucide-react";
 
 const AdminPage = async () => {
   const currentUser: {
@@ -17,6 +21,12 @@ const AdminPage = async () => {
   const users: { data: any[]; count: number } =
     await AdminUsersService.getAllUsers("AfaKosCBYUxTnUzrRBz26cvAFfBH7j");
 
+  const revenueSummary: { data: any; count: number } =
+    await AdminMessagesService.getAllMessages("AfaKosCBYUxTnUzrRBz26cvAFfBH7j");
+
+  //   console.log("users: ", users);
+  //   console.log("revenueSummary: ", revenueSummary);
+
   return (
     <Container>
       <span className="text-3xl font-bold">ADMIN</span>
@@ -25,12 +35,12 @@ const AdminPage = async () => {
           <div className="flex gap-4 h-[144px]">
             <CardStatistic
               title="Łączny przychód z aplikacji"
-              value={users.count || 0}
+              value={revenueSummary.data.total_fee || 0}
               icon={"PLN"}
             />
             <CardStatistic
               title="Łączny obrót aplikacji"
-              value={users.count || 0}
+              value={revenueSummary.data.total_amount || 0}
               icon={"PLN"}
             />
             <CardStatistic
@@ -38,9 +48,14 @@ const AdminPage = async () => {
               value={users.count || 0}
               icon={"PLN"}
             />
+            <CardStatistic
+              title="Łączna liczba wiadomości"
+              value={revenueSummary.count || 0}
+              icon={<MessageCircleMore />}
+            />
           </div>
         </div>
-        <CustomAdminTable uid={currentUser.uid} data={users.data} />
+        <CustomAdminTable data={users.data} />
       </section>
     </Container>
   );

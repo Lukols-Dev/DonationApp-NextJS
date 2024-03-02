@@ -1,5 +1,12 @@
 import { firestore } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 interface IParams {
@@ -37,5 +44,44 @@ export const GET = async (req: Request, { params }: { params: IParams }) => {
     );
   } catch (err) {
     return NextResponse.json(err, { status: 404, statusText: "Not Found" });
+  }
+};
+
+//Update user data
+export const PUT = async (req: Request, { params }: { params: IParams }) => {
+  const { uid, data }: { uid: string; data: any } = await req.json();
+  const { id } = params;
+
+  if (!id || !uid) {
+    return NextResponse.json("Not Found", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
+  try {
+    const docRef = doc(firestore, "users", `${uid}`);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      return NextResponse.json("Document does not exist", {
+        status: 404,
+      });
+    }
+
+    await setDoc(docRef, data, { merge: true });
+
+    return NextResponse.json(
+      { message: "Document updated successfully" },
+      {
+        status: 200,
+      }
+    );
+  } catch (err) {
+    console.error("Error updating document: ", err);
+    return NextResponse.json(
+      { error: "Error updating document" },
+      { status: 500 }
+    );
   }
 };

@@ -5,6 +5,7 @@ import {
   ArrowUpDown,
   MoreHorizontal,
   ShieldAlert,
+  ShieldCheck,
   XCircle,
 } from "lucide-react";
 
@@ -15,23 +16,60 @@ import DropDownWrapper from "@/components/ui/dropdown-menu";
 import TooltipWrapper from "@/components/ui/tooltip";
 import { DropDownMenuItem } from "@/types";
 import { formatTimestamp } from "@/lib/utils";
+import { AdminUsersService } from "@/lib/firebase/firebase-admin-actions";
+import { useRouter } from "next/navigation";
 
-export const getColumnsUsers = (uid: string): ColumnDef<Payment>[] => {
-  const dropdownItems: DropDownMenuItem[] = [
-    {
-      title: "Zablokuj konto",
-      element: (
-        <div className="flex items-center gap-2 cursor-pointer">
-          <ShieldAlert className="w-4 h-4" /> Zablokuj Konto
-        </div>
-      ),
-      action: (payment: any) => {
-        //   QueueService.addToQueue(uid, payment)
-        //     .then(() => console.log("add to queue"))
-        //     .catch((err) => console.log("problem with add to queue: ", err));
-      },
-    },
-    {
+export const getColumnsUsers = (): ColumnDef<Payment>[] => {
+  const route = useRouter();
+  const generateDropdownItems = (user: any): DropDownMenuItem[] => {
+    let accountStatusAction: DropDownMenuItem;
+    let deleteAccount: DropDownMenuItem;
+
+    if (user.account_status.includes("block")) {
+      accountStatusAction = {
+        title: "Odblokuj konto",
+        element: (
+          <div className="flex items-center gap-2 cursor-pointer">
+            <ShieldAlert className="w-4 h-4" /> Odblokuj Konto
+          </div>
+        ),
+        action: () => {
+          AdminUsersService.updateUserData(
+            "AfaKosCBYUxTnUzrRBz26cvAFfBH7j",
+            user.id,
+            { account_status: ["active"] }
+          )
+            .then(() => {
+              console.log("User unblocked");
+              route.refresh();
+            })
+            .catch((err) => console.log("Problem with unblocked: ", err));
+        },
+      };
+    } else {
+      accountStatusAction = {
+        title: "Zablokuj konto",
+        element: (
+          <div className="flex items-center gap-2 cursor-pointer">
+            <ShieldAlert className="w-4 h-4" /> Zablokuj Konto
+          </div>
+        ),
+        action: () => {
+          AdminUsersService.updateUserData(
+            "AfaKosCBYUxTnUzrRBz26cvAFfBH7j",
+            user.id,
+            { account_status: ["block"] }
+          )
+            .then(() => {
+              console.log("User blocked");
+              route.refresh();
+            })
+            .catch((err) => console.log("Problem with blocked: ", err));
+        },
+      };
+    }
+
+    deleteAccount = {
       title: "Usuń konto",
       element: (
         <div className="flex items-center gap-2 cursor-pointer">
@@ -43,8 +81,42 @@ export const getColumnsUsers = (uid: string): ColumnDef<Payment>[] => {
         //     .then(() => console.log("add to queue"))
         //     .catch((err) => console.log("problem with add to queue: ", err));
       },
-    },
-  ];
+    };
+
+    return [accountStatusAction, deleteAccount];
+  };
+  // const dropdownItems: DropDownMenuItem[] = [
+  //   {
+  //     title: "Zablokuj konto",
+  //     element: (
+  //       <div className="flex items-center gap-2 cursor-pointer">
+  //         <ShieldAlert className="w-4 h-4" /> Zablokuj Konto
+  //       </div>
+  //     ),
+  //     action: (user: any) => {
+  //       AdminUsersService.updateUserData(
+  //         "AfaKosCBYUxTnUzrRBz26cvAFfBH7j",
+  //         user.id,
+  //         { account_status: ["block"] }
+  //       )
+  //         .then(() => console.log("User blocked"))
+  //         .catch((err) => console.log("Problem with blocked: ", err));
+  //     },
+  //   },
+  //   {
+  //     title: "Usuń konto",
+  //     element: (
+  //       <div className="flex items-center gap-2 cursor-pointer">
+  //         <XCircle className="w-4 h-4" /> Usuń Konto
+  //       </div>
+  //     ),
+  //     action: (payment: any) => {
+  //       //   QueueService.addToQueue(uid, payment)
+  //       //     .then(() => console.log("add to queue"))
+  //       //     .catch((err) => console.log("problem with add to queue: ", err));
+  //     },
+  //   },
+  // ];
 
   return [
     {
@@ -136,7 +208,22 @@ export const getColumnsUsers = (uid: string): ColumnDef<Payment>[] => {
               statuses.map((status, index) => {
                 switch (status) {
                   case "block":
-                    return <ShieldAlert key={index} className="w-4 h-4" />;
+                    return (
+                      <span className="flex gap-2 items-center bg-yellow-600 rounded-md text-white px-2 py-1">
+                        <ShieldAlert key={index} className="w-4 h-4" />
+                        blocked
+                      </span>
+                    );
+                  case "active":
+                    return (
+                      <span
+                        key={index}
+                        className="flex gap-2 items-center  bg-green-600 rounded-md text-white px-2 py-1"
+                      >
+                        <ShieldCheck key={index} className="w-4 h-4" />
+                        active
+                      </span>
+                    );
                   default:
                     return null;
                 }
@@ -149,15 +236,12 @@ export const getColumnsUsers = (uid: string): ColumnDef<Payment>[] => {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
+        const user = row.original;
 
-        const itemsWithActions = dropdownItems.map((item) => ({
-          ...item,
-          action: () => item.action(payment),
-        }));
+        const itemsWithActions = generateDropdownItems(user);
 
         return (
-          <DropDownWrapper items={itemsWithActions} row={payment}>
+          <DropDownWrapper items={itemsWithActions} row={user}>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <MoreHorizontal className="h-4 w-4" />
             </Button>

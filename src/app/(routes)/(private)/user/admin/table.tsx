@@ -5,11 +5,10 @@ import { getColumnsUsers } from "./columns";
 
 interface Props {
   data: any[];
-  uid: string;
 }
 
-const CustomAdminTable = ({ data, uid }: Props) => {
-  const columns = getColumnsUsers(uid);
+const CustomAdminTable = ({ data }: Props) => {
+  const columns = getColumnsUsers();
 
   return (
     <div className="w-full h-full">
