@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
 import { speakText } from "@/lib/utils";
+import { QueueService } from "@/lib/firebase/firebase-actions";
 
 interface Props {
   element: EditorElement;
@@ -144,6 +145,28 @@ const DonateComponent = (props: Props) => {
     }
   }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
 
+  // useEffect(() => {
+  //   if (
+  //     !isRead &&
+  //     currentMessageIndex !== null &&
+  //     currentMessageIndex < listItems.length
+  //   ) {
+  //     const timeoutId = setTimeout(() => {
+  //       const currentMessage = listItems[currentMessageIndex];
+
+  //       setCurrentMessageIndex((currentIndex) =>
+  //         currentIndex !== null && currentIndex + 1 < listItems.length
+  //           ? currentIndex + 1
+  //           : null
+  //       );
+  //     }, donateDelay || 2000);
+  //     const message = listItems[currentMessageIndex];
+  //     QueueService.deleteFromQueue(props.uid, message.id, message.mid);
+
+  //     return () => clearTimeout(timeoutId);
+  //   }
+  // }, [currentMessageIndex, listItems, isRead]);
+
   useEffect(() => {
     if (
       !isRead &&
@@ -151,13 +174,29 @@ const DonateComponent = (props: Props) => {
       currentMessageIndex < listItems.length
     ) {
       const timeoutId = setTimeout(() => {
-        setCurrentMessageIndex((currentIndex) =>
-          currentIndex !== null && currentIndex + 1 < listItems.length
-            ? currentIndex + 1
-            : null
-        );
+        const currentMessage = listItems[currentMessageIndex];
+
+        setCurrentMessageIndex((currentIndex) => {
+          const nextIndex =
+            currentIndex !== null && currentIndex + 1 < listItems.length
+              ? currentIndex + 1
+              : null;
+
+          if (currentMessage && currentMessage.id && currentMessage.mid) {
+            QueueService.deleteFromQueue(
+              props.uid,
+              currentMessage.id,
+              currentMessage.mid
+            )
+              .then(() => console.log("delete"))
+              .catch((error) => console.error("Delete queue:", error));
+          }
+
+          return nextIndex;
+        });
+
+        return () => clearTimeout(timeoutId);
       }, donateDelay || 2000);
-      return () => clearTimeout(timeoutId);
     }
   }, [currentMessageIndex, listItems, isRead]);
 
@@ -217,7 +256,10 @@ const DonateComponent = (props: Props) => {
               />
             )}
           </>
-        ) : !donateActive && currentMessageIndex !== null ? (
+        ) : !donateActive &&
+          listItems &&
+          listItems.length > 0 &&
+          currentMessageIndex !== null ? (
           <>
             <h1 className="font-bold text-4xl text-green-500">
               {listItems[currentMessageIndex] && amountType

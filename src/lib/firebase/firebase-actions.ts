@@ -101,14 +101,14 @@ export class QueueService {
     ).json();
   }
 
-  static async deleteFromQueue(uid: string, qid: string) {
+  static async deleteFromQueue(uid: string, qid: string, mid: string) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: { qid: qid }, uid }),
+        body: JSON.stringify({ data: { qid: qid, mid: mid }, uid }),
       })
     ).json();
   }
