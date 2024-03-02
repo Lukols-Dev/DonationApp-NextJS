@@ -1,10 +1,10 @@
 "use client";
 
 import {
+  Crown,
   HandCoins,
   LayoutDashboard,
   MessageCircleMore,
-  Rocket,
   Video,
   Wallet,
 } from "lucide-react";
@@ -101,8 +101,8 @@ const menuItems = [
   },
   {
     id: "6",
-    name: "Cele",
-    link: "/user/goals",
-    icon: Rocket,
+    name: "Admin Portalu",
+    link: "/user/admin",
+    icon: Crown,
   },
 ];

@@ -2,7 +2,7 @@ import Container from "@/components/Container";
 import CardStatistic from "@/components/dashboard/cards/card-statistic";
 import CardLegend from "@/components/dashboard/cards/card-legend";
 import CardTable from "@/components/dashboard/cards/card-table";
-import { MessagesService } from "@/lib/firebase/firebase-actions";
+import { MessagesService, QueueService } from "@/lib/firebase/firebase-actions";
 import { getColumnsMessage } from "@/components/dashboard/columns/columns-message";
 import getCurrentUser from "@/lib/auth-actions";
 import { Clock, MessageCircleMore } from "lucide-react";
@@ -12,6 +12,8 @@ const MessagesPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
+  const queue: { count: number; notifications: any[] } =
+    await QueueService.getQueue(currentUser.uid);
 
   return (
     <Container>
@@ -23,7 +25,11 @@ const MessagesPage = async () => {
               value={messages.count || 0}
               icon={<MessageCircleMore />}
             />
-            <CardStatistic title="W kolejce" value="999" icon={<Clock />} />
+            <CardStatistic
+              title="W kolejce"
+              value={queue.count}
+              icon={<Clock />}
+            />
             <CardLegend />
           </div>
         </div>
