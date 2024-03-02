@@ -41,7 +41,17 @@ const ControllerWidget = () => {
 
   const updateGoalAmount = () => {
     try {
-      ControllerService.updateController(uid, { goal_amount: goalValue });
+      ControllerService.updateController(uid, {
+        goal_amount: goalValue,
+      });
+    } catch (err) {
+      console.log("Controller Err: ", err);
+    }
+  };
+
+  const resetGoalAmount = () => {
+    try {
+      ControllerService.updateController(uid, {}, true);
     } catch (err) {
       console.log("Controller Err: ", err);
     }
@@ -88,6 +98,7 @@ const ControllerWidget = () => {
             />
           </div>
           <Button onClick={updateGoalAmount}>Wślij</Button>
+          <Button onClick={resetGoalAmount}>Reset</Button>
         </div>
       </div>
       <div className="bg-white w-full h-full"></div>

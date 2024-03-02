@@ -6,7 +6,13 @@ import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { EditorElement } from "@/types/configurator";
 import { useEditor } from "@/hooks/useEditor";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
 import { speakText } from "@/lib/utils";
 
@@ -23,6 +29,7 @@ const DonateComponent = (props: Props) => {
   );
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [isRead, setRead] = useState<boolean>(false);
+  const [donateActive, setDonateActive] = useState<boolean>(false);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -71,7 +78,7 @@ const DonateComponent = (props: Props) => {
   }, [donateLector]);
 
   useEffect(() => {
-    if (state.editor.liveMode) {
+    if (state.editor.liveMode && !donateActive) {
       const messagesQuery = query(
         collection(firestore, "users", props.uid, "queue"),
         orderBy("create_at", "desc")
@@ -96,7 +103,7 @@ const DonateComponent = (props: Props) => {
       setListItems(testMessages);
       setCurrentMessageIndex(0);
     }
-  }, [state.editor.liveMode, props.uid]);
+  }, [state.editor.liveMode, props.uid, donateActive]);
 
   useEffect(() => {
     const readMessage = () => {
@@ -127,10 +134,15 @@ const DonateComponent = (props: Props) => {
       }
     };
 
-    if (donateLector && state.editor.liveMode && listItems.length > 0) {
+    if (
+      donateLector &&
+      state.editor.liveMode &&
+      listItems.length > 0 &&
+      !donateActive
+    ) {
       readMessage();
     }
-  }, [currentMessageIndex, listItems, state.editor.liveMode]);
+  }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
 
   useEffect(() => {
     if (
@@ -148,6 +160,25 @@ const DonateComponent = (props: Props) => {
       return () => clearTimeout(timeoutId);
     }
   }, [currentMessageIndex, listItems, isRead]);
+
+  useEffect(() => {
+    const controllerRef = doc(
+      firestore,
+      "users",
+      props.uid,
+      "controller",
+      "controller"
+    );
+
+    const unsubscribe = onSnapshot(controllerRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setDonateActive(data.donate_active ?? false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [props.uid]);
 
   return (
     <div
@@ -186,19 +217,19 @@ const DonateComponent = (props: Props) => {
               />
             )}
           </>
-        ) : currentMessageIndex !== null ? (
+        ) : !donateActive && currentMessageIndex !== null ? (
           <>
             <h1 className="font-bold text-4xl text-green-500">
-              {amountType
+              {listItems[currentMessageIndex] && amountType
                 ? listItems[currentMessageIndex][amountType]
-                : listItems[currentMessageIndex].amount}{" "}
+                : listItems[currentMessageIndex]?.amount}{" "}
               PLN
             </h1>
             <h2 className="font-bold text-xl text-black">
-              {listItems[currentMessageIndex].nick}
+              {listItems[currentMessageIndex]?.nick}
             </h2>
             <p className="font-bold text-lg text-black">
-              {listItems[currentMessageIndex].description}
+              {listItems[currentMessageIndex]?.description}
             </p>
             {donateUrl && (
               <img

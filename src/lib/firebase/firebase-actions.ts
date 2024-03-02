@@ -115,14 +115,18 @@ export class QueueService {
 }
 
 export class ControllerService {
-  static async updateController(uid: string, data: any) {
+  static async updateController(
+    uid: string,
+    data: any,
+    resetGoalAmount?: boolean
+  ) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/controller`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: data, uid }),
+        body: JSON.stringify({ data: data, resetGoalAmount, uid }),
       })
     ).json();
   }

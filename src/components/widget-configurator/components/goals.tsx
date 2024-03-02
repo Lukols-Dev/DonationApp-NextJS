@@ -27,6 +27,7 @@ const GoalsComponent = (props: Props) => {
   const { dispatch, state } = useEditor();
   const [value, setValue] = useState<any>();
   const [goalActive, setGoalActive] = useState<boolean>(false);
+  const [goalAmount, setGoalAmount] = useState<number>(0);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -112,6 +113,7 @@ const GoalsComponent = (props: Props) => {
       if (doc.exists()) {
         const data = doc.data();
         setGoalActive(data.goal_active ?? false);
+        setGoalAmount(data.goal_amount ?? 0);
       }
     });
 
@@ -163,7 +165,7 @@ const GoalsComponent = (props: Props) => {
       </span>
       {!goalActive && (
         <Progress
-          value={!state.editor.liveMode ? 10 : value}
+          value={!state.editor.liveMode ? 10 : value + goalAmount}
           maxValue={goalMaxValue}
           className="h-[40px]"
         />
