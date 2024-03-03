@@ -19,8 +19,25 @@ export class AdminMessagesService {
   static async getAllMessages(id: string, uid?: string) {
     return (
       await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/admin/${uid}/users/messages`
+        `${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/messages`
       )
+    ).json();
+  }
+}
+
+export class AdminPaymentService {
+  static async getAppFees(id: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/fees`)
+    ).json();
+  }
+
+  static async updateAppFees(id: string, data: any) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/fees`, {
+        method: "PUT",
+        body: JSON.stringify({ data: data }),
+      })
     ).json();
   }
 }

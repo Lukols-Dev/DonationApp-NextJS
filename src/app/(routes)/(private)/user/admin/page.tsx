@@ -4,9 +4,12 @@ import getCurrentUser from "@/lib/auth-actions";
 import CustomAdminTable from "./table";
 import {
   AdminMessagesService,
+  AdminPaymentService,
   AdminUsersService,
 } from "@/lib/firebase/firebase-admin-actions";
 import { MessageCircleMore } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InputFees } from "./components/inputFees";
 
 const AdminPage = async () => {
   const currentUser: {
@@ -24,6 +27,10 @@ const AdminPage = async () => {
   const revenueSummary: { data: any; count: number } =
     await AdminMessagesService.getAllMessages("AfaKosCBYUxTnUzrRBz26cvAFfBH7j");
 
+  const getAppFee = await AdminPaymentService.getAppFees(
+    "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
+  );
+  // console.log("getAppFee: ", getAppFee);
   //   console.log("users: ", users);
   //   console.log("revenueSummary: ", revenueSummary);
 
@@ -53,6 +60,26 @@ const AdminPage = async () => {
               value={revenueSummary.count || 0}
               icon={<MessageCircleMore />}
             />
+          </div>
+        </div>
+        <div className="w-full h-full overflow-x-auto">
+          <div className="flex gap-4">
+            <Card className="max-w-[260px]">
+              <CardHeader>
+                <CardTitle className="text-[#343C6A]">
+                  Ustaw prowizje aplikacji
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-xl font-bold text-zinc-950">
+                  Aktualna: {getAppFee.app_fee || 0}%
+                </p>
+                <p className="text-sm font-normal text-[#B1B1B1]">
+                  Prowizja od kadej transakcji
+                </p>
+                <InputFees />
+              </CardContent>
+            </Card>
           </div>
         </div>
         <CustomAdminTable data={users.data} />
