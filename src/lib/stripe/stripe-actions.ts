@@ -34,6 +34,31 @@ export const createPaymentIntent = async (
   }
 };
 
+export const createCheckout = async (
+  method: string,
+  account: string,
+  amount: number
+) => {
+  try {
+    if (!method || !amount || !account) return null;
+
+    return (
+      await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/payments/stripe/checkout`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            data: { amount: amount, method: method, account: account },
+          }),
+        }
+      )
+    ).json();
+  } catch (error) {
+    console.error("Error creating payment intent: ", error);
+    return null;
+  }
+};
+
 export const updatePaymentIntent = async (
   intent: string,
   amount: number,

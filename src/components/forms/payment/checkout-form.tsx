@@ -17,6 +17,8 @@ import { calculateApplicationFeeAmount, debounce } from "@/lib/utils";
 import { PaymentMethodFees } from "@/types";
 import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
 import PaypalCheckout from "./checkout-paypal";
+import PaysafecardCheckout from "./checkout-paysafecard";
+import StripeForm from "./stripe-form";
 
 interface Props {
   uid: string;
@@ -72,30 +74,29 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
 
   if (!connectAcc) return;
 
-  const { loading, clientSecret, intent } = useCheckout(
-    values.payment_method,
-    connectAcc,
-    appFee,
-    values.summaryPrice
-  );
+  // const { loading, clientSecret, intent } = useCheckout(
+  //   values.payment_method,
+  //   connectAcc,
+  //   appFee,
+  //   values.summaryPrice
+  // );
 
   const onSubmit = async () => {
-    if (!intent) return;
+    // if (!intent) return;
     try {
-      if (values.payment_method !== "paypal") {
-        const newClientSecret = await updatePaymentIntent(
-          intent,
-          values.amount,
-          values.payment_method,
-          appFee
-        );
-        await setSecret(newClientSecret?.client_secret);
-      }
-
+      // if (values.payment_method !== "paypal") {
+      //   const newClientSecret = await updatePaymentIntent(
+      //     intent,
+      //     values.amount,
+      //     values.payment_method,
+      //     appFee
+      //   );
+      //   await setSecret(newClientSecret?.client_secret);
+      // }
       await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
-          payment_intent: intent || "",
+          // payment_intent: intent || "",
           amount_after_fees: values.amount_fees.amount_after_app_fee,
         },
       });
@@ -104,11 +105,11 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
         mount_after_app_fee: values.amount_fees.amount_after_app_fee,
         method: values.payment_method,
       });
-      toast({
-        variant: "default",
-        title: "Sukces",
-        description: `Wiadomość została wysłana.`,
-      });
+      //   toast({
+      //     variant: "default",
+      //     title: "Sukces",
+      //     description: `Wiadomość została wysłana.`,
+      //   });
       setValues({
         nick: "",
         amount: 5,
@@ -129,12 +130,12 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
         },
       });
     } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description:
-          "Wystąpił błąd podczas wysyłania. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
-      });
+      // toast({
+      //   variant: "destructive",
+      //   title: "Error",
+      //   description:
+      //     "Wystąpił błąd podczas wysyłania. Spróbuj jeszcze raz lub skontaktuj się z Tipey.",
+      // });
       console.log("Error add message: ", err);
     }
   };
@@ -155,36 +156,36 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
     []
   );
 
-  const updatePaymentIntentDebounced = useCallback(
-    debounce(async () => {
-      console.log("intent czy dziala: ", intent);
-      if (!connectAcc || !intent) return;
+  // const updatePaymentIntentDebounced = useCallback(
+  //   debounce(async () => {
+  //     console.log("intent czy dziala: ", intent);
+  //     if (!connectAcc || !intent) return;
 
-      const newClientSecret = await updatePaymentIntent(
-        intent,
-        values.amount,
-        values.payment_method,
-        appFee
-      );
-      setSecret(newClientSecret?.client_secret);
-    }, 500),
-    []
-  );
+  //     const newClientSecret = await updatePaymentIntent(
+  //       intent,
+  //       values.amount,
+  //       values.payment_method,
+  //       appFee
+  //     );
+  //     setSecret(newClientSecret?.client_secret);
+  //   }, 500),
+  //   []
+  // );
 
   const getTotalPrice = async () => {
     setValues((prevValues) => ({
       ...prevValues,
       summaryPrice: prevValues.amount,
     }));
-    if (intent) {
-      const updateIntent = await updatePaymentIntent(
-        intent,
-        values.amount,
-        values.payment_method,
-        appFee
-      );
-      setSecret(updateIntent?.client_secret);
-    }
+    // if (intent) {
+    //   const updateIntent = await updatePaymentIntent(
+    //     intent,
+    //     values.amount,
+    //     values.payment_method,
+    //     appFee
+    //   );
+    //   setSecret(updateIntent?.client_secret);
+    // }
   };
 
   const getAppFees = () => {
@@ -220,10 +221,15 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
     getAppFees();
   }, [values.summaryPrice, appFees.app_fee, appFees.fees]);
 
-  useEffect(() => {
-    if (values.payment_method !== "paypal") return;
-    updatePaymentIntentDebounced(values.amount);
-  }, [values.amount, updatePaymentIntentDebounced]);
+  // useEffect(() => {
+  //   if (
+  //     values.payment_method !== "paypal" &&
+  //     values.payment_method !== "smspremium" &&
+  //     values.payment_method !== "paysafecard"
+  //   )
+  //     return;
+  //   updatePaymentIntentDebounced(values.amount);
+  // }, [values.amount, updatePaymentIntentDebounced]);
 
   return (
     <>
@@ -270,13 +276,25 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           ))}
         </ul>
         <div className="mt-9">
-          {clientSecret && !loading && values.payment_method !== "paypal" ? (
+          {/* {clientSecret && !loading && values.payment_method !== "paypal" ? (
             <Elements
               stripe={getStripe()}
               options={{ clientSecret: secret || clientSecret }}
             >
               <StripeCheckoutForm loadingForm={loading} onSumbit={onSubmit} />
             </Elements>
+          ) : (
+            <></>
+          )} */}
+          {values.payment_method === "card" ||
+          values.payment_method === "blik" ||
+          values.payment_method === "p24" ? (
+            <StripeForm
+              amount={values.summaryPrice}
+              method={values.payment_method}
+              account={connectAcc}
+              onSumbit={onSubmit}
+            />
           ) : (
             <></>
           )}
@@ -290,7 +308,22 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           ) : (
             <></>
           )}
-          {values.payment_method === "sms" ? <div>sms payment</div> : <></>}
+          {values.payment_method === "paysafecard" ? (
+            <PaysafecardCheckout
+              uid={uid}
+              amount={values.summaryPrice}
+              appFee={appFee}
+              onSumbit={onSubmit}
+            />
+          ) : (
+            // <div>paysafe card</div>
+            <></>
+          )}
+          {values.payment_method === "smspremium" ? (
+            <div>sms payment</div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

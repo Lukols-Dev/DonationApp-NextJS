@@ -54,7 +54,7 @@ const PaymentPage = async (props: Page) => {
             ) : (
               <></>
             )}
-            {payment_methods.length > 0 ? (
+            {payment_methods && payment_methods.length > 0 ? (
               <CheckoutForm
                 paymentMethod={payment_methods}
                 uid={uid}
