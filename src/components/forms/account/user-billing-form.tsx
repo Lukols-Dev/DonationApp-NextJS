@@ -30,6 +30,7 @@ type UserBillingData = {
 
 const UserBillingForm = ({ uid, data }: Props) => {
   const { toast } = useToast();
+  const [changes, setChanges] = useState<Partial<UserBillingData>>({});
   const [values, setValues] = useState<UserBillingData>({
     account_type: "",
     name: "",
@@ -46,38 +47,6 @@ const UserBillingForm = ({ uid, data }: Props) => {
   });
 
   const initUserData = async () => {
-    if (data.connect_acc && data.person_id) {
-      const account = await stripe.accounts.retrieve(data.connect_acc);
-      const person = await stripe.accounts.retrievePerson(
-        data.connect_acc,
-        data.person_id
-      );
-
-      data = {
-        ...data,
-        ...{
-          name: person.first_name,
-          surname: person.last_name,
-          country: account.country,
-          company_name: account.company?.name,
-          address:
-            account.business_type === "company"
-              ? account.company?.address?.line1 +
-                " " +
-                account.company?.address?.line2
-              : person.address?.line1 + " " + person.address?.line2,
-          city:
-            account.business_type === "company"
-              ? account.company?.address?.city
-              : person.address?.city,
-          post_code:
-            account.business_type === "company"
-              ? account.company?.address?.postal_code
-              : person.address?.postal_code,
-          bank: "PL2123",
-        },
-      };
-    }
     setValues({ ...values, ...data });
   };
 
@@ -91,6 +60,7 @@ const UserBillingForm = ({ uid, data }: Props) => {
   ) => {
     if (field in values) {
       setValues({ ...values, [field]: e.target.value });
+      setChanges({ ...changes, [field]: e.target.value });
     }
   };
 
@@ -102,6 +72,7 @@ const UserBillingForm = ({ uid, data }: Props) => {
         title: "Sukces",
         description: `Dane zostały zaktualizowane.`,
       });
+      setChanges({});
     } catch (err) {
       toast({
         variant: "destructive",
@@ -206,28 +177,32 @@ const UserBillingForm = ({ uid, data }: Props) => {
               />
             </div>
           </div>
-          <div>
-            <p className="flex gap-2 items-center mt-4 mb-2">
-              <Dot /> Dane firmowe
-            </p>
-            <div className="flex flex-col gap-y-2 mx-8">
-              <Input
-                label="Nazwa Firmy"
-                value={values.company_name}
-                onChange={(e) => handleChange(e, "company_name")}
-              />
-              <Input
-                label="NIP"
-                value={values.company_nip}
-                onChange={(e) => handleChange(e, "company_nip")}
-              />
-              <Input
-                label="Adres"
-                value={values.address}
-                onChange={(e) => handleChange(e, "address")}
-              />
+          {values.account_type === "company" ? (
+            <div>
+              <p className="flex gap-2 items-center mt-4 mb-2">
+                <Dot /> Dane firmowe
+              </p>
+              <div className="flex flex-col gap-y-2 mx-8">
+                <Input
+                  label="Nazwa Firmy"
+                  value={values.company_name}
+                  onChange={(e) => handleChange(e, "company_name")}
+                />
+                <Input
+                  label="NIP"
+                  value={values.company_nip}
+                  onChange={(e) => handleChange(e, "company_nip")}
+                />
+                <Input
+                  label="Adres"
+                  value={values.address}
+                  onChange={(e) => handleChange(e, "address")}
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
           <div>
             <p className="flex gap-2 items-center mt-4 mb-2">
               <Dot /> Dane do wypłaty

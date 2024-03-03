@@ -67,6 +67,7 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
   const onSubmit = async () => {
     try {
       await UserService.updateUserData(uid, changes);
+
       if (changes.nick && pid) {
         await PaymentPageService.updatePaymentPageInfo(pid, {
           nick: changes.nick,

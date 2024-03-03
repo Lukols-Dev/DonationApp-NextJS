@@ -21,7 +21,7 @@ const CheckoutButton = ({ uid, userData }: Props) => {
     setLoading(true);
     try {
       await PaymentService.generateCheckout(uid, userData);
-      await PaymentService.addPaymentFees(uid, userData.connect_acc);
+      await PaymentService.addPaymentFees(uid);
       toast({
         variant: "default",
         title: "Sukces",

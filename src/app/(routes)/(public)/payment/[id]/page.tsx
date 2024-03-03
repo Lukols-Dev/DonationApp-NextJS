@@ -1,8 +1,6 @@
 import Logo from "@/components/Header/Logo";
 import Magnetic from "@/components/common/Magnetic";
 import CheckoutForm from "@/components/forms/payment/checkout-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   PaymentPageService,
   PaymentService,
@@ -24,7 +22,7 @@ const PaymentPage = async (props: Page) => {
     socials,
     description,
     payment_methods,
-    profile_img,
+    picture,
     uid,
     connect_acc,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
@@ -60,6 +58,7 @@ const PaymentPage = async (props: Page) => {
                 uid={uid}
                 connectAcc={connect_acc}
                 appFees={fees}
+                pid={params.id}
               />
             ) : (
               <div className="mx-auto my-auto">
@@ -73,7 +72,7 @@ const PaymentPage = async (props: Page) => {
                 className="object-cover object-center"
                 alt="Payment User"
                 fill
-                src={profile_img || ""}
+                src={picture || ""}
               />
             </div>
             <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">

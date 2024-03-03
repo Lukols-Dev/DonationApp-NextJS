@@ -22,7 +22,7 @@ const DropDownWrapper = ({ items, row, children }: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((item: DropDownMenuItem) => (
-          <>
+          <div key={item.title}>
             {item.path ? (
               <Link href={item.path} key={item.title}>
                 <DropdownMenuItem key={item.title}>
@@ -37,7 +37,7 @@ const DropDownWrapper = ({ items, row, children }: Props) => {
                 {item.element}
               </DropdownMenuItem>
             )}
-          </>
+          </div>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

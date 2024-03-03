@@ -11,16 +11,22 @@ import NotificationBtn from "../buttons/notification-dropdown";
 
 const font = generalSans.bold.className;
 
-const HeaderDashboard = async () => {
-  const currentUser: { picture: string; uid: string; role: string } =
-    await getCurrentUser();
+interface Props {
+  uid: string;
+  picture: string;
+  role: string;
+}
+
+const HeaderDashboard = ({ uid, role, picture }: Props) => {
+  // const currentUser: { picture: string; uid: string; role: string } =
+  //   await getCurrentUser();
   return (
     <header className="w-full bg-transparent">
       <Container>
         <div className="flex justify-between items-center mt-4 py-2 px-6 bg-white rounded-full">
           <p className={cn(font, "text-2xl text-[#18181A] p-4")}>TIPEY</p>
           <div className="hidden md:flex">
-            <MenuItems role={currentUser.role} />
+            <MenuItems role={role} />
           </div>
           <div className="hidden md:flex items-center gap-5">
             <TooltipWrapper description="Pomoc">
@@ -28,8 +34,8 @@ const HeaderDashboard = async () => {
                 <HelpCircle className="w-7 h-7 text-[#343C6A] hover:text-blue-700" />
               </MailTo>
             </TooltipWrapper>
-            <NotificationBtn uid={currentUser.uid} />
-            <AvatarDropDown src={currentUser.picture} />
+            <NotificationBtn uid={uid} />
+            <AvatarDropDown src={picture} />
           </div>
           <div className="flex md:hidden">{/* <Menu /> */}</div>
         </div>

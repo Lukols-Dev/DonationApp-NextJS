@@ -58,16 +58,26 @@ export const PUT = async (req: Request, { params }: { params: IParams }) => {
 
   try {
     const docRef = doc(firestore, "users", `${id}`);
-    const docSnap = await getDoc(docRef);
+    // const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
-      return NextResponse.json("Document does not exist", {
-        status: 404,
-      });
-    }
+    // if (!docSnap.exists()) {
+    //   return NextResponse.json("Document does not exist", {
+    //     status: 404,
+    //   });
+    // }
 
-    await updateDoc(docRef, dataToUpdate);
+    const updates = Object.keys(dataToUpdate).reduce((acc: any, key) => {
+      if (key === "socials" && dataToUpdate[key]) {
+        Object.keys(dataToUpdate[key]).forEach((socialKey) => {
+          acc[`socials.${socialKey}`] = dataToUpdate[key][socialKey];
+        });
+      } else {
+        acc[key] = dataToUpdate[key];
+      }
+      return acc;
+    }, {});
 
+    await updateDoc(docRef, updates);
     return NextResponse.json(
       { message: "Document updated successfully" },
       {

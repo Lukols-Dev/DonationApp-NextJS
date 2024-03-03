@@ -38,7 +38,7 @@ const MonetisationPage = async () => {
       <section className="w-full h-full gap-4 flex flex-col py-6">
         <Card className="max-w-[300px]">
           <CardContent>
-            {!url && currentUser.connect_acc ? (
+            {!url ? (
               <CheckoutButton uid={currentUser.uid} userData={currentUser} />
             ) : (
               <InputCopy
@@ -47,7 +47,7 @@ const MonetisationPage = async () => {
             )}
           </CardContent>
         </Card>
-        {!currentUser.connect_acc ? (
+        {/* {!currentUser.connect_acc ? (
           <Card className="max-w-[300px]">
             <CardContent>
               <ConnectStripeButton
@@ -58,7 +58,7 @@ const MonetisationPage = async () => {
           </Card>
         ) : (
           <></>
-        )}
+        )} */}
         <div className="w-[320px] flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
           Metody płatności
           <span className="text-sm">
@@ -90,7 +90,7 @@ const MonetisationPage = async () => {
               </div>
             </CardContent>
           </Card>
-          {!url || validateRequiredData(currentUser) ? (
+          {!url || !validateRequiredData(currentUser) ? (
             <div className="w-full h-full flex flex-col items-center justify-center bg-white/80 absolute gap-4 font-bold">
               Aby odblokować funkcję musisz:
               {!url && (
@@ -98,7 +98,7 @@ const MonetisationPage = async () => {
                   - Wygenerować URL strony z płatnościami.
                 </div>
               )}
-              {validateRequiredData(currentUser) && (
+              {!validateRequiredData(currentUser) && (
                 <div className="font-normal">
                   - Uzupełnić wszystkie dane konta.{" "}
                   <Link

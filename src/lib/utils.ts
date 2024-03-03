@@ -175,12 +175,20 @@ export const formatNumber = (number: number) => {
 
 export const validateRequiredData = (curr: any) => {
   const requiredFields = [
-    "charges_enabled",
-    "details_enabled",
-    "payouts_enabled",
+    "account_type",
+    "email",
+    "name",
+    "surname",
+    "nick",
+    "address",
+    "city",
+    "country",
+    "bank",
   ];
 
-  const missingFields = requiredFields.filter((field) => !!curr[field]);
+  const missingFields = requiredFields.filter(
+    (field) => !curr[field] || curr[field] === ""
+  );
 
   if (missingFields.length > 0) {
     return false;

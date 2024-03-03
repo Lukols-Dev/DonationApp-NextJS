@@ -4,7 +4,15 @@ import { NextResponse } from "next/server";
 export const POST = async (req: Request) => {
   const { data }: { data: any } = await req.json();
 
-  if (!data || !data.amount || !data.method || !data.account) {
+  if (
+    !data ||
+    !data.amount ||
+    !data.method ||
+    !data.account ||
+    !data.uid ||
+    !data.pid ||
+    !data.url
+  ) {
     return NextResponse.json("No products in cart", { status: 400 });
   }
 
@@ -32,6 +40,9 @@ export const POST = async (req: Request) => {
       line_items: line_items,
       metadata: {
         account: data.account,
+        pid: data.pid,
+        uid: data.uid,
+        url: data.url,
       },
     });
 

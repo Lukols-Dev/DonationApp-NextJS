@@ -37,10 +37,13 @@ export const createPaymentIntent = async (
 export const createCheckout = async (
   method: string,
   account: string,
-  amount: number
+  amount: number,
+  uid: string,
+  pid: string,
+  url: string
 ) => {
   try {
-    if (!method || !amount || !account) return null;
+    if (!method || !amount || !account || !uid || !pid || !url) return null;
 
     return (
       await fetch(
@@ -48,7 +51,14 @@ export const createCheckout = async (
         {
           method: "POST",
           body: JSON.stringify({
-            data: { amount: amount, method: method, account: account },
+            data: {
+              amount: amount,
+              method: method,
+              account: account,
+              uid: uid,
+              pid: pid,
+              url: url,
+            },
           }),
         }
       )

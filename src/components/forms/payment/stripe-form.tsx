@@ -7,14 +7,25 @@ interface Props {
   method: string;
   amount: number;
   account: string;
+  uid: string;
+  pid: string;
+  urlID: string;
   onSumbit: () => void;
 }
 
-const StripeForm = ({ method, amount, account, onSumbit }: Props) => {
+const StripeForm = ({
+  method,
+  amount,
+  account,
+  uid,
+  pid,
+  urlID,
+  onSumbit,
+}: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const handleSubmit = async () => {
-    if (!method || !amount || amount === 0) {
+    if (!method || !amount || amount === 0 || !urlID) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -27,7 +38,14 @@ const StripeForm = ({ method, amount, account, onSumbit }: Props) => {
 
     try {
       await onSumbit();
-      const url = await createCheckout(method, account, amount);
+      const url = await createCheckout(
+        method,
+        account,
+        amount,
+        uid,
+        pid,
+        urlID
+      );
       router.push(url);
     } catch (err) {
       console.log("ERR: ", err);
