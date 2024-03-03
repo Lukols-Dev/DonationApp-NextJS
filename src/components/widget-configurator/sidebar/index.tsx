@@ -53,8 +53,7 @@ const EditorSidebar = ({ subaccountId }: Props) => {
               <SheetHeader className="text-left p-6">
                 <SheetTitle>Style</SheetTitle>
                 <SheetDescription>
-                  Show your creativity! You can customize every component as you
-                  like.
+                  Uwolnij swoją kreatywność! Dostosuj komponenty tak jak chcesz.
                 </SheetDescription>
               </SheetHeader>
               <StylesTab />
@@ -63,7 +62,7 @@ const EditorSidebar = ({ subaccountId }: Props) => {
               <SheetHeader className="text-left p-6 ">
                 <SheetTitle>Komponenty</SheetTitle>
                 <SheetDescription>
-                  You can drag and drop components on the canvas
+                  Wybierz komponent i upuść go w obszarze edytora.
                 </SheetDescription>
               </SheetHeader>
               <ComponentsTab />

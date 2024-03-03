@@ -1,7 +1,10 @@
 "use client";
 
 import Container from "../Container";
-import Picture1 from "../../../public/assets/images/test/1.jpeg";
+import PaymentPic from "../../../public/assets/images/payments.png";
+import DashboardPic from "../../../public/assets/images/dashboard.png";
+import ConfiguratorPic from "../../../public/assets/images/configurator.png";
+
 import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -36,7 +39,7 @@ const FeatureSection = () => {
                 </div>
                 <div className="w-[500px] h-[500px] relative">
                   <Image
-                    src={Picture1}
+                    src={PaymentPic}
                     fill
                     alt="Image"
                     placeholder="blur"
@@ -51,18 +54,16 @@ const FeatureSection = () => {
                 className="w-full h-[500px] sticky start-0 top-0 flex items-start justify-center gap-9"
               >
                 <div className="flex flex-col w-[500px]">
-                  <p className="text-[70px]">Powiadomienia</p>
+                  <p className="text-[70px]">Dashboard</p>
                   <p className="text-[40px]">
-                    Ustaw metody płatności jednym kliknięciem i zbieraj
-                    darowizny od społeczności
+                    Zarządzaj, analizuj, monitoruj aktywności na swoim koncie.
                   </p>
                 </div>
                 <div className="w-[500px] h-[500px] relative">
                   <Image
-                    src={Picture1}
+                    src={DashboardPic}
                     fill
                     alt="Image"
-                    placeholder="blur"
                     className="object-cover"
                   />
                 </div>
@@ -76,13 +77,13 @@ const FeatureSection = () => {
                 <div className="flex flex-col w-[500px]">
                   <p className="text-[70px]">Konfigurator</p>
                   <p className="text-[40px]">
-                    Ustaw metody płatności jednym kliknięciem i zbieraj
-                    darowizny od społeczności
+                    Stwórz bez kodowania widgety w własnym stylu lub skorzystaj
+                    z godowych opcji.
                   </p>
                 </div>
                 <div className="w-[500px] h-[500px] relative">
                   <Image
-                    src={Picture1}
+                    src={ConfiguratorPic}
                     fill
                     alt="Image"
                     placeholder="blur"

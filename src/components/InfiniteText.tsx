@@ -1,5 +1,4 @@
 "use client";
-// TODO: dodac napis idacy od lewej do prawej
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,24 +38,24 @@ const InfiniteText = () => {
   };
 
   return (
-    <section className="w-full h-[100px]  bg-red-500">
-      <div className="absolute ">
+    <div className="overflow-hidden relative flex -top-[50px]">
+      <div className="h-[500px]">
         <div ref={slider} className="relative whitespace-nowrap">
           <p
             ref={firstText}
-            className="relative m-0 text-white text-[70px] font-medium pr-[50px]"
+            className="relative m-0 text-black text-[230px] font-medium pr-[50px]"
           >
-            Zarządzaj -
+            Monetyzuj - Zarządzaj -
           </p>
           <p
             ref={secondText}
-            className="absolute left-[100%] top-0 m-0 text-white text-[70px] font-medium pr-[50px]"
+            className="absolute left-[100%] top-0 m-0 text-black text-[230px] font-medium pr-[50px]"
           >
-            Monetyzuj -
+            Monetyzuj - Zarządzaj -
           </p>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
