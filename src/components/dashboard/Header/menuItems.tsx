@@ -15,11 +15,19 @@ import { generalSans } from "@/fonts";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-const MenuItems = async () => {
+interface Props {
+  role: string;
+}
+
+const MenuItems = async ({ role }: Props) => {
+  const filteredMenuItems = menuItems.filter(
+    (item) => role === "admin" || item.id !== "6"
+  );
+
   return (
     <nav className="flex items-center">
       <ul className="text-sm flex items-center">
-        {menuItems.map((item: any) => (
+        {filteredMenuItems.map((item: any) => (
           <Item key={item.id} item={item} />
         ))}
       </ul>

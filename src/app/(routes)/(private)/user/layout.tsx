@@ -1,3 +1,4 @@
+import { BlockAccInfo } from "@/components/blockedAcc";
 import HeaderDashboard from "@/components/dashboard/Header";
 
 const UserPageLayout = ({ children }: { children: React.ReactNode }) => {
@@ -7,6 +8,7 @@ const UserPageLayout = ({ children }: { children: React.ReactNode }) => {
       <main className="w-full h-full py-6 overflow-y-auto pb-40">
         {children}
       </main>
+      <BlockAccInfo />
     </div>
   );
 };

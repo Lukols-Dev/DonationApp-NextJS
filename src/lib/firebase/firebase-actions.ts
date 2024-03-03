@@ -18,6 +18,15 @@ export class UserService {
       })
     ).json();
   }
+
+  static async deleteUser(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`, {
+        method: "POST",
+        body: JSON.stringify({ uid: uid }),
+      })
+    ).json();
+  }
 }
 
 export class MessagesService {

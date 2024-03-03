@@ -31,7 +31,7 @@ const UserSettingPage = async () => {
           </Card>
           <Card className="max-w-[500px]">
             <CardContent className="flex flex-col gap-y-4">
-              <UserDeleteAccForm data={data} uid={currentUser.uid} />
+              <UserDeleteAccForm uid={currentUser.uid} />
             </CardContent>
           </Card>
         </div>

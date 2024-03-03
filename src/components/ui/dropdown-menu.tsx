@@ -32,7 +32,7 @@ const DropDownWrapper = ({ items, row, children }: Props) => {
             ) : (
               <DropdownMenuItem
                 key={item.title}
-                onSelect={() => item.action(row)}
+                onSelect={() => (item.action ? item.action(row) : undefined)}
               >
                 {item.element}
               </DropdownMenuItem>

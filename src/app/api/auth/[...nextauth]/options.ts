@@ -3,7 +3,7 @@ import { cert } from "firebase-admin/app";
 import GoogleProvider from "next-auth/providers/google";
 import { GoogleProfile } from "next-auth/providers/google";
 import { assertValue } from "@/lib/utils";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 
 export const authOptions = {
   providers: [
@@ -28,7 +28,7 @@ export const authOptions = {
           role: "user",
           pid: "",
           account_type: "individual",
-          create_at: Timestamp.fromDate(new Date()),
+          create_at: Timestamp.now(),
           account_status: ["active"],
         };
       },

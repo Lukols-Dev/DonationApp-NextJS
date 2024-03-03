@@ -76,47 +76,18 @@ export const getColumnsUsers = (): ColumnDef<Payment>[] => {
           <XCircle className="w-4 h-4" /> Usuń Konto
         </div>
       ),
-      action: (payment: any) => {
-        //   QueueService.addToQueue(uid, payment)
-        //     .then(() => console.log("add to queue"))
-        //     .catch((err) => console.log("problem with add to queue: ", err));
+      action: () => {
+        AdminUsersService.deleteUser("AfaKosCBYUxTnUzrRBz26cvAFfBH7j", user.id)
+          .then(() => {
+            console.log("delete user");
+            route.refresh();
+          })
+          .catch((err) => console.log("problem with delete user: ", err));
       },
     };
 
     return [accountStatusAction, deleteAccount];
   };
-  // const dropdownItems: DropDownMenuItem[] = [
-  //   {
-  //     title: "Zablokuj konto",
-  //     element: (
-  //       <div className="flex items-center gap-2 cursor-pointer">
-  //         <ShieldAlert className="w-4 h-4" /> Zablokuj Konto
-  //       </div>
-  //     ),
-  //     action: (user: any) => {
-  //       AdminUsersService.updateUserData(
-  //         "AfaKosCBYUxTnUzrRBz26cvAFfBH7j",
-  //         user.id,
-  //         { account_status: ["block"] }
-  //       )
-  //         .then(() => console.log("User blocked"))
-  //         .catch((err) => console.log("Problem with blocked: ", err));
-  //     },
-  //   },
-  //   {
-  //     title: "Usuń konto",
-  //     element: (
-  //       <div className="flex items-center gap-2 cursor-pointer">
-  //         <XCircle className="w-4 h-4" /> Usuń Konto
-  //       </div>
-  //     ),
-  //     action: (payment: any) => {
-  //       //   QueueService.addToQueue(uid, payment)
-  //       //     .then(() => console.log("add to queue"))
-  //       //     .catch((err) => console.log("problem with add to queue: ", err));
-  //     },
-  //   },
-  // ];
 
   return [
     {

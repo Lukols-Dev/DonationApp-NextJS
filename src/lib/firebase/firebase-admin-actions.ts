@@ -13,6 +13,15 @@ export class AdminUsersService {
       })
     ).json();
   }
+
+  static async deleteUser(id: string, uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users`, {
+        method: "POST",
+        body: JSON.stringify({ uid: uid }),
+      })
+    ).json();
+  }
 }
 
 export class AdminMessagesService {

@@ -30,9 +30,6 @@ const AdminPage = async () => {
   const getAppFee = await AdminPaymentService.getAppFees(
     "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
   );
-  // console.log("getAppFee: ", getAppFee);
-  //   console.log("users: ", users);
-  //   console.log("revenueSummary: ", revenueSummary);
 
   return (
     <Container>
