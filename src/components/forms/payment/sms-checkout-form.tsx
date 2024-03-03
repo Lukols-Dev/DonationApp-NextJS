@@ -1,9 +1,6 @@
 "use client";
 import { CashbillService } from "@/lib/cashbill/cashbill-actions";
-import { PaypalPayment } from "@/lib/paypal/paypal-actions";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Send } from "lucide-react";
-import { useRouter } from "next/router";
 
 interface Props {
   uid: string;
@@ -12,7 +9,7 @@ interface Props {
   onSumbit: () => void;
 }
 
-const PaysafecardCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
+const SMSCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
   // const router = useRouter();
 
   const onClick = async () => {
@@ -42,4 +39,4 @@ const PaysafecardCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
   );
 };
 
-export default PaysafecardCheckout;
+export default SMSCheckout;

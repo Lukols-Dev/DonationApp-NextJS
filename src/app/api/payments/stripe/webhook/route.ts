@@ -1,19 +1,24 @@
+import getCurrentUser, { getSession } from "@/lib/auth-actions";
+import { firestore } from "@/lib/firebase";
+import { QueueService, UserService } from "@/lib/firebase/firebase-actions";
 import { stripe } from "@/lib/stripe";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripeWebhookEvents = new Set([
   "account.updated",
-  "product.created",
-  "customer.created",
-  "product.updated",
-  "price.created",
-  "price.updated",
-  "checkout.session.completed",
-  "customer.subscription.created",
-  "customer.subscription.updated",
-  "customer.subscription.deleted",
+  "person.created",
+  "charge.succeeded",
+  "payment_intent.succeeded",
 ]);
 
 export async function POST(req: NextRequest) {
@@ -34,64 +39,140 @@ export async function POST(req: NextRequest) {
     console.log(`🔴 Error ${error.message}`);
     return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
   }
-  console.log("stripeEvent: ", stripeEvent.type);
-  //
+  console.log("stripeEvent webhook: ", stripeEvent.type);
+
   try {
     if (stripeWebhookEvents.has(stripeEvent.type)) {
-      const subscription = stripeEvent.data.object as Stripe.Subscription;
-      if (
-        !subscription.metadata.connectAccountPayments &&
-        !subscription.metadata.connectAccountSubscriptions
-      ) {
-        switch (stripeEvent.type) {
-          case "customer.subscription.created":
-          case "customer.subscription.updated": {
-            if (subscription.status === "active") {
-              // await subscriptionCreated(
-              //   subscription,
-              //   subscription.customer as string
-              // )
-              console.log("CREATED FROM WEBHOOK 💳", subscription);
-            } else {
-              console.log(
-                "SKIPPED AT CREATED FROM WEBHOOK 💳 because subscription status is not active",
-                subscription
-              );
-              break;
-            }
-          }
-          case "customer.created":
-            console.log("Konto zostało utworzone webhook info!!!!");
-            break;
+      switch (stripeEvent.type) {
+        case "account.updated": {
+          const accountUpdatedData = stripeEvent.data.object as Stripe.Account;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", accountUpdatedData.id)
+          );
+          const existingUser = await getDocs(existingQuery);
 
-          case "account.updated":
-            console.log("account.updated");
-            // Then define and call a function to handle the event account.updated
-            break;
-          case "account.application.authorized":
-            console.log("account.application.authorized");
-            // Then define and call a function to handle the event account.application.authorized
-            break;
-          case "account.application.deauthorized":
-            // Then define and call a function to handle the event account.application.deauthorized
-            break;
-          case "account.external_account.created":
-            // Then define and call a function to handle the event account.external_account.created
-            break;
-          case "account.external_account.deleted":
-            // Then define and call a function to handle the event account.external_account.deleted
-            break;
-          case "account.external_account.updated":
-            // Then define and call a function to handle the event account.external_account.updated
-            break;
-          default:
-            console.log("👉🏻 Unhandled relevant event!", stripeEvent.type);
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            account_type: accountUpdatedData.business_type,
+            charges_enabled: !!accountUpdatedData.charges_enabled,
+            payouts_enabled: !!accountUpdatedData.payouts_enabled,
+            details_enabled: !!accountUpdatedData.details_submitted,
+          });
+          break;
         }
-      } else {
-        console.log(
-          "SKIPPED FROM WEBHOOK 💳 because subscription was from a connected account not for the application",
-          subscription
-        );
+        case "person.created": {
+          const createdPersonData = stripeEvent.data.object as Stripe.Person;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", createdPersonData.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            person_id: createdPersonData.id,
+          });
+          break;
+        }
+
+        case "account.external_account.created": {
+          const createdBankData = stripeEvent.data
+            .object as Stripe.ExternalAccount;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", createdBankData.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+
+          const paymentDoc = existingUser.docs[0];
+          await updateDoc(doc(firestore, "users", paymentDoc.id), {
+            bank_id: createdBankData.id,
+          });
+          break;
+        }
+
+        case "payment_intent.succeeded": {
+          const dataPaymentIntentSucceeded = stripeEvent.data
+            .object as Stripe.PaymentIntent;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where(
+              "connect_acc",
+              "==",
+              dataPaymentIntentSucceeded.metadata.account
+            )
+          );
+          const existingUser = await getDocs(existingQuery);
+          const userDoc = existingUser.docs[0];
+          const messagecColl = collection(
+            firestore,
+            "users",
+            userDoc.id,
+            "messages"
+          );
+          const existingQueryMes = query(
+            messagecColl,
+            where("payment_intent", "==", dataPaymentIntentSucceeded.id)
+          );
+          const existingMes = await getDocs(existingQueryMes);
+          const messDoc = existingMes.docs[0];
+          await updateDoc(
+            doc(firestore, "users", userDoc.id, "messages", messDoc.id),
+            {
+              payment_status: dataPaymentIntentSucceeded.status,
+            }
+          );
+          await QueueService.addToQueue(userDoc.id, {
+            mid: messDoc.id,
+            nick: messDoc.get("nick"),
+            description: messDoc.get("description"),
+            amount: messDoc.get("amount"),
+            amount_after_fees: messDoc.get("amount_after_fees"),
+            currency: messDoc.get("currency"),
+          });
+
+          break;
+        }
+
+        case "charge.succeeded": {
+          const dataChargeSucceded = stripeEvent.data.object as Stripe.Charge;
+          const userColl = collection(firestore, "users");
+          const existingQuery = query(
+            userColl,
+            where("connect_acc", "==", dataChargeSucceded.metadata.account)
+          );
+          const existingUser = await getDocs(existingQuery);
+          const userDoc = existingUser.docs[0];
+          const messagecColl = collection(
+            firestore,
+            "users",
+            userDoc.id,
+            "messages"
+          );
+          const existingQueryMes = query(
+            messagecColl,
+            where("payment_intent", "==", dataChargeSucceded.payment_intent)
+          );
+          const existingMes = await getDocs(existingQueryMes);
+          const messDoc = existingMes.docs[0];
+          await updateDoc(
+            doc(firestore, "users", userDoc.id, "messages", messDoc.id),
+            {
+              charge_id: dataChargeSucceded.id,
+              charge_paid: dataChargeSucceded.paid,
+              recipt_url: dataChargeSucceded.receipt_url,
+            }
+          );
+          break;
+        }
+
+        default:
+          console.log("👉🏻 Unhandled relevant event!", stripeEvent.type);
       }
     }
   } catch (error) {

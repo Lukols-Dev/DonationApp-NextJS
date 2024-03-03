@@ -13,12 +13,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import StripeCheckoutForm from "./stripe-checkout";
-import { calculateApplicationFeeAmount, debounce } from "@/lib/utils";
+import { calculateApplicationFeeAmount, cn, debounce } from "@/lib/utils";
 import { PaymentMethodFees } from "@/types";
 import { updatePaymentIntent } from "@/lib/stripe/stripe-actions";
 import PaypalCheckout from "./checkout-paypal";
 import PaysafecardCheckout from "./checkout-paysafecard";
 import StripeForm from "./stripe-form";
+import SMSCheckout from "./sms-checkout-form";
 
 interface Props {
   uid: string;
@@ -214,6 +215,7 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   };
 
   useEffect(() => {
+    if (!values.amount) return;
     getTotalPrice();
   }, [values.amount]);
 
@@ -230,6 +232,11 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
   //     return;
   //   updatePaymentIntentDebounced(values.amount);
   // }, [values.amount, updatePaymentIntentDebounced]);
+
+  useEffect(() => {
+    if (!values.summaryPrice) return;
+    setValues({ ...values, payment_method: "" });
+  }, [values.summaryPrice]);
 
   return (
     <>
@@ -263,7 +270,11 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
           {paymentMethod.map((item: string) => (
             <li
               key={item}
-              className="w-full h-[80px] flex items-center justify-center p-2 border-2 rounded-md relative cursor-pointer"
+              className={cn(
+                "w-full h-[80px] flex items-center justify-center p-2 border-2 rounded-md relative cursor-pointer bg-white",
+                item === values.payment_method &&
+                  "border-2 border-blue-500 shadow-md"
+              )}
               onClick={() => handleSelectPaymentMethod(item)}
             >
               <Image
@@ -316,11 +327,15 @@ const CheckoutForm = ({ uid, paymentMethod, connectAcc, appFees }: Props) => {
               onSumbit={onSubmit}
             />
           ) : (
-            // <div>paysafe card</div>
             <></>
           )}
           {values.payment_method === "smspremium" ? (
-            <div>sms payment</div>
+            <SMSCheckout
+              uid={uid}
+              amount={values.summaryPrice}
+              appFee={appFee}
+              onSumbit={onSubmit}
+            />
           ) : (
             <></>
           )}
