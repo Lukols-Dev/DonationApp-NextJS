@@ -266,8 +266,8 @@ const CheckoutForm = ({
           method: value.methodFee,
         },
         custom_elements: {
-          gif: appFees.custom_elements.gif,
-          voice: appFees.custom_elements.gif,
+          gif: appFees.custom_elements.gif || 0,
+          voice: appFees.custom_elements.gif || 0,
         },
       },
     }));

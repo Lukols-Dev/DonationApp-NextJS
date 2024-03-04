@@ -8,18 +8,22 @@ import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 interface Props {
   data: any[];
   type: string;
+  title?: string;
 }
 
-const CustomAdminTable = ({ data, type }: Props) => {
+const CustomAdminTable = ({ data, type, title }: Props) => {
   const columnsUsers = getColumnsUsers();
   const columnsPayouts = getColumnsPayouts();
 
   return (
     <div className="w-full h-full">
-      <ExportBtn
-        columns={type === "users" ? exportColUser : exportColPayout}
-        data={data}
-      />
+      <div className="flex gap-4 items-center">
+        {title}
+        <ExportBtn
+          columns={type === "users" ? exportColUser : exportColPayout}
+          data={data}
+        />
+      </div>
       <CardTable
         data={data}
         columns={type === "users" ? columnsUsers : columnsPayouts}

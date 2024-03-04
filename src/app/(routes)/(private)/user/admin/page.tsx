@@ -154,8 +154,12 @@ const AdminPage = async () => {
             </Card>
           </div>
         </div>
-        <CustomAdminTable data={users.data} type="users" />
-        <CustomAdminTable data={getPayouts.data} type="payout" />
+        <CustomAdminTable data={users.data} type="users" title="Konta" />
+        <CustomAdminTable
+          data={getPayouts.data}
+          type="payout"
+          title="Prośby o wypłatę"
+        />
       </section>
     </Container>
   );
