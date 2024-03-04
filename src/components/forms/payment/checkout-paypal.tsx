@@ -16,7 +16,8 @@ const PaypalCheckout = ({ uid, amount, appFee, isblock, onSumbit }: Props) => {
     <form className="w-full h-[100px] rounded-md">
       <PayPalScriptProvider
         options={{
-          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+          clientId:
+            "AWmrRArA7rinSbfBZZUyPpA7kJvbPcFrLDOUSnJew67hp_SAEm9JswWQJilb0Fo02nzi_J7m9UYIOlcd",
           currency: "PLN",
           intent: "capture",
         }}

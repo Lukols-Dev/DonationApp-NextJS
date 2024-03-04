@@ -16,7 +16,7 @@ export const POST = async (req: Request, { params }: { params: IParams }) => {
       currencyCode: "pln",
     },
     description: "Wspardzie na dalszy rozwój działalności.",
-    returnUrl: process.env.NEXT_PUBLIC_URL,
+    returnUrl: "https://donation-app-next-js.vercel.app",
     // negativeReturnUrl,
     // paymentChannel,
     languageCode: "PL",
@@ -34,12 +34,12 @@ export const POST = async (req: Request, { params }: { params: IParams }) => {
     // },
     // referer,
     // options,
-    sign: process.env.NEXT_PUBLIC_CASHBILL_API_KEY,
+    sign: "1870021741.5aa4e00deb54d1b5735c42a1ab5765f02f88fceb",
   });
 
   try {
     const response = await fetch(
-      `https://pay.cashbill.pl/ws/rest/payment/${process.env.NEXT_PUBLIC_CASHBILL_POS_ID}`,
+      `https://pay.cashbill.pl/ws/rest/payment/dc07c1e0da5f270b98e4675c84df2003`,
       {
         method: "POST",
         headers: {

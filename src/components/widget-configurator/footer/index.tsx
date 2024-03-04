@@ -24,13 +24,16 @@ const EditorFooter = ({ uid }: Props) => {
       content: state.editor.elements,
     };
     try {
-      const resp = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const resp = await fetch(
+        `https://donation-app-next-js.vercel.app/api/widgets`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       if (resp.ok) {
         toast({
@@ -106,7 +109,9 @@ const EditorFooter = ({ uid }: Props) => {
           Wyczyść
         </button>
         <div className="border-2 border-[#1814F3] rounded-sm w-[300px]">
-          <InputCopy value={`${process.env.NEXT_PUBLIC_URL}/widget/${uid}`} />
+          <InputCopy
+            value={`https://donation-app-next-js.vercel.app/widget/${uid}`}
+          />
         </div>
       </div>
     </div>

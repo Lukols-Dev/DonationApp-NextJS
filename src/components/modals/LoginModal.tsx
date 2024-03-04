@@ -40,7 +40,7 @@ const LoginItems = () => {
           type="button"
           onClick={() => {
             signIn("google", {
-              callbackUrl: `${process.env.NEXT_PUBLIC_URL}/user`,
+              callbackUrl: `https://donation-app-next-js.vercel.app/user`,
             });
           }}
         >

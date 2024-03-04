@@ -12,8 +12,8 @@ import {
 import { NextResponse } from "next/server";
 
 const environment = new paypal.core.SandboxEnvironment(
-  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
-  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET!
+  "AWmrRArA7rinSbfBZZUyPpA7kJvbPcFrLDOUSnJew67hp_SAEm9JswWQJilb0Fo02nzi_J7m9UYIOlcd",
+  "EEMLwEQ3nz31JWWqsoHXxWQ67ft5JBIG_opxEA0Ob1DIkceC8E6Ru1JMt4b3UFHPFfhRTOveKdaYLUMq"
 );
 const client = new paypal.core.PayPalHttpClient(environment);
 

@@ -5,13 +5,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyDeg-t8jWJU4ngd0GpYm-2L4dB-7tMBjlM",
+  authDomain: "tipey-c631a.firebaseapp.com",
+  projectId: "tipey-c631a",
+  storageBucket: "tipey-c631a.appspot.com",
+  messagingSenderId: "2013776465",
+  appId: "1:2013776465:web:cca432e70432bec08c8670",
+  measurementId: "G-1E1FPK7TVM",
 };
 
 const app = initializeApp(firebaseConfig);
