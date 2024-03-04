@@ -10,9 +10,9 @@ import {
 } from "@/lib/firebase/firebase-admin-actions";
 import { Banknote, MessageCircleMore } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { InputFees } from "./(components)/inputFees";
-import { getColumnsUsers } from "./(columns)/user";
-import { getColumnsPayouts } from "./(columns)/payout";
+import { InputFees } from "./inputFees";
+import { getColumnsUsers } from "./user";
+import { getColumnsPayouts } from "./payout";
 import Link from "next/link";
 import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 
