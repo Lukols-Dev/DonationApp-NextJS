@@ -24,7 +24,7 @@ const AdminPage = async () => {
     role: string;
   } = await getCurrentUser();
 
-  if (currentUser.role !== "admin") return;
+  if (!currentUser || currentUser.role !== "admin") return;
 
   const users: { data: any[]; count: number } =
     await AdminUsersService.getAllUsers("AfaKosCBYUxTnUzrRBz26cvAFfBH7j");
