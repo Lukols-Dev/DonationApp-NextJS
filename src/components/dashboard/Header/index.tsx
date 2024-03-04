@@ -8,6 +8,7 @@ import MailTo from "@/components/ui/mail-to";
 import AvatarDropDown from "@/components/common/Buttons/AvatarDropdown";
 import getCurrentUser from "@/lib/auth-actions";
 import NotificationBtn from "../buttons/notification-dropdown";
+import HamburgerBtn from "../buttons/hamburger-btn";
 
 const font = generalSans.bold.className;
 
@@ -35,7 +36,10 @@ const HeaderDashboard = ({ uid, role, picture }: Props) => {
             <NotificationBtn uid={uid} />
             <AvatarDropDown src={picture} />
           </div>
-          <div className="flex md:hidden">{/* <Menu /> */}</div>
+          <div className="flex items-center gap-5 md:hidden">
+            <HamburgerBtn role={role} />
+            <AvatarDropDown src={picture} />
+          </div>
         </div>
       </Container>
     </header>

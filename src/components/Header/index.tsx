@@ -1,5 +1,5 @@
 "use client";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import gsap from "gsap";
 
@@ -9,8 +9,12 @@ import Logo from "./Logo";
 import Menu from "./Menu";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LoginBtn from "../common/Buttons/LoginBtn";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
+  const [isActive, setIsActive] = useState<boolean>(false);
+
   const button = useRef<any>(null);
 
   useLayoutEffect(() => {
@@ -52,9 +56,15 @@ const Header = () => {
           </div>
         </Container>
       </header>
-      <div className="fixed transform scale-0 top-5 right-5 z-20 " ref={button}>
-        <RoundedButton />
-      </div>
+      {/* <div className="fixed transform scale-0 top-5 right-5 z-20 " ref={button}>
+        <div
+          onClick={() => {
+            setIsActive(!isActive);
+          }}
+        >
+          <RoundedButton />
+        </div>
+      </div> */}
     </>
   );
 };
