@@ -34,11 +34,34 @@ const VoiceRecorder = ({
     }
   };
 
+  // const stopRecording = () => {
+  //   if (mediaRecorderRef.current) {
+  //     mediaRecorderRef.current.stop();
+  //     setIsRecording(false);
+  //     clearInterval(recordingIntervalRef.current as NodeJS.Timeout);
+  //   }
+  // };
+
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       clearInterval(recordingIntervalRef.current as NodeJS.Timeout);
+
+      // Aktualizacja czasu nagrania powinna nastąpić tutaj, przed wywołaniem onRecordingComplete.
+      const finalRecordingTime = recordingTime;
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/mp4",
+        });
+        setAudioUrl(URL.createObjectURL(audioBlob));
+        setIsLoading(false);
+
+        // Wywołujemy onRecordingComplete z finalnym czasem nagrania.
+        if (onRecordingComplete) {
+          onRecordingComplete(audioBlob, finalRecordingTime);
+        }
+      };
     }
   };
 

@@ -285,6 +285,7 @@ const CheckoutForm = ({
     audioBlob: Blob,
     recordingLength: number
   ) => {
+    console.log("recordingLength: ", recordingLength);
     await setRecordingLength(recordingLength);
     await setVoiceFile(audioBlob);
     await getTotalPrice();
