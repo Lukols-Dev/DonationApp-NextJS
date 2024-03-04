@@ -1,8 +1,8 @@
 "use client";
 
 import CardTable from "@/components/dashboard/cards/card-table";
-import { getColumnsUsers } from "./_columns/user";
-import { getColumnsPayouts } from "./_columns/payout";
+import { getColumnsUsers } from "./(columns)/user";
+import { getColumnsPayouts } from "./(columns)/payout";
 import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 
 interface Props {
