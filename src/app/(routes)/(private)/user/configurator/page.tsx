@@ -7,6 +7,8 @@ import EditorProvider from "@/providers/widget-configurator/configurator-provide
 const ConfiguratorPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
 
+  if (!currentUser) return;
+
   return (
     <div className="w-full h-full bg-white overflow-hidden">
       <EditorProvider subaccountId={"1"} funnelId={"2"} pageDetails={1}>

@@ -20,6 +20,9 @@ import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 const WalletPage = async () => {
   let summary: any;
   const currentUser: { uid: string; email: string } = await getCurrentUser();
+
+  if (!currentUser) return;
+
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
   const payments: { count: number; payments: any[] } =

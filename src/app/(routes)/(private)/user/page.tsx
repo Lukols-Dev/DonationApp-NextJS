@@ -21,6 +21,9 @@ const UserPage = async () => {
   let barchatSummary: any;
   const currentUser: { uid: string; nick: string; picture: string } =
     await getCurrentUser();
+
+  if (!currentUser) return;
+
   const url = await PaymentService.getCheckout(currentUser.uid);
   const news = await NewsService.getNews();
 

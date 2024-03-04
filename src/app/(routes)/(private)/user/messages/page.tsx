@@ -10,6 +10,9 @@ import CustomTable from "./table";
 
 const MessagesPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
+
+  if (!currentUser) return;
+
   const messages: { count: number; messages: any[] } =
     await MessagesService.getAllMessages(currentUser.uid);
   const queue: { count: number; notifications: any[] } =

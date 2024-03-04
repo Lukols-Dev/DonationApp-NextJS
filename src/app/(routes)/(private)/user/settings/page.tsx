@@ -8,6 +8,7 @@ import { UserService } from "@/lib/firebase/firebase-actions";
 
 const UserSettingPage = async () => {
   const currentUser: { uid: string; pid: string } = await getCurrentUser();
+  if (!currentUser) return;
   const data = await UserService.getUserData(currentUser.uid);
 
   return (

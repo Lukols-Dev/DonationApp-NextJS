@@ -19,6 +19,9 @@ const MonetisationPage = async () => {
     picture: string;
     connect_acc: string;
   } = await getCurrentUser();
+
+  if (!currentUser) return;
+
   const url = await PaymentService.getCheckout(currentUser.uid);
   const fetchedPayments: { count: number; payments: any[] } =
     await PaymentService.getAllPayments(currentUser.uid);

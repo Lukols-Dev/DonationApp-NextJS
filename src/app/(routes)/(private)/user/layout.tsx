@@ -5,6 +5,9 @@ import getCurrentUser from "@/lib/auth-actions";
 const UserPageLayout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser: { uid: string; role: string; picture: string } =
     await getCurrentUser();
+
+  if (!currentUser) return;
+
   return (
     <div className="w-screen h-screen overflow-hidden bg-slate-100">
       <HeaderDashboard
