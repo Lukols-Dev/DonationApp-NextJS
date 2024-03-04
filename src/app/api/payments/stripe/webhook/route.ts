@@ -176,6 +176,8 @@ export async function POST(req: NextRequest) {
             amount: messDoc.get("amount"),
             amount_after_fees: messDoc.get("amount_after_fees"),
             currency: messDoc.get("currency"),
+            gif_url: messDoc.get("gif_url"),
+            voice_url: messDoc.get("voice_url"),
           });
 
           break;

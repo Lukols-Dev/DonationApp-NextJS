@@ -156,7 +156,7 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
         city: user.city,
         country: user.country,
         amount: amount,
-        methods: ["p24", "card", "blik"],
+        methods: ["paypal"],
       });
       route.refresh();
     } catch (err) {
