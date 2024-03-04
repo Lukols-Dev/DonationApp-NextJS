@@ -1,11 +1,10 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 import gsap from "gsap";
 
 import Container from "../Container";
 import RoundedButton from "../common/Buttons/RoundedButton";
-import Magnetic from "../common/Magnetic";
 import Logo from "./Logo";
 import Menu from "./Menu";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

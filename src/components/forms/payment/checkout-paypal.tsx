@@ -1,4 +1,5 @@
 "use client";
+import { QueueService } from "@/lib/firebase/firebase-actions";
 import { PaypalPayment } from "@/lib/paypal/paypal-actions";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
@@ -35,15 +36,12 @@ const PaypalCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
             return order_id + "";
           }}
           onApprove={async (data, actions) => {
-            console.log("data: ", data);
             let response = await PaypalPayment.paypalCaptureOrder(uid, {
               orderID: data.orderID,
             });
             if (response) {
-              onSumbit();
+              await onSumbit();
             }
-            // if (response) return true;
-            console.log("response: ", response);
             return response;
           }}
         />

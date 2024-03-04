@@ -47,7 +47,7 @@ export const POST = async (req: Request) => {
     });
 
     const response = await client.execute(request);
-    console.log("response payouts: ", response);
+
     if (response.statusCode !== 201) {
       return NextResponse.json({
         status: 500,

@@ -37,7 +37,6 @@ const NotificationBtn = ({ uid }: Props) => {
   const deleteNotifications = async () => {
     try {
       await NotificationService.deleteAllNotifications(uid);
-      setOpen(false);
       route.refresh();
     } catch (err) {
       console.log("Err delete notification: ", err);
@@ -65,15 +64,17 @@ const NotificationBtn = ({ uid }: Props) => {
           {notifications && notifications.count > 0 ? (
             <div className="flex flex-col gap-2">
               <div className="overflow-y-auto max-h-[300px]">
-                {notifications.notifications.map((item: Notification) => (
-                  <div
-                    key={item.create_at}
-                    className="flex items-center gap-4 text-sm"
-                  >
-                    <span>{item.description}</span>
-                    <span>{formatTimestamp(item.create_at)}</span>
-                  </div>
-                ))}
+                {notifications.notifications.map(
+                  (item: Notification, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 text-sm"
+                    >
+                      <span>{item.description}</span>
+                      <span>{formatTimestamp(item.create_at)}</span>
+                    </div>
+                  )
+                )}
               </div>
               <button
                 className="ml-auto mr-0 text-sm"

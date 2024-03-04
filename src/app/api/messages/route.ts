@@ -37,17 +37,20 @@ export const POST = async (req: Request) => {
     const existingPayments = await getDocs(existingPaymentQuery);
     if (!existingPayments.empty) {
       const paymentDoc = existingPayments.docs[0];
-      await addDoc(collRef, messageData);
+      const messageRes = await addDoc(collRef, messageData);
       await updateDoc(doc(firestore, "users", uid, "payment", paymentDoc.id), {
         used: increment(1),
         current_amount: increment(data.amount),
         payout: increment(data.amount),
       });
 
-      return NextResponse.json("Message was sent.", {
-        status: 200,
-        statusText: "OK",
-      });
+      return NextResponse.json(
+        { id: messageRes.id, message: "Message was sent." },
+        {
+          status: 200,
+          statusText: "OK",
+        }
+      );
     } else {
       return NextResponse.json("Missing payment method", { status: 400 });
     }

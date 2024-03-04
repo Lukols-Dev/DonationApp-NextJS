@@ -3,6 +3,7 @@
 import Modal from "@/components/modals/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Payment } from "@/components/ui/table";
+import { PayoutService } from "@/lib/firebase/firebase-actions";
 import { PaypalPayment } from "@/lib/paypal/paypal-actions";
 import { createPayout } from "@/lib/stripe/stripe-actions";
 import { useRouter } from "next/navigation";
@@ -67,12 +68,14 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
   const route = useRouter();
   const [loading, setLoading] = useState<{
     paypal: boolean;
-    sms: boolean;
+    smspremium: boolean;
     stripe: boolean;
+    paysafecard: boolean;
   }>({
     paypal: false,
-    sms: false,
+    smspremium: false,
     stripe: false,
+    paysafecard: false,
   });
   const [payouts, setPayouts] = useState<any>();
   if (!user) return;
@@ -86,17 +89,26 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
   function calculatePayouts() {
     const payoutSummary: Record<string, number> = {
       paypal: 0,
-      sms: 0,
+      smspremium: 0,
+      paysafecard: 0,
       other: 0,
     };
 
     payments.payments.forEach((payment: any) => {
-      if (payment.name === "paypal" || payment.name === "sms") {
-        payoutSummary[payment.name] += payment.payout;
-      } else {
-        payoutSummary.other += payment.payout;
+      const payout = Number(payment.payout);
+      if (!isNaN(payout)) {
+        if (
+          payment.name === "paypal" ||
+          payment.name === "smspremium" ||
+          payment.name === "paysafecard"
+        ) {
+          payoutSummary[payment.name] += payout;
+        } else {
+          payoutSummary.other += payout;
+        }
       }
     });
+
     setPayouts(payoutSummary);
   }
 
@@ -104,9 +116,20 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     if (amount === 0) return;
     setLoading((prev) => ({ ...prev, stripe: true }));
     try {
-      // route.push("https://dashboard.stripe.com/test/balance/overview");
-      const resp = await createPayout(5, user.connect_acc);
-      console.log("resp stripe: ", resp);
+      await PayoutService.addNewPayout(user.uid, {
+        uid: user.uid,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        bank: user.bank,
+        addres: user.address,
+        city: user.city,
+        country: user.country,
+        amount: amount,
+        methods: ["p24", "card", "blik"],
+      });
+      route.refresh();
+      // const resp = await createPayout(5, user.connect_acc);
     } catch (err) {
       setLoading((prev) => ({ ...prev, stripe: false }));
       console.log("Payout error: ", err);
@@ -119,9 +142,21 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     if (amount === 0) return;
     setLoading((prev) => ({ ...prev, paypal: true }));
     try {
-      await PaypalPayment.paypalPayout(user.uid, {
+      // await PaypalPayment.paypalPayout(user.uid, {
+      //   email: user.email,
+      //   amount: amount,
+      // });
+      await PayoutService.addNewPayout(user.uid, {
+        uid: user.uid,
+        name: user.name,
+        surname: user.surname,
         email: user.email,
+        bank: user.bank,
+        addres: user.address,
+        city: user.city,
+        country: user.country,
         amount: amount,
+        methods: ["p24", "card", "blik"],
       });
       route.refresh();
     } catch (err) {
@@ -132,15 +167,53 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     }
   };
 
-  const smsPayout = (amount: number) => {
+  const smsPayout = async (amount: number) => {
     if (amount === 0) return;
-    setLoading((prev) => ({ ...prev, sms: true }));
+    setLoading((prev) => ({ ...prev, smspremium: true }));
     try {
+      await PayoutService.addNewPayout(user.uid, {
+        uid: user.uid,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        bank: user.bank,
+        addres: user.address,
+        city: user.city,
+        country: user.country,
+        amount: amount,
+        methods: ["smspremium"],
+      });
+      route.refresh();
     } catch (err) {
-      setLoading((prev) => ({ ...prev, sms: false }));
+      setLoading((prev) => ({ ...prev, smspremium: false }));
       console.log("Payout error: ", err);
     } finally {
-      setLoading((prev) => ({ ...prev, sms: false }));
+      setLoading((prev) => ({ ...prev, smspremium: false }));
+    }
+  };
+
+  const paysafecardPayout = async (amount: number) => {
+    if (amount === 0) return;
+    setLoading((prev) => ({ ...prev, paysafecard: true }));
+    try {
+      await PayoutService.addNewPayout(user.uid, {
+        uid: user.uid,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        bank: user.bank,
+        addres: user.address,
+        city: user.city,
+        country: user.country,
+        amount: amount,
+        methods: ["paysafecard"],
+      });
+      route.refresh();
+    } catch (err) {
+      setLoading((prev) => ({ ...prev, paysafecard: false }));
+      console.log("Payout error: ", err);
+    } finally {
+      setLoading((prev) => ({ ...prev, paysafecard: false }));
     }
   };
 
@@ -187,11 +260,33 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
         SMS
         <button
           className="border-2 border-[#1814F3] text-[#1814F3] hover:bg-[#1814F3] hover:text-white rounded-md px-4 py-2"
-          onClick={() => smsPayout(payouts && payouts.sms ? payouts.sms : 0)}
-          disabled={loading.sms}
+          onClick={() =>
+            smsPayout(payouts && payouts.smspremium ? payouts.smspremium : 0)
+          }
+          disabled={loading.smspremium}
         >
-          {!loading.sms ? (
-            <>{payouts && payouts.sms ? payouts.sms : 0} Wypłać</>
+          {!loading.smspremium ? (
+            <>{payouts && payouts.smspremium ? payouts.smspremium : 0} Wypłać</>
+          ) : (
+            <PulseLoader size={10} color="#1814F3" />
+          )}
+        </button>
+      </div>
+      <div className="flex items-center justify-between hover:bg-gray-300 p-4 rounded-md">
+        Paysafecard
+        <button
+          className="border-2 border-[#1814F3] text-[#1814F3] hover:bg-[#1814F3] hover:text-white rounded-md px-4 py-2"
+          onClick={() =>
+            paysafecardPayout(
+              payouts && payouts.paysafecard ? payouts.paysafecard : 0
+            )
+          }
+          disabled={loading.paysafecard}
+        >
+          {!loading.paysafecard ? (
+            <>
+              {payouts && payouts.paysafecard ? payouts.paysafecard : 0} Wypłać
+            </>
           ) : (
             <PulseLoader size={10} color="#1814F3" />
           )}

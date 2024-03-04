@@ -18,8 +18,6 @@ interface Props {
 }
 
 const HeaderDashboard = ({ uid, role, picture }: Props) => {
-  // const currentUser: { picture: string; uid: string; role: string } =
-  //   await getCurrentUser();
   return (
     <header className="w-full bg-transparent">
       <Container>

@@ -5,11 +5,14 @@ import CustomAdminTable from "./table";
 import {
   AdminMessagesService,
   AdminPaymentService,
+  AdminPayoutService,
   AdminUsersService,
 } from "@/lib/firebase/firebase-admin-actions";
-import { MessageCircleMore } from "lucide-react";
+import { Banknote, MessageCircleMore } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputFees } from "./components/inputFees";
+import { getColumnsUsers } from "./_columns/user";
+import { getColumnsPayouts } from "./_columns/payout";
 
 const AdminPage = async () => {
   const currentUser: {
@@ -30,6 +33,12 @@ const AdminPage = async () => {
   const getAppFee = await AdminPaymentService.getAppFees(
     "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
   );
+
+  const getPayouts = await AdminPayoutService.getAllUsers(
+    "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
+  );
+
+  console.log("getPayouts: ", getPayouts);
 
   return (
     <Container>
@@ -57,6 +66,11 @@ const AdminPage = async () => {
               value={revenueSummary.count || 0}
               icon={<MessageCircleMore />}
             />
+            <CardStatistic
+              title="Oczekuje na wypłatę"
+              value={getPayouts.count || 0}
+              icon={<Banknote />}
+            />
           </div>
         </div>
         <div className="w-full h-full overflow-x-auto">
@@ -79,7 +93,8 @@ const AdminPage = async () => {
             </Card>
           </div>
         </div>
-        <CustomAdminTable data={users.data} />
+        <CustomAdminTable data={users.data} type="users" />
+        <CustomAdminTable data={getPayouts.data} type="payout" />
       </section>
     </Container>
   );

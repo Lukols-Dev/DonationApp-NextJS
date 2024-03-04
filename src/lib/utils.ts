@@ -241,8 +241,19 @@ export function debounce(func: any, wait: number) {
   };
 }
 
-export const calculateTotalPayout = (payments: any): number => {
-  return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
+// export const calculateTotalPayout = (payments: any): number => {
+//   console.log("payments: ", payments);
+//   return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
+// };
+
+export const calculateTotalPayout = (payments: any[]): number => {
+  return payments.reduce((acc, payment) => {
+    const payout = Number(payment.payout);
+    if (!isNaN(payout)) {
+      return acc + payout;
+    }
+    return acc;
+  }, 0);
 };
 
 interface SpeakOptions {

@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   MessagesService,
   NotificationService,
+  QueueService,
 } from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
@@ -60,7 +61,7 @@ const CheckoutForm = ({
     currency: "PLN",
     description: "",
     payment_method: "card",
-    payment_status: "pending",
+    payment_status: "complete",
     status: ["queue"],
     summaryPrice: 0,
     amount_fees: {
@@ -78,13 +79,29 @@ const CheckoutForm = ({
 
   const onSubmit = async () => {
     try {
-      await MessagesService.addNewMessage(uid, {
+      const res = await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
           amount_after_fees: values.amount_fees.amount_after_app_fee,
           url: url,
         },
       });
+
+      if (
+        values.payment_method === "paypal" ||
+        values.payment_method === "smspremium" ||
+        values.payment_method === "paysafecard"
+      ) {
+        await QueueService.addToQueue(uid, {
+          mid: res.id,
+          nick: values.nick,
+          description: values.description,
+          amount: values.summaryPrice,
+          amount_after_fees: values.amount_fees.amount_after_app_fee,
+          currency: "PLN",
+        });
+      }
+
       await NotificationService.addNewNotification(uid, {
         amount: values.summaryPrice,
         mount_after_app_fee: values.amount_fees.amount_after_app_fee,
@@ -96,7 +113,7 @@ const CheckoutForm = ({
         currency: "PLN",
         description: "",
         payment_method: "card",
-        payment_status: "",
+        payment_status: "complete",
         status: ["queue"],
         summaryPrice: 0,
         amount_fees: {
@@ -175,7 +192,12 @@ const CheckoutForm = ({
 
   useEffect(() => {
     getAppFees();
-  }, [values.summaryPrice, appFees.app_fee, appFees.fees]);
+  }, [
+    values.summaryPrice,
+    appFees.app_fee,
+    appFees.fees,
+    values.payment_method,
+  ]);
 
   useEffect(() => {
     if (!values.summaryPrice) return;
@@ -237,7 +259,7 @@ const CheckoutForm = ({
             <StripeForm
               amount={values.summaryPrice}
               method={values.payment_method}
-              account={connectAcc}
+              account={"connectAcc"}
               onSumbit={onSubmit}
               uid={uid}
               pid={pid}
