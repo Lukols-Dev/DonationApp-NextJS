@@ -116,7 +116,7 @@ const PaymentPage = async (props: Page) => {
                 <div className="w-4 h-4 rounded-full bg-red-500 animate-ping absolute top-0 left-0" />
                 <div className="w-4 h-4 rounded-full bg-red-500 absolute top-0 left-0" />
               </div>
-              <ul className="w-full h-full max-h-[500px] mt-4 flex flex-col gap-y-2 overflow-auto">
+              <ul className="w-full h-full max-h-[350px] mt-4 flex flex-col gap-y-2 overflow-auto">
                 {lastPayments &&
                   lastPayments.messages
                     .sort((a, b) => b.create_at - a.create_at)
