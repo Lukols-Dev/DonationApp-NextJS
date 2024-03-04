@@ -130,7 +130,7 @@ const GoalsComponent = (props: Props) => {
 
     ControllerService.updateController(props.uid, {
       goal_amount: 0,
-      goal_active: true,
+      goal_active: false,
     });
   }, [is_controller]);
 

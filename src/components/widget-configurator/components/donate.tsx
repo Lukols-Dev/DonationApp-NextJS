@@ -208,7 +208,7 @@ const DonateComponent = (props: Props) => {
     if (!is_controller) return;
 
     ControllerService.updateController(props.uid, {
-      donate_active: true,
+      donate_active: false,
     });
   }, [is_controller]);
 
