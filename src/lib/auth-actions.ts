@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { UserService } from "./firebase/firebase-actions";
 
 export const getSession = async () => {
+  //@ts-ignore
   return await getServerSession(authOptions);
 };
 
