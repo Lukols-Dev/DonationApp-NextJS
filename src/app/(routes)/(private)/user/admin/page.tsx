@@ -40,8 +40,6 @@ const AdminPage = async () => {
     "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
   );
 
-  console.log("getPayouts: ", getPayouts);
-
   return (
     <Container>
       <span className="text-3xl font-bold">ADMIN</span>
