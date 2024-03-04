@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
 import { Progress } from "@/components/ui/progress";
+import { ControllerService } from "@/lib/firebase/firebase-actions";
 
 interface Props {
   element: EditorElement;
@@ -58,6 +59,10 @@ const GoalsComponent = (props: Props) => {
   const amountType = !Array.isArray(props.element.content)
     ? props.element.content.amount_type
     : "amount";
+
+  const is_controller = !Array.isArray(props.element.content)
+    ? props.element.content.goal_controller
+    : false;
 
   useEffect(() => {
     if (!state.editor.liveMode || !goalActivation) return;
@@ -119,6 +124,15 @@ const GoalsComponent = (props: Props) => {
 
     return () => unsubscribe();
   }, [props.uid]);
+
+  useEffect(() => {
+    if (!is_controller) return;
+
+    ControllerService.updateController(props.uid, {
+      goal_amount: 0,
+      goal_active: true,
+    });
+  }, [is_controller]);
 
   return (
     <div

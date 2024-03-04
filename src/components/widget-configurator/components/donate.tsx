@@ -15,7 +15,10 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
 import { speakText } from "@/lib/utils";
-import { QueueService } from "@/lib/firebase/firebase-actions";
+import {
+  ControllerService,
+  QueueService,
+} from "@/lib/firebase/firebase-actions";
 
 interface Props {
   element: EditorElement;
@@ -64,6 +67,10 @@ const DonateComponent = (props: Props) => {
   const amountType = !Array.isArray(props.element.content)
     ? props.element.content.amount_type
     : "amount";
+
+  const is_controller = !Array.isArray(props.element.content)
+    ? props.element.content.donate_controller
+    : false;
 
   useEffect(() => {
     if (!donateLector) return;
@@ -196,6 +203,14 @@ const DonateComponent = (props: Props) => {
 
     return () => unsubscribe();
   }, [props.uid]);
+
+  useEffect(() => {
+    if (!is_controller) return;
+
+    ControllerService.updateController(props.uid, {
+      donate_active: true,
+    });
+  }, [is_controller]);
 
   return (
     <div

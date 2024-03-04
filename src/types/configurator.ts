@@ -38,9 +38,11 @@ export type EditorElement = {
         donate_delay?: number;
         donate_activation_amount?: number;
         donate_lector?: boolean;
+        donate_controller?: boolean;
         goal_activation?: boolean;
         goal_max_value?: number;
         goal_start_date?: any;
+        goal_controller?: boolean;
       };
 };
 

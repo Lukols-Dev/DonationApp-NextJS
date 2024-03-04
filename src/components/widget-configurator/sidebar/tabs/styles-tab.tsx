@@ -39,6 +39,7 @@ import { Slider } from "@/components/ui/slider";
 import { useEditor } from "@/hooks/useEditor";
 import { Switch } from "@/components/ui/switch";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { ControllerService } from "@/lib/firebase/firebase-actions";
 
 type Props = {};
 
@@ -207,7 +208,20 @@ const StylesTab = (props: Props) => {
                   </div>
                   <div className="flex items-center gap-x-6">
                     <Label className="text-muted-foreground">Kontroler</Label>
-                    <Switch id="donate_controller" checked={true} />
+                    <Switch
+                      id="donate_controller"
+                      checked={
+                        state.editor.selectedElement.content.donate_controller
+                      }
+                      onCheckedChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "donate_controller",
+                            value: e,
+                          },
+                        })
+                      }
+                    />
                   </div>
                 </>
               )}
@@ -244,8 +258,26 @@ const StylesTab = (props: Props) => {
                       }
                     />
                   </div>
+                  <div className="flex items-center gap-x-6">
+                    <Label className="text-muted-foreground">Kontroler</Label>
+                    <Switch
+                      id="goal_controller"
+                      checked={
+                        state.editor.selectedElement.content.goal_controller
+                      }
+                      onCheckedChange={(e) =>
+                        handleChangeCustomValues({
+                          target: {
+                            id: "goal_controller",
+                            value: e,
+                          },
+                        })
+                      }
+                    />
+                  </div>
                 </>
               )}
+
             {(state.editor.selectedElement.type === "list" ||
               state.editor.selectedElement.type === "donate" ||
               state.editor.selectedElement.type === "goal") &&

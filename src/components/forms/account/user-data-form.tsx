@@ -82,10 +82,12 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
 
       if (changes.picture && pid) {
         const pictureUrl = await FileService.addFile(uid, changes.picture);
-        await UserService.updateUserData(uid, { picture: pictureUrl });
-        await PaymentPageService.updatePaymentPageInfo(pid, {
-          picture: pictureUrl,
-        });
+        if (pictureUrl) {
+          await UserService.updateUserData(uid, { picture: pictureUrl });
+          await PaymentPageService.updatePaymentPageInfo(pid, {
+            picture: pictureUrl,
+          });
+        }
       }
       toast({
         variant: "default",
