@@ -94,7 +94,7 @@ const EditorFooter = ({ uid }: Props) => {
           Zapisz
         </button>
         <Link
-          href={`http://localhost:3000/widget/${uid}/controller`}
+          href={`https://donation-app-next-js.vercel.app/${uid}/controller`}
           target="_blank"
           rel="noopener noreferrer"
           className=" px-9 py-2 rounded-sm border-2 border-[#1814F3] text-[#1814F3] hover:text-white hover:bg-[#1814F3] font-semibold text-lg"
