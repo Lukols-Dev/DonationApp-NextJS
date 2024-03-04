@@ -25,6 +25,10 @@ const PaymentPage = async (props: Page) => {
     picture,
     uid,
     connect_acc,
+    is_gif,
+    is_voice,
+    voice_price,
+    gif_price,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
   const fees = await PaymentService.getAppFees(uid);
 
@@ -59,6 +63,12 @@ const PaymentPage = async (props: Page) => {
                 connectAcc={connect_acc}
                 appFees={fees}
                 pid={params.id}
+                custom_elements={{
+                  is_gif: is_gif,
+                  is_voice: is_voice,
+                  voice_price: voice_price,
+                  gif_price: gif_price,
+                }}
               />
             ) : (
               <div className="mx-auto my-auto">

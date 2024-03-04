@@ -16,30 +16,21 @@ import { NextResponse } from "next/server";
 interface IParams {
   id?: string;
 }
-//GET all doc from queue
+//GET all doc from gifs
 export const GET = async (req: Request, { params }: { params: IParams }) => {
-  const { id } = params;
-
-  if (!id) {
-    return NextResponse.json("Not Found", {
-      status: 404,
-      statusText: "Not Found",
-    });
-  }
-
   try {
-    const notificationsColl = collection(firestore, "users", id, "queue");
-    const notificationsDocs = await getDocs(notificationsColl);
+    const gifsColl = collection(firestore, "gifs");
+    const gifsDocs = await getDocs(gifsColl);
 
-    const notifications = notificationsDocs.docs.map((doc) => ({
+    const gifs = gifsDocs.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    const count = notifications.length;
+    const count = gifs.length;
 
     return NextResponse.json(
-      { notifications: notifications, count: count },
+      { data: gifs, count: count },
       {
         status: 200,
         statusText: "OK",
@@ -50,7 +41,7 @@ export const GET = async (req: Request, { params }: { params: IParams }) => {
   }
 };
 
-// Add new doc to queue
+// Add new doc to gifs
 export const POST = async (req: Request) => {
   const { uid, data }: { uid: string; data: any } = await req.json();
 
@@ -69,8 +60,6 @@ export const POST = async (req: Request) => {
       amount: data.amount,
       amount_after_fees: data.amount_after_fees,
       currency: data.currency,
-      gif_url: data.gif_url,
-      voice_url: data.voice_url,
     };
 
     const doc = await addDoc(collRef, queueData);
@@ -82,41 +71,5 @@ export const POST = async (req: Request) => {
     });
   } catch (err) {
     return NextResponse.json(err, { status: 404, statusText: "Not Found" });
-  }
-};
-
-//Delete all docs from queue
-export const DELETE = async (req: Request, { params }: { params: IParams }) => {
-  const { id } = params;
-
-  if (!id) {
-    return NextResponse.json("User ID is required", {
-      status: 400,
-      statusText: "Bad Request",
-    });
-  }
-
-  try {
-    const notificationsColl = collection(firestore, "users", id, "queue");
-    const notificationsDocs = await getDocs(notificationsColl);
-
-    const batch = writeBatch(firestore);
-
-    notificationsDocs.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
-    // Commit the batch
-    await batch.commit();
-
-    return NextResponse.json("All notifications deleted.", {
-      status: 200,
-      statusText: "OK",
-    });
-  } catch (err) {
-    return NextResponse.json(err, {
-      status: 500,
-      statusText: "Internal Server Error",
-    });
   }
 };

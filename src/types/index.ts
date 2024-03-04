@@ -38,6 +38,10 @@ export type PaymentPageData = {
   payment_methods: string[];
   socials: Record<string, string>;
   connect_acc?: string;
+  is_gif?: boolean;
+  is_voice?: boolean;
+  voice_price?: number;
+  gif_price?: number;
 };
 
 export type StripeCustomerType = {

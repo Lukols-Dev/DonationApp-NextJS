@@ -1,3 +1,7 @@
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from ".";
+import { toSnakeCase } from "../utils";
+
 export class AdminUsersService {
   static async getAllUsers(id: string) {
     return (
@@ -58,5 +62,21 @@ export class AdminPayoutService {
         `${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/payments/payout`
       )
     ).json();
+  }
+}
+
+export class AdminFileService {
+  static async addFile(file: File | null | undefined, fileName: string) {
+    if (!file || !fileName) return;
+
+    try {
+      const storageRef = ref(storage, `tipey/dokumenty/${fileName}`);
+      const upload = await uploadBytesResumable(storageRef, file);
+      const url = await getDownloadURL(upload.ref);
+      return url;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 }

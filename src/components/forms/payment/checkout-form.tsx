@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import {
+  FileService,
   MessagesService,
   NotificationService,
+  PaymentPageService,
   QueueService,
 } from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
@@ -17,6 +19,16 @@ import PaysafecardCheckout from "./checkout-paysafecard";
 import StripeForm from "./stripe-form";
 import SMSCheckout from "./sms-checkout-form";
 import { v4 as uuidv4 } from "uuid";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import VoiceRecorder from "@/components/ui/voice-recorder";
 
 interface Props {
   uid: string;
@@ -24,6 +36,12 @@ interface Props {
   pid: string;
   appFees: { app_fee: number; fees: PaymentMethodFees };
   paymentMethod: string[];
+  custom_elements: {
+    is_gif?: boolean;
+    gif_price?: number;
+    is_voice?: boolean;
+    voice_price?: number;
+  };
 }
 
 type MessageData = {
@@ -44,6 +62,7 @@ type MessageData = {
     app: number;
     method: number;
   };
+  gif_url?: string;
 };
 
 const CheckoutForm = ({
@@ -52,9 +71,11 @@ const CheckoutForm = ({
   paymentMethod,
   connectAcc,
   appFees,
+  custom_elements,
 }: Props) => {
   const url = uuidv4();
   const { toast } = useToast();
+  const [recordingLength, setRecordingLength] = useState(0); // Dodajemy stan dla długości nagrania
   const [values, setValues] = useState<MessageData>({
     nick: "",
     amount: 5,
@@ -73,17 +94,25 @@ const CheckoutForm = ({
       app: 0,
       method: 0,
     },
+    gif_url: "",
   });
 
   const [appFee, setAppFee] = useState<number>(0);
+  const [voiceFile, setVoiceFile] = useState<Blob | null>(null);
+  const [gifs, setGifs] = useState<{ name: string; url: string }[]>([]);
 
   const onSubmit = async () => {
+    let audioUrl: any = "";
     try {
+      if (voiceFile) {
+        audioUrl = await FileService.addAudio(uid, voiceFile); // Załóżmy, że addAudio przyjmuje Blob
+      }
       const res = await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
           amount_after_fees: values.amount_fees.amount_after_app_fee,
           url: url,
+          voice_url: audioUrl || "",
         },
       });
 
@@ -99,6 +128,8 @@ const CheckoutForm = ({
           amount: values.summaryPrice,
           amount_after_fees: values.amount_fees.amount_after_app_fee,
           currency: "PLN",
+          gif_url: values.gif_url,
+          voice_url: audioUrl || "",
         });
       }
 
@@ -125,6 +156,7 @@ const CheckoutForm = ({
           app: 0,
           method: 0,
         },
+        gif_url: "",
       });
     } catch (err) {
       toast({
@@ -153,12 +185,69 @@ const CheckoutForm = ({
     []
   );
 
-  const getTotalPrice = async () => {
+  const handleChangeCustomValues = (e: any) => {
+    const settingProperty = e.target.id;
+    let value = e.target.value;
+
+    const object = {
+      [settingProperty]: value,
+    };
+
     setValues((prevValues) => ({
       ...prevValues,
-      summaryPrice: prevValues.amount,
+      ...object,
     }));
   };
+
+  // const getTotalPrice = async () => {
+  //   let totalPrice = values.amount; //default amount
+  //   //gif
+  //   if (custom_elements.is_gif && values.gif_url) {
+  //     totalPrice += custom_elements.gif_price || 0;
+  //   }
+
+  //   // voice
+  //   if (custom_elements.is_voice && recordingLength > 0) {
+  //     totalPrice += recordingLength * (custom_elements.voice_price || 0);
+  //   }
+
+  //   setValues((prevValues) => ({
+  //     ...prevValues,
+  //     summaryPrice: totalPrice,
+  //   }));
+  // };
+
+  const getTotalPrice = useCallback(() => {
+    let totalPrice = values.amount; // default amount
+
+    // Add gif price
+    if (custom_elements.is_gif && values.gif_url) {
+      totalPrice += Number(custom_elements.gif_price) || 0;
+    }
+
+    // Add voice price
+    if (custom_elements.is_voice && recordingLength > 0) {
+      totalPrice +=
+        recordingLength * (Number(custom_elements.voice_price) || 0);
+    }
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      summaryPrice: totalPrice,
+    }));
+  }, [
+    values.amount,
+    values.gif_url,
+    recordingLength,
+    custom_elements.is_gif,
+    custom_elements.is_voice,
+    custom_elements.gif_price,
+    custom_elements.voice_price,
+  ]);
+
+  // const handleRecordingComplete = (length: number) => {
+  //   setRecordingLength(length);
+  // };
 
   const getAppFees = () => {
     if (!appFees) return;
@@ -185,10 +274,31 @@ const CheckoutForm = ({
     setAppFee(value.amountAppFee);
   };
 
+  const getGifsLib = async () => {
+    const resp = await PaymentPageService.getAllGifs();
+    if (resp && resp.count > 0) {
+      setGifs(resp.data);
+    }
+  };
+
+  const handleRecordingComplete = async (
+    audioBlob: Blob,
+    recordingLength: number
+  ) => {
+    await setRecordingLength(recordingLength);
+    await setVoiceFile(audioBlob);
+    await getTotalPrice();
+  };
+
+  // useEffect(() => {
+  //    if (!values.amount) return;
+  //   getTotalPrice();
+  //   // console.log("values: ", values);
+  // }, [values.amount, values.gif_url]);
+
   useEffect(() => {
-    if (!values.amount) return;
     getTotalPrice();
-  }, [values.amount]);
+  }, [getTotalPrice]);
 
   useEffect(() => {
     getAppFees();
@@ -203,6 +313,11 @@ const CheckoutForm = ({
     if (!values.summaryPrice) return;
     setValues({ ...values, payment_method: "" });
   }, [values.summaryPrice]);
+
+  useEffect(() => {
+    // if(true) return
+    getGifsLib();
+  }, []);
 
   return (
     <>
@@ -230,6 +345,53 @@ const CheckoutForm = ({
           value={values.description}
           onChange={(e) => handleChange(e, "description")}
         />
+        {custom_elements.is_gif && (
+          <div>
+            <Label className="text-muted-foreground">
+              Gif donejta (koszt: {custom_elements.gif_price} PLN)
+            </Label>
+            <Select
+              onValueChange={(e) =>
+                handleChangeCustomValues({
+                  target: {
+                    id: "gif_url",
+                    value: e,
+                  },
+                })
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Wybierz gif" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {gifs.map((item, index) => (
+                    <SelectItem key={index} value={item.url}>
+                      <div className="flex gap-2 items-center">
+                        <img
+                          alt="GIF DONATE"
+                          width={30}
+                          height={30}
+                          src={item.url}
+                        />
+                        {item.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        {custom_elements.is_voice && (
+          <div>
+            <VoiceRecorder
+              maxRecordingTime={10}
+              price={custom_elements.voice_price}
+              onRecordingComplete={handleRecordingComplete}
+            />
+          </div>
+        )}
         <div>Podsumowanie: {values.summaryPrice}</div>
         Metody Płatności
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

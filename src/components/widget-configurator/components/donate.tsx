@@ -279,7 +279,7 @@ const DonateComponent = (props: Props) => {
                 alt="GIF DONATE"
                 width={200}
                 height={200}
-                src={donateUrl}
+                src={listItems[currentMessageIndex]?.gif_url || donateUrl}
               />
             )}
           </>

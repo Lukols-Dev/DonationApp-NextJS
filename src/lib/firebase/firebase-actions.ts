@@ -1,7 +1,13 @@
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { toSnakeCase } from "../utils";
 import { storage } from ".";
 import { onSnapshot } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 export class UserService {
   static async getUserData(uid: string) {
@@ -218,6 +224,12 @@ export class PaymentPageService {
       })
     ).json();
   }
+
+  static async getAllGifs() {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/gifs`)
+    ).json();
+  }
 }
 
 export class NewsService {
@@ -271,6 +283,25 @@ export class FileService {
       const storageRef = ref(storage, `users/${uid}/profile/${fileName}`);
       const upload = await uploadBytesResumable(storageRef, file);
       const url = await getDownloadURL(upload.ref);
+      return url;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  static async addAudio(uid: string, blob: Blob | null | undefined) {
+    if (!blob || !uid) return;
+    const vid = uuidv4();
+
+    const fileName = `${toSnakeCase("voice")}_${vid}`;
+    const file = new File([blob], "recording.mp3", { type: "audio/mp3" });
+
+    try {
+      const storageRef = ref(storage, `messages/${uid}/files/${fileName}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(snapshot.ref);
+      console.log("url file: ", url);
       return url;
     } catch (err) {
       console.log(err);

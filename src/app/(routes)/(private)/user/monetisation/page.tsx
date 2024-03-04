@@ -11,7 +11,6 @@ import getCurrentUser from "@/lib/auth-actions";
 import CheckoutButton from "@/components/dashboard/buttons/checkout-btn";
 import Link from "next/link";
 import { validateRequiredData } from "@/lib/utils";
-import ConnectStripeButton from "@/components/dashboard/buttons/connect-stripe-btn";
 
 const MonetisationPage = async () => {
   const currentUser: {
@@ -47,18 +46,6 @@ const MonetisationPage = async () => {
             )}
           </CardContent>
         </Card>
-        {/* {!currentUser.connect_acc ? (
-          <Card className="max-w-[300px]">
-            <CardContent>
-              <ConnectStripeButton
-                uid={currentUser.uid}
-                userData={currentUser as any}
-              />
-            </CardContent>
-          </Card>
-        ) : (
-          <></>
-        )} */}
         <div className="w-[320px] flex flex-col text-2xl text-[#333B69] my-2 font-semibold">
           Metody płatności
           <span className="text-sm">
