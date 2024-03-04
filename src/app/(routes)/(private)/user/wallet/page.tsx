@@ -15,6 +15,7 @@ import {
 import getCurrentUser from "@/lib/auth-actions";
 import { Card } from "@/components/ui/card";
 import CardPayout from "@/components/dashboard/cards/card-payout";
+import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 
 const WalletPage = async () => {
   let summary: any;
@@ -86,9 +87,9 @@ const WalletPage = async () => {
           </div>
         </div>
         <div className="w-full h-full">
-          <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold">
+          <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold items-center">
             <p>Historia płatności</p>
-            <button>Eksportuj tabelę</button>
+            <ExportBtn columns={exportCol} data={messages.messages} />
           </div>
           <CardTable data={messages.messages} columns={columnsWallet} />
         </div>
@@ -98,3 +99,30 @@ const WalletPage = async () => {
 };
 
 export default WalletPage;
+
+const exportCol = [
+  {
+    accessorKey: "mid",
+    header: "id",
+  },
+  {
+    accessorKey: "description",
+    header: "Treść",
+  },
+  {
+    accessorKey: "create_at",
+    header: "Data",
+  },
+  {
+    accessorKey: "nick",
+    header: "Nick",
+  },
+  {
+    accessorKey: "payment_method",
+    header: "Metoda",
+  },
+  {
+    accessorKey: "amount",
+    header: "Ktowa",
+  },
+];

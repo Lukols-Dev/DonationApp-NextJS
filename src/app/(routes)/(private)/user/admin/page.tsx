@@ -14,6 +14,7 @@ import { InputFees } from "./components/inputFees";
 import { getColumnsUsers } from "./_columns/user";
 import { getColumnsPayouts } from "./_columns/payout";
 import Link from "next/link";
+import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
 
 const AdminPage = async () => {
   const currentUser: {
