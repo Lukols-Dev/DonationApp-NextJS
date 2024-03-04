@@ -78,13 +78,6 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     paysafecard: false,
   });
   const [payouts, setPayouts] = useState<any>();
-  if (!user) return;
-  if (!payments)
-    return (
-      <div className="w-full min-h-[200px] flex items-center justify-center">
-        Nie posiadasz jeszcze żadnych wpłat
-      </div>
-    );
 
   function calculatePayouts() {
     const payoutSummary: Record<string, number> = {
@@ -221,6 +214,14 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
     if (!payments) return;
     calculatePayouts();
   }, [payments]);
+
+  if (!user) return;
+  if (!payments)
+    return (
+      <div className="w-full min-h-[200px] flex items-center justify-center">
+        Nie posiadasz jeszcze żadnych wpłat
+      </div>
+    );
 
   return (
     <div className="w-full min-h-[200px] mt-4 flex flex-col gap-4 justify-center">
