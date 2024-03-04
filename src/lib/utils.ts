@@ -208,7 +208,8 @@ export const calculateApplicationFeeAmount = (
   totalAmount: number,
   applicationFeePercent: number,
   paymentMethod: string,
-  paymentMethodFees: PaymentMethodFees
+  paymentMethodFees: PaymentMethodFees,
+  customElementsFees: { gif?: number; voice?: number }
 ): FeeCalculationResult => {
   let feeAmount = totalAmount * (applicationFeePercent / 100);
 
@@ -216,6 +217,15 @@ export const calculateApplicationFeeAmount = (
     const additionalFeePercent = paymentMethodFees[paymentMethod];
     feeAmount += totalAmount * (additionalFeePercent / 100);
   }
+
+  let customFee = 0;
+  if (customElementsFees.gif) {
+    customFee += totalAmount * (customElementsFees.gif / 100);
+  }
+  if (customElementsFees.voice) {
+    customFee += totalAmount * (customElementsFees.voice / 100);
+  }
+  feeAmount += customFee;
 
   return {
     amountAppFee: Math.round((feeAmount + Number.EPSILON) * 100) / 100,
@@ -240,11 +250,6 @@ export function debounce(func: any, wait: number) {
     timeout = setTimeout(later, wait);
   };
 }
-
-// export const calculateTotalPayout = (payments: any): number => {
-//   console.log("payments: ", payments);
-//   return payments.reduce((acc: any, payment: any) => acc + payment.payout, 0);
-// };
 
 export const calculateTotalPayout = (payments: any[]): number => {
   return payments.reduce((acc, payment) => {

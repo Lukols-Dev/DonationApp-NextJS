@@ -34,7 +34,11 @@ interface Props {
   uid: string;
   connectAcc?: string;
   pid: string;
-  appFees: { app_fee: number; fees: PaymentMethodFees };
+  appFees: {
+    custom_elements: any;
+    app_fee: number;
+    fees: PaymentMethodFees;
+  };
   paymentMethod: string[];
   custom_elements: {
     is_gif?: boolean;
@@ -199,24 +203,6 @@ const CheckoutForm = ({
     }));
   };
 
-  // const getTotalPrice = async () => {
-  //   let totalPrice = values.amount; //default amount
-  //   //gif
-  //   if (custom_elements.is_gif && values.gif_url) {
-  //     totalPrice += custom_elements.gif_price || 0;
-  //   }
-
-  //   // voice
-  //   if (custom_elements.is_voice && recordingLength > 0) {
-  //     totalPrice += recordingLength * (custom_elements.voice_price || 0);
-  //   }
-
-  //   setValues((prevValues) => ({
-  //     ...prevValues,
-  //     summaryPrice: totalPrice,
-  //   }));
-  // };
-
   const getTotalPrice = useCallback(() => {
     let totalPrice = values.amount; // default amount
 
@@ -245,17 +231,20 @@ const CheckoutForm = ({
     custom_elements.voice_price,
   ]);
 
-  // const handleRecordingComplete = (length: number) => {
-  //   setRecordingLength(length);
-  // };
-
   const getAppFees = () => {
     if (!appFees) return;
+
+    const customElementsFees = {
+      gif: values.gif_url ? appFees.custom_elements.gif : 0,
+      voice: voiceFile ? appFees.custom_elements.voice : 0,
+    };
+
     const value = calculateApplicationFeeAmount(
       values.summaryPrice,
       appFees.app_fee,
       values.payment_method,
-      appFees.fees
+      appFees.fees,
+      customElementsFees
     );
     setValues((prevValues) => ({
       ...prevValues,
@@ -268,6 +257,10 @@ const CheckoutForm = ({
         fees: {
           app: value.appFee,
           method: value.methodFee,
+        },
+        custom_elements: {
+          gif: appFees.custom_elements.gif,
+          voice: appFees.custom_elements.gif,
         },
       },
     }));
@@ -285,17 +278,10 @@ const CheckoutForm = ({
     audioBlob: Blob,
     recordingLength: number
   ) => {
-    console.log("recordingLength: ", recordingLength);
     await setRecordingLength(recordingLength);
     await setVoiceFile(audioBlob);
     await getTotalPrice();
   };
-
-  // useEffect(() => {
-  //    if (!values.amount) return;
-  //   getTotalPrice();
-  //   // console.log("values: ", values);
-  // }, [values.amount, values.gif_url]);
 
   useEffect(() => {
     getTotalPrice();
@@ -308,6 +294,8 @@ const CheckoutForm = ({
     appFees.app_fee,
     appFees.fees,
     values.payment_method,
+    values.gif_url,
+    voiceFile,
   ]);
 
   useEffect(() => {

@@ -145,28 +145,6 @@ const DonateComponent = (props: Props) => {
     }
   }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
 
-  // useEffect(() => {
-  //   if (
-  //     !isRead &&
-  //     currentMessageIndex !== null &&
-  //     currentMessageIndex < listItems.length
-  //   ) {
-  //     const timeoutId = setTimeout(() => {
-  //       const currentMessage = listItems[currentMessageIndex];
-
-  //       setCurrentMessageIndex((currentIndex) =>
-  //         currentIndex !== null && currentIndex + 1 < listItems.length
-  //           ? currentIndex + 1
-  //           : null
-  //       );
-  //     }, donateDelay || 2000);
-  //     const message = listItems[currentMessageIndex];
-  //     QueueService.deleteFromQueue(props.uid, message.id, message.mid);
-
-  //     return () => clearTimeout(timeoutId);
-  //   }
-  // }, [currentMessageIndex, listItems, isRead]);
-
   useEffect(() => {
     if (
       !isRead &&
