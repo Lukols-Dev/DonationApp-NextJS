@@ -106,6 +106,13 @@ const CheckoutForm = ({
   const [gifs, setGifs] = useState<{ name: string; url: string }[]>([]);
 
   const onSubmit = async () => {
+    if (
+      values.nick.length === 0 ||
+      values.amount === 0 ||
+      values.summaryPrice === 0 ||
+      values.description.length === 0
+    )
+      return;
     let audioUrl: any = "";
     try {
       if (voiceFile) {
@@ -408,6 +415,12 @@ const CheckoutForm = ({
           values.payment_method === "blik" ||
           values.payment_method === "p24" ? (
             <StripeForm
+              isblock={
+                values.nick.length === 0 ||
+                values.amount === 0 ||
+                values.summaryPrice === 0 ||
+                values.description.length === 0
+              }
               amount={values.summaryPrice}
               method={values.payment_method}
               account={"connectAcc"}
@@ -421,6 +434,12 @@ const CheckoutForm = ({
           )}
           {values.payment_method === "paypal" ? (
             <PaypalCheckout
+              isblock={
+                values.nick.length === 0 ||
+                values.amount === 0 ||
+                values.summaryPrice === 0 ||
+                values.description.length === 0
+              }
               uid={uid}
               amount={values.summaryPrice}
               appFee={appFee}
@@ -431,6 +450,12 @@ const CheckoutForm = ({
           )}
           {values.payment_method === "paysafecard" ? (
             <PaysafecardCheckout
+              isblock={
+                values.nick.length === 0 ||
+                values.amount === 0 ||
+                values.summaryPrice === 0 ||
+                values.description.length === 0
+              }
               uid={uid}
               amount={values.summaryPrice}
               appFee={appFee}
@@ -441,6 +466,12 @@ const CheckoutForm = ({
           )}
           {values.payment_method === "smspremium" ? (
             <SMSCheckout
+              isblock={
+                values.nick.length === 0 ||
+                values.amount === 0 ||
+                values.summaryPrice === 0 ||
+                values.description.length === 0
+              }
               uid={uid}
               amount={values.summaryPrice}
               appFee={appFee}

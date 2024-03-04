@@ -5,7 +5,7 @@ import {
   PaymentPageService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
-import { isEmpty } from "@/lib/utils";
+import { formatTimestamp, isEmpty } from "@/lib/utils";
 import { PaymentPageData } from "@/types";
 import { Page } from "@/types/page";
 import Image from "next/image";
@@ -31,6 +31,8 @@ const PaymentPage = async (props: Page) => {
     gif_price,
   }: PaymentPageData = await PaymentPageService.getPaymentPageInfo(params.id);
   const fees = await PaymentService.getAppFees(uid);
+  const lastPayments: { count: number; messages: any[] } =
+    await PaymentPageService.getLastPayments(uid);
 
   return (
     <main className="w-screen min-h-screen flex flex-col relative">
@@ -114,14 +116,24 @@ const PaymentPage = async (props: Page) => {
                 <div className="w-4 h-4 rounded-full bg-red-500 animate-ping absolute top-0 left-0" />
                 <div className="w-4 h-4 rounded-full bg-red-500 absolute top-0 left-0" />
               </div>
-              <ul className="w-full h-full mt-4">
-                <li className="flex flex-col m-0">
-                  <p className="text-xs text-[#B1B1B1]">12.01.2024</p>
-                  <p className="text-sm text-[#B1B1B1]">
-                    <span className="text-bold text-black mr-2">Jan Nowak</span>
-                    wysłał wiadomość
-                  </p>
-                </li>
+              <ul className="w-full h-full max-h-[500px] mt-4 flex flex-col gap-y-2 overflow-auto">
+                {lastPayments &&
+                  lastPayments.messages
+                    .sort((a, b) => b.create_at - a.create_at)
+                    .slice(0, 15)
+                    .map((item, index) => (
+                      <li className="flex flex-col m-0" key={index}>
+                        <p className="text-xs text-[#B1B1B1]">
+                          {formatTimestamp(item.create_at)}
+                        </p>
+                        <p className="text-sm text-[#B1B1B1]">
+                          <span className="text-bold text-black mr-2">
+                            {item.nick}
+                          </span>
+                          wysłał wiadomość
+                        </p>
+                      </li>
+                    ))}
               </ul>
             </div>
           </div>

@@ -9,20 +9,27 @@ interface Props {
   uid: string;
   amount: number;
   appFee: number;
+  isblock?: boolean;
   onSumbit: () => void;
 }
 
-const PaysafecardCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
+const PaysafecardCheckout = ({
+  uid,
+  amount,
+  appFee,
+  isblock,
+  onSumbit,
+}: Props) => {
   // const router = useRouter();
 
   const onClick = async () => {
+    if (isblock) return;
+
     const finalAmount = (amount = appFee);
-    console.log("finalAmount: ", finalAmount);
     try {
       const resp = await CashbillService.paysafecardPaymemnt(uid, {
         amount: finalAmount,
       });
-      console.log("resp: ", resp);
       onSumbit();
       // router.push(resp)
     } catch (err) {

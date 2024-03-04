@@ -230,6 +230,12 @@ export class PaymentPageService {
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/gifs`)
     ).json();
   }
+
+  static async getLastPayments(uid: string) {
+    return (
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages/${uid}`)
+    ).json();
+  }
 }
 
 export class NewsService {

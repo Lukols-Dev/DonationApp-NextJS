@@ -10,6 +10,7 @@ interface Props {
   uid: string;
   pid: string;
   urlID: string;
+  isblock?: boolean;
   onSumbit: () => void;
 }
 
@@ -20,12 +21,13 @@ const StripeForm = ({
   uid,
   pid,
   urlID,
+  isblock,
   onSumbit,
 }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const handleSubmit = async () => {
-    if (!method || !amount || amount === 0 || !urlID) {
+    if (!method || !amount || amount === 0 || !urlID || isblock) {
       toast({
         variant: "destructive",
         title: "Error",

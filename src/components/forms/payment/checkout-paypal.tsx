@@ -7,10 +7,11 @@ interface Props {
   uid: string;
   amount: number;
   appFee: number;
+  isblock?: boolean;
   onSumbit: () => void;
 }
 
-const PaypalCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
+const PaypalCheckout = ({ uid, amount, appFee, isblock, onSumbit }: Props) => {
   return (
     <form className="w-full h-[100px] rounded-md">
       <PayPalScriptProvider
@@ -29,6 +30,8 @@ const PaypalCheckout = ({ uid, amount, appFee, onSumbit }: Props) => {
             height: 50,
           }}
           createOrder={async (data, actions) => {
+            if (isblock) return "";
+
             let order_id = await PaypalPayment.paypalCreateOrder(uid, {
               amount: amount,
               appFee: appFee,
