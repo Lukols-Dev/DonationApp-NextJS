@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputFees } from "./components/inputFees";
 import { getColumnsUsers } from "./_columns/user";
 import { getColumnsPayouts } from "./_columns/payout";
+import Link from "next/link";
 
 const AdminPage = async () => {
   const currentUser: {
@@ -89,6 +90,33 @@ const AdminPage = async () => {
                   Prowizja od kadej transakcji
                 </p>
                 <InputFees />
+              </CardContent>
+            </Card>
+            <Card className="max-w-[260px]">
+              <CardHeader>
+                <CardTitle className="text-[#343C6A]">
+                  Linki do stron wypłat
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 flex flex-col gap-2">
+                <Link
+                  href={"https://dashboard.stripe.com/balance/overview"}
+                  className="text-xl font-bold text-zinc-950"
+                >
+                  {">>"} Stripe
+                </Link>
+                <Link
+                  href={"https://www.paypal.com/mep/dashboard"}
+                  className="text-xl font-bold text-zinc-950"
+                >
+                  {">>"} Paypal
+                </Link>
+                <Link
+                  href={"https://panel.cashbill.pl/dashboard"}
+                  className="text-xl font-bold text-zinc-950"
+                >
+                  {">>"} Cashbill
+                </Link>
               </CardContent>
             </Card>
           </div>
