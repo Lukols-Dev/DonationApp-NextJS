@@ -32,7 +32,6 @@ const ConfigurationPageForm = ({ pid }: Props) => {
   });
   const getFormData = async () => {
     const data = await PaymentPageService.getPaymentPageInfo(pid);
-    console.log("payment custom: ", data);
     setValue(data.description);
     setCustomValue({
       is_gif: data.is_gif || false,
@@ -54,7 +53,6 @@ const ConfigurationPageForm = ({ pid }: Props) => {
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
     let value = e.target.value;
-    console.log("value: ", value);
     const object = {
       [settingProperty]: value,
     };

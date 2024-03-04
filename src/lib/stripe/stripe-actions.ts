@@ -9,9 +9,6 @@ export const createPaymentIntent = async (
   appFee: number
 ) => {
   try {
-    // console.log("method: ", method);
-    // console.log("amount: ", amount);
-    // console.log("appFee: ", Math.round(appFee * 100));
     if (!method || !amount || !appFee) return null;
     const intent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
@@ -75,10 +72,6 @@ export const updatePaymentIntent = async (
   method: string,
   appFee: number
 ) => {
-  console.log("intent: ", intent);
-  console.log("amount: ", Math.round(amount * 100));
-  console.log("method: ", method);
-  console.log("app_fee: ", Math.round(appFee * 100));
   try {
     const paymentIntent = await stripe.paymentIntents.update(intent, {
       amount: Math.round(amount * 100),
@@ -139,8 +132,6 @@ export const updateAccPaymentMeth = async () => {
   const capabilities = await stripe.accounts.listCapabilities(
     "acct_1OmKklFafy5qD2Ia"
   );
-
-  console.log("acc payment: ", capabilities);
 };
 
 export const createPayout = async (

@@ -27,7 +27,6 @@ const WalletPage = async () => {
 
   if (messages.messages.length > 0) {
     summary = calculateIncomeSummary({ messages: messages.messages });
-    console.log("summ: ", summary);
   } else {
     summary = {
       monthly: 0,

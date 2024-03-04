@@ -3,15 +3,15 @@ import { MenuItem, PaymentMethod } from "@/types";
 export const MENU: MenuItem[] = [
   {
     title: "NO-CODE SYSTEM",
-    path: "/nocode",
+    path: "/",
   },
   {
     title: "UNIWERSYTET",
-    path: "/uniwersytet",
+    path: "/",
   },
   {
     title: "KONTAKT",
-    path: "/kontakt",
+    path: "/",
   },
 ];
 
@@ -22,38 +22,38 @@ export const FOOTER_MENU: MenuItem[] = [
   },
   {
     title: "No-Code System",
-    path: "/nocode",
+    path: "/",
   },
   {
     title: "Uniwersytet",
-    path: "/uniwersytet",
+    path: "/",
   },
   {
     title: "Kontakt",
-    path: "/kontakt",
+    path: "/",
   },
   {
     title: "Regulamin aplikacji",
-    path: "/regulamin",
+    path: "/",
   },
   {
     title: "Polityka prywatności",
-    path: "/polityka",
+    path: "/",
   },
 ];
 
 export const SOCIAL = [
   {
     title: "linkedin",
-    path: "https://www.linkedin.com/in/lukols/",
+    path: "/",
   },
   {
     title: "github",
-    path: "https://github.com/Lukols-Dev",
+    path: "/",
   },
   {
     title: "instagram",
-    path: "https://github.com/Lukols-Dev",
+    path: "/",
   },
 ];
 

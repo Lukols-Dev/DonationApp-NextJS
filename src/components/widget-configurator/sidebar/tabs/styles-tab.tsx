@@ -72,7 +72,6 @@ const StylesTab = (props: Props) => {
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
     let value = e.target.value;
-    console.log("value: ", value);
     const styleObject = {
       [settingProperty]: value,
     };

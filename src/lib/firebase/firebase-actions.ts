@@ -307,7 +307,6 @@ export class FileService {
       const storageRef = ref(storage, `messages/${uid}/files/${fileName}`);
       const snapshot = await uploadBytes(storageRef, file);
       const url = await getDownloadURL(snapshot.ref);
-      console.log("url file: ", url);
       return url;
     } catch (err) {
       console.log(err);
