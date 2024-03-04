@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatTimestamp } from "@/lib/utils";
 import { News } from "@/types";
+import { Timestamp } from "firebase/firestore";
 import { Calendar, NotebookPen } from "lucide-react";
 
 interface Props {
@@ -26,12 +27,13 @@ const CardNews = ({ title, items }: Props) => {
               <li key={item.title} className="flex flex-col mt-4 gap-4">
                 <p className="flex gap-2 items-center">
                   <Calendar className="w-6 h-6" />
-                  {formatTimestamp(item.create_at)}
+                  {formatTimestamp(Timestamp.now())}
+                  {/* {formatTimestamp(item.create_at)} if more news*/}
                 </p>
                 <p className="line-clamp-2 overflow-hidden text-ellipsis font-semibold">
                   {item.title}
                 </p>
-                <p className="line-clamp-3 overflow-hidden text-ellipsis">
+                <p className="line-clamp-3 md:line-clamp-none overflow-hidden text-ellipsis">
                   {item.description}
                 </p>
               </li>
