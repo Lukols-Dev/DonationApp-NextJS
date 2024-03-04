@@ -6,7 +6,11 @@ import { AdminPaymentService } from "@/lib/firebase/firebase-admin-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const InputFees = () => {
+interface Props {
+  id: string;
+}
+
+export const InputFees = ({ id }: Props) => {
   const route = useRouter();
   const [feesValue, setFeesValue] = useState<number>(0);
 
@@ -15,12 +19,23 @@ export const InputFees = () => {
   };
 
   const updateFeesAmount = async () => {
+    let data;
+    if (id === "app_fee") {
+      data = {
+        app_fee: feesValue,
+      };
+    } else {
+      data = {
+        custom_elements: {
+          [id]: feesValue,
+        },
+      };
+    }
+
     try {
       await AdminPaymentService.updateAppFees(
         "AfaKosCBYUxTnUzrRBz26cvAFfBH7j",
-        {
-          app_fee: feesValue,
-        }
+        data
       );
       route.refresh();
     } catch (err) {

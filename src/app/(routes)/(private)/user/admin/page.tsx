@@ -90,7 +90,39 @@ const AdminPage = async () => {
                 <p className="text-sm font-normal text-[#B1B1B1]">
                   Prowizja od kadej transakcji
                 </p>
-                <InputFees />
+                <InputFees id="app_fee" />
+              </CardContent>
+            </Card>
+            <Card className="max-w-[260px]">
+              <CardHeader>
+                <CardTitle className="text-[#343C6A]">
+                  Ustaw prowizje od GIF
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-xl font-bold text-zinc-950">
+                  Aktualna: {getAppFee.custom_elements["gif"] || 0}%
+                </p>
+                <p className="text-sm font-normal text-[#B1B1B1]">
+                  Prowizja od kadej transakcji
+                </p>
+                <InputFees id="gif" />
+              </CardContent>
+            </Card>
+            <Card className="max-w-[260px]">
+              <CardHeader>
+                <CardTitle className="text-[#343C6A]">
+                  Ustaw prowizje od nagrania
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-xl font-bold text-zinc-950">
+                  Aktualna: {getAppFee.custom_elements["voice"] || 0}%
+                </p>
+                <p className="text-sm font-normal text-[#B1B1B1]">
+                  Prowizja od kadej transakcji
+                </p>
+                <InputFees id="voice" />
               </CardContent>
             </Card>
             <Card className="max-w-[260px]">
