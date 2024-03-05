@@ -56,7 +56,7 @@ const Header = () => {
           </div>
         </Container>
       </header>
-      <div className="fixed transform scale-0 top-5 right-5 z-20 " ref={button}>
+      {/* <div className="fixed transform scale-0 top-5 right-5 z-20 " ref={button}>
         <div
           onClick={() => {
             setIsActive(!isActive);
@@ -64,7 +64,7 @@ const Header = () => {
         >
           <RoundedButton />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
