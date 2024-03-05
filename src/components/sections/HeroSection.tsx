@@ -36,7 +36,7 @@ const HeroSection = async () => {
               Live Stream
             </h1>
           </div>
-          <div className="w-[452px] h-[452px] flex flex-col gap-4 absolute -translate-x-1/2 left-1/2  top-[400px] xl:left-auto xl:-translate-x-0 xl:right-0 xl:top-[20%]">
+          <div className="w-full sm:w-[452px] h-[452px] flex flex-col gap-4 absolute -translate-x-1/2 left-1/2  top-[400px] xl:left-auto xl:-translate-x-0 xl:right-0 xl:top-[20%]">
             <div className="w-full h-full flex items-end gap-4">
               <div className="w-full h-full max-w-[248px] max-h-[216px] rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] relative overflow-hidden">
                 <Image
