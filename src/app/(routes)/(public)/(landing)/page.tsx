@@ -8,7 +8,7 @@ import ImageSection from "@/components/sections/ImageSection";
 
 export default function Home() {
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col ">
       <Preloader />
       <HeroSection />
       <InfiniteText />
