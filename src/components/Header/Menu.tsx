@@ -9,7 +9,7 @@ const font = generalSans.medium.className;
 
 const Menu = () => {
   return (
-    <nav className="flex items-center">
+    <nav className="hidden xl:flex items-center">
       <ul className="text-sm flex items-center">
         {MENU.map((item: MenuItem) => (
           <Magnetic key={item.title}>

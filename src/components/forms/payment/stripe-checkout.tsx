@@ -26,7 +26,7 @@ const StripeCheckoutForm = ({ loadingForm, onSumbit }: Props) => {
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `https://donation-app-next-js.vercel.app`,
+          return_url: `${process.env.NEXT_PUBLIC_URL}`,
         },
       });
 

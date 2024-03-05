@@ -44,7 +44,7 @@ const MonetisationPage = async () => {
               <CheckoutButton uid={currentUser.uid} userData={currentUser} />
             ) : (
               <InputCopy
-                value={`https://donation-app-next-js.vercel.app/payment/${url}`}
+                value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
               />
             )}
           </CardContent>

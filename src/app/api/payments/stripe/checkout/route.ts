@@ -32,8 +32,8 @@ export const POST = async (req: Request) => {
     ];
 
     const checkoutSession = await stripe.checkout.sessions.create({
-      success_url: "https://donation-app-next-js.vercel.app",
-      cancel_url: "https://donation-app-next-js.vercel.app",
+      success_url: process.env.NEXT_PUBLIC_URL,
+      cancel_url: process.env.NEXT_PUBLIC_URL,
       payment_method_types: [data.method],
       mode: "payment",
       billing_address_collection: "auto",

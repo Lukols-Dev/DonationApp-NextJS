@@ -7,6 +7,7 @@ import { getColumnsMessage } from "@/components/dashboard/columns/columns-messag
 import getCurrentUser from "@/lib/auth-actions";
 import { Clock, MessageCircleMore } from "lucide-react";
 import CustomTable from "./table";
+import Link from "next/link";
 
 const MessagesPage = async () => {
   const currentUser: { uid: string } = await getCurrentUser();
@@ -36,6 +37,14 @@ const MessagesPage = async () => {
             <CardLegend />
           </div>
         </div>
+        <Link
+          href={`${process.env.NEXT_PUBLIC_URL}/widget/${currentUser.uid}/controller`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" px-9 py-2 rounded-sm border-2 border-[#1814F3] text-[#1814F3] hover:text-white hover:bg-[#1814F3] font-semibold text-lg"
+        >
+          Kontroler Widgetu
+        </Link>
         <CustomTable uid={currentUser.uid} messages={messages} />
       </section>
     </Container>

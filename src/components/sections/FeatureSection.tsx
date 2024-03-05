@@ -28,16 +28,18 @@ const FeatureSection = () => {
             <div className="w-full h-full absolute top-0 flex flex-col items-center justify-center">
               <motion.div
                 style={{ opacity: opacity1 }}
-                className="w-full h-[500px] sticky start-0 top-0  flex items-start justify-center gap-9"
+                className="w-full h-[500px] sticky start-0 top-0  flex flex-col md:flex-row items-center md:items-start justify-center gap-9"
               >
-                <div className="flex flex-col w-[500px]">
-                  <p className="text-[70px]">Płatności</p>
-                  <p className="text-[40px]">
+                <div className="flex flex-col w-full md:w-[500px]">
+                  <p className="text-[40px] sm:text-[50px] md:text-[70px]">
+                    Płatności
+                  </p>
+                  <p className="text-[20px] sm:text-[30px] md:text-[40px]">
                     Ustaw metody płatności jednym kliknięciem i zbieraj
                     darowizny od społeczności
                   </p>
                 </div>
-                <div className="w-[500px] h-[500px] relative">
+                <div className="w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] relative">
                   <Image
                     src={PaymentPic}
                     fill
@@ -51,15 +53,17 @@ const FeatureSection = () => {
             <div className="w-full h-full absolute top-0 flex flex-col items-center justify-center">
               <motion.div
                 style={{ opacity: opacity2 }}
-                className="w-full h-[500px] sticky start-0 top-0 flex items-start justify-center gap-9"
+                className="w-full h-[500px] sticky start-0 top-0  flex flex-col md:flex-row items-center md:items-start justify-center gap-9"
               >
-                <div className="flex flex-col w-[500px]">
-                  <p className="text-[70px]">Dashboard</p>
-                  <p className="text-[40px]">
+                <div className="flex flex-col w-full md:w-[500px]">
+                  <p className="text-[40px] sm:text-[50px] md:text-[70px]">
+                    Dashboard
+                  </p>
+                  <p className="text-[20px] sm:text-[30px] md:text-[40px]">
                     Zarządzaj, analizuj, monitoruj aktywności na swoim koncie.
                   </p>
                 </div>
-                <div className="w-[500px] h-[500px] relative">
+                <div className="w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] relative">
                   <Image
                     src={DashboardPic}
                     fill
@@ -72,16 +76,18 @@ const FeatureSection = () => {
             <div className="w-full h-full absolute top-0 flex flex-col items-center justify-center">
               <motion.div
                 style={{ opacity: opacity3 }}
-                className="w-full h-[500px]  start-0 top-0 flex items-start justify-center gap-9"
+                className="w-full h-[500px] sticky start-0 top-0  flex flex-col md:flex-row items-center md:items-start justify-center gap-9"
               >
-                <div className="flex flex-col w-[500px]">
-                  <p className="text-[70px]">Konfigurator</p>
-                  <p className="text-[40px]">
+                <div className="flex flex-col w-full md:w-[500px]">
+                  <p className="text-[40px] sm:text-[50px] md:text-[70px]">
+                    Konfigurator
+                  </p>
+                  <p className="text-[20px] sm:text-[30px] md:text-[40px]">
                     Stwórz bez kodowania widgety w własnym stylu lub skorzystaj
                     z godowych opcji.
                   </p>
                 </div>
-                <div className="w-[500px] h-[500px] relative">
+                <div className="w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] relative">
                   <Image
                     src={ConfiguratorPic}
                     fill

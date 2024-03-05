@@ -4,13 +4,10 @@ import { firestore } from "../firebase";
 export class CashbillService {
   static async paysafecardPaymemnt(uid: string, data: any) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/cashbill`,
-        {
-          method: "POST",
-          body: JSON.stringify({ uid: uid, data: data }),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/cashbill`, {
+        method: "POST",
+        body: JSON.stringify({ uid: uid, data: data }),
+      })
     ).json();
   }
 }

@@ -44,7 +44,7 @@ export const createCheckout = async (
 
     return (
       await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/stripe/checkout`,
+        `${process.env.NEXT_PUBLIC_URL}/api/payments/stripe/checkout`,
         {
           method: "POST",
           body: JSON.stringify({

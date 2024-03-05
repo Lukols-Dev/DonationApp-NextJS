@@ -43,14 +43,14 @@ const WalletPage = async () => {
         <div className="w-full h-full overflow-x-auto">
           <div className="flex gap-4 h-[144px]">
             <CardStatistic
-              title="Aktualny przychód"
-              value={formatNumber(summary.monthly)}
-              valueDesc={`${summary.percentageChange} ostatni miesiąc`}
+              title="Aktualny przychód od początku"
+              value={formatNumber(summary.yearly)}
               icon="PLN"
             />
             <CardStatistic
-              title="W tym roku"
-              value={formatNumber(summary.yearly)}
+              title="W tym miesiącu"
+              value={formatNumber(summary.monthly)}
+              valueDesc={`${summary.percentageChange} ostatni miesiąc`}
               icon="PLN"
             />
             <CardPayout
@@ -88,13 +88,13 @@ const WalletPage = async () => {
             )}
           </div>
         </div>
-        <div className="w-full h-full">
+        {/* <div className="w-full h-full">
           <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold items-center">
             <p>Historia płatności</p>
             <ExportBtn columns={exportCol} data={messages.messages} />
           </div>
           <CardTable data={messages.messages} columns={columnsWallet} />
-        </div>
+        </div> */}
       </section>
     </Container>
   );

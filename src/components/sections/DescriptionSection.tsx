@@ -25,7 +25,7 @@ const DescriptionSection = () => {
             <motion.p
               ref={container}
               className={cn(
-                "text-[#18181A] text-3xl text-left w-[780px]",
+                "text-[#18181A] text-3xl text-left w-full xl:w-[780px]",
                 font
               )}
               style={{ opacity }}

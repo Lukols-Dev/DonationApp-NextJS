@@ -16,7 +16,7 @@ export const POST = async (req: Request, { params }: { params: IParams }) => {
       currencyCode: "pln",
     },
     description: "Wspardzie na dalszy rozwój działalności.",
-    returnUrl: "https://donation-app-next-js.vercel.app",
+    returnUrl: process.env.NEXT_PUBLIC_URL,
     // negativeReturnUrl,
     // paymentChannel,
     languageCode: "PL",

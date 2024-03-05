@@ -22,7 +22,7 @@ const HeaderDashboard = ({ uid, role, picture }: Props) => {
   return (
     <header className="w-full bg-transparent">
       <Container>
-        <div className="flex justify-between items-center mt-4 py-2 px-6 bg-white rounded-full">
+        <div className="flex justify-between items-center mt-4 py-2 px-6 bg-white rounded-xl">
           <p className={cn(font, "text-2xl text-[#18181A] p-4")}>TIPEY</p>
           <div className="hidden md:flex">
             <MenuItems role={role} />

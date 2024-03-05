@@ -12,13 +12,13 @@ import { v4 as uuidv4 } from "uuid";
 export class UserService {
   static async getUserData(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/user/${uid}`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`)
     ).json();
   }
 
   static async updateUserData(uid: string, data: any) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/user/${uid}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`, {
         method: "PUT",
         body: JSON.stringify(data),
       })
@@ -27,7 +27,7 @@ export class UserService {
 
   static async deleteUser(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/user/${uid}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user/${uid}`, {
         method: "POST",
         body: JSON.stringify({ uid: uid }),
       })
@@ -38,13 +38,13 @@ export class UserService {
 export class MessagesService {
   static async getAllMessages(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/messages/${uid}`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages/${uid}`)
     ).json();
   }
 
   static async addNewMessage(uid: string, data: any) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/messages`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,15 +58,13 @@ export class MessagesService {
 export class NotificationService {
   static async getAllNotifications(uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/notification/${uid}`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification/${uid}`)
     ).json();
   }
 
   static async addNewNotification(uid: string, data: any) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/notification`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,15 +76,12 @@ export class NotificationService {
 
   static async deleteAllNotifications(uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/notification/${uid}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/notification/${uid}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
     ).json();
   }
 }
@@ -94,13 +89,13 @@ export class NotificationService {
 export class QueueService {
   static async getQueue(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/queue/${uid}`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`)
     ).json();
   }
 
   static async addToQueue(uid: string, data: any) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/queue/${uid}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +107,7 @@ export class QueueService {
 
   static async clearQueue(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/queue/${uid}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +118,7 @@ export class QueueService {
 
   static async deleteFromQueue(uid: string, qid: string, mid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/queue`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +136,7 @@ export class ControllerService {
     resetGoalAmount?: boolean
   ) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/controller`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/controller`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,22 +150,20 @@ export class ControllerService {
 export class PaymentService {
   static async getAllPayments(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/payments/${uid}`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/${uid}`)
     ).json();
   }
 
   static async getCheckout(uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/checkout/${uid}`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/checkout/${uid}`)
     ).json();
   }
 
   static async generateCheckout(uid: string, data: any) {
     return (
       await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/checkout/${uid}`,
+        `${process.env.NEXT_PUBLIC_URL}/api/payments/checkout/${uid}`,
         {
           method: "POST",
           headers: {
@@ -187,7 +180,7 @@ export class PaymentService {
     data: { name?: string; isActive?: boolean }
   ) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/payments`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -199,7 +192,7 @@ export class PaymentService {
 
   static async addPaymentFees(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/payments/fees`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/fees`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,9 +204,7 @@ export class PaymentService {
 
   static async getAppFees(uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/fees/${uid}`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/fees/${uid}`)
     ).json();
   }
 }
@@ -221,33 +212,28 @@ export class PaymentService {
 export class PaymentPageService {
   static async getPaymentPageInfo(id: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/user/${id}`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/user/${id}`)
     ).json();
   }
 
   static async updatePaymentPageInfo(id: string, data: any) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/user/${id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(data),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      })
     ).json();
   }
 
   static async getAllGifs() {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/tipey/gifs`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/gifs`)
     ).json();
   }
 
   static async getLastPayments(uid: string) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/messages/${uid}`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/messages/${uid}`)
     ).json();
   }
 }
@@ -255,7 +241,7 @@ export class PaymentPageService {
 export class NewsService {
   static async getNews() {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/tipey/news`)
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/tipey/news`)
     ).json();
   }
 }
@@ -263,18 +249,15 @@ export class NewsService {
 export class ConfiguratorService {
   static async getWidget(uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/widgets/${uid}`,
-        {
-          method: "GET",
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets/${uid}`, {
+        method: "GET",
+      })
     ).json();
   }
 
   static async updateWidget(uid: string, content: any) {
     return (
-      await fetch(`https://donation-app-next-js.vercel.app/api/widgets`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/widgets`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -335,16 +318,13 @@ export class FileService {
 export class PayoutService {
   static async addNewPayout(uid: string, data: any) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/payments/payout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ data: data, uid }),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/payments/payout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: data, uid }),
+      })
     ).json();
   }
 }

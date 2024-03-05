@@ -9,8 +9,8 @@ const HeroSection = async () => {
   return (
     <section>
       <Container>
-        <div className="w-full h-screen max-h-[900px] relative">
-          <div className="flex flex-col w-full max-w-[680px] gap-4 absolute left-0 top-1/3">
+        <div className="w-full h-[900px] xl:h-screen xl:max-h-[900px] relative">
+          <div className="flex flex-col w-full max-w-[680px] gap-4 absolute -translate-x-1/2 left-1/2 top-[200px] xl:-translate-x-0 xl:left-0 xl:top-1/3">
             <h1
               className={cn(
                 "text-4xl text-black sm:text-5xl md:text-6xl",
@@ -21,13 +21,13 @@ const HeroSection = async () => {
             </h1>
             <h1
               className={cn(
-                "text-4xl text-black sm:text-5xl md:text-6xl",
+                "text-4xl text-black flex items-center sm:text-5xl md:text-6xl",
                 font
               )}
             >
               <span
                 className={cn(
-                  "bg-[#18181A] text-[#70FF4D] py-1 px-3 rounded-lg text-5xl mr-2",
+                  "bg-[#18181A] text-[#70FF4D] py-1 px-3 rounded-lg text-2xl md:text-5xl mr-2",
                   font
                 )}
               >
@@ -36,7 +36,7 @@ const HeroSection = async () => {
               Live Stream
             </h1>
           </div>
-          <div className="w-[452px] h-[452px] flex flex-col gap-4 absolute right-0 top-[20%]">
+          <div className="w-[452px] h-[452px] flex flex-col gap-4 absolute -translate-x-1/2 left-1/2  top-[400px] xl:left-auto xl:-translate-x-0 xl:right-0 xl:top-[20%]">
             <div className="w-full h-full flex items-end gap-4">
               <div className="w-full h-full max-w-[248px] max-h-[216px] rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] relative overflow-hidden">
                 <Image

@@ -81,7 +81,7 @@ const UserPage = async () => {
                   </div>
                   <p className="text-2xl text-[#343C6A]">{currentUser.nick}</p>
                   <InputCopy
-                    value={`https://donation-app-next-js.vercel.app/payment/${url}`}
+                    value={`${process.env.NEXT_PUBLIC_URL}/payment/${url}`}
                   />
                 </div>
               </CardContent>

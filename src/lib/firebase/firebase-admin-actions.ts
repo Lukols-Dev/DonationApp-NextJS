@@ -5,33 +5,25 @@ import { toSnakeCase } from "../utils";
 export class AdminUsersService {
   static async getAllUsers(id: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users`)
     ).json();
   }
 
   static async updateUserData(id: string, uid: string, data: any) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users`,
-        {
-          method: "PUT",
-          body: JSON.stringify({ uid: uid, data: data }),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users`, {
+        method: "PUT",
+        body: JSON.stringify({ uid: uid, data: data }),
+      })
     ).json();
   }
 
   static async deleteUser(id: string, uid: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users`,
-        {
-          method: "POST",
-          body: JSON.stringify({ uid: uid }),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users`, {
+        method: "POST",
+        body: JSON.stringify({ uid: uid }),
+      })
     ).json();
   }
 }
@@ -40,7 +32,7 @@ export class AdminMessagesService {
   static async getAllMessages(id: string, uid?: string) {
     return (
       await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users/messages`
+        `${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/messages`
       )
     ).json();
   }
@@ -49,21 +41,16 @@ export class AdminMessagesService {
 export class AdminPaymentService {
   static async getAppFees(id: string) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users/fees`
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/fees`)
     ).json();
   }
 
   static async updateAppFees(id: string, data: any) {
     return (
-      await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users/fees`,
-        {
-          method: "PUT",
-          body: JSON.stringify({ data: data }),
-        }
-      )
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/fees`, {
+        method: "PUT",
+        body: JSON.stringify({ data: data }),
+      })
     ).json();
   }
 }
@@ -72,7 +59,7 @@ export class AdminPayoutService {
   static async getAllUsers(id: string) {
     return (
       await fetch(
-        `https://donation-app-next-js.vercel.app/api/admin/${id}/users/payments/payout`
+        `${process.env.NEXT_PUBLIC_URL}/api/admin/${id}/users/payments/payout`
       )
     ).json();
   }

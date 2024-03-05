@@ -63,6 +63,12 @@ const HamburgerBtn = ({ role }: Props) => {
           </nav>
         </SheetContent>
       </Sheet>
+      {open && (
+        <div
+          className="bg-black/10 w-screen h-screen absolute top-0 left-0 z-[89]"
+          onClick={() => setOpen((prev) => !prev)}
+        ></div>
+      )}
     </>
   );
 };
