@@ -19,7 +19,7 @@ interface Props {
 type UserData = {
   nick: string;
   email: string;
-  picture: File | null | undefined;
+  // picture: string;
   socials: {
     youtube?: string;
     twitch?: string;
@@ -30,10 +30,11 @@ type UserData = {
 const UserDataForm = ({ uid, pid, data }: Props) => {
   const { toast } = useToast();
   const [changes, setChanges] = useState<Partial<UserData>>({});
+  const [picture, setPicture] = useState<File | null | undefined>(null);
   const [values, setValues] = useState<UserData>({
     nick: "",
     email: "",
-    picture: null,
+    // picture: "",
     socials: {
       youtube: "",
       twitch: "",
@@ -80,8 +81,8 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
         });
       }
 
-      if (changes.picture && pid) {
-        const pictureUrl = await FileService.addFile(uid, changes.picture);
+      if (pid) {
+        const pictureUrl = await FileService.addFile(uid, picture);
         if (pictureUrl) {
           await UserService.updateUserData(uid, { picture: pictureUrl });
           await PaymentPageService.updatePaymentPageInfo(pid, {
@@ -89,11 +90,21 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
           });
         }
       }
-      toast({
-        variant: "default",
-        title: "Sukces",
-        description: `Dane zostały zaktualizowane.`,
-      });
+
+      if ((changes.socials || changes.nick) && !pid) {
+        toast({
+          variant: "default",
+          title: "Sukces",
+          description: `Przed zmianą parametrów naley utworzyć link do strony płatności.`,
+        });
+      } else {
+        toast({
+          variant: "default",
+          title: "Sukces",
+          description: `Dane zostały zaktualizowane.`,
+        });
+      }
+
       setChanges({});
     } catch (err) {
       toast({
@@ -132,19 +143,20 @@ const UserDataForm = ({ uid, pid, data }: Props) => {
           /> */}
           <div className="max-w-[200px]">
             <Dropzone
-              value={values.picture}
+              value={picture}
               dropzoneOptions={{
                 maxSize: 1024 * 1024 * 1, // 1MB
               }}
               onChange={(file) => {
-                setValues((prev) => ({
-                  ...prev,
-                  picture: file,
-                }));
-                setChanges((prev) => ({
-                  ...prev,
-                  picture: file,
-                }));
+                // setValues((prev) => ({
+                //   ...prev,
+                //   picture: file,
+                // }));
+                setPicture(file);
+                // setChanges((prev) => ({
+                //   ...prev,
+                //   picture: fil,
+                // }));
               }}
             />
           </div>

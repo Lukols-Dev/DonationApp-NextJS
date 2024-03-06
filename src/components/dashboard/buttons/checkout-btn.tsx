@@ -44,7 +44,7 @@ const CheckoutButton = ({ uid, userData }: Props) => {
 
   return (
     <Button
-      className="border-2 border-[#1814F3] text-[#1814F3] bg-transparent rounded-md px-4 py-2"
+      className="border-2 border-[#1814F3] text-[#1814F3] hover:text-white hover:bg-[#1814F3] bg-transparent rounded-md px-4 py-2"
       onClick={onClick}
     >
       {!loading ? (

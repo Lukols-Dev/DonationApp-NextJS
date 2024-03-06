@@ -41,7 +41,7 @@ const MessagesPage = async () => {
           href={`${process.env.NEXT_PUBLIC_URL}/widget/${currentUser.uid}/controller`}
           target="_blank"
           rel="noopener noreferrer"
-          className=" px-9 py-2 rounded-sm border-2 border-[#1814F3] text-[#1814F3] hover:text-white hover:bg-[#1814F3] font-semibold text-lg"
+          className="max-w-[250px] flex items-center justify-center px-4 py-2 rounded-md border-2 border-[#1814F3] text-[#1814F3] hover:text-white hover:bg-[#1814F3] font-semibold text-lg"
         >
           Kontroler Widgetu
         </Link>
