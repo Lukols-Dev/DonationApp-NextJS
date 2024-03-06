@@ -12,6 +12,7 @@ const ControllerWidget = () => {
   const pathname = usePathname();
   const [uid, setId] = useState<string>("");
   const [donateActive, setDonateActive] = useState<boolean>(true);
+  const [skipDonateActive, setSkipDonateActive] = useState<boolean>(true);
   const [goalActive, setGoalActive] = useState<boolean>(true);
   const [goalValue, setGoalValue] = useState<number>(0);
 
@@ -34,6 +35,23 @@ const ControllerWidget = () => {
       console.log("Controller Err: ", err);
     }
   };
+
+  // const onClickSkipDonate = () => {
+  //   setSkipDonateActive(false);
+
+  //   try {
+  //     setTimeout(() => {
+  //       ControllerService.updateController(uid, { donate_skip: true });
+  //     }, 500);
+  //   } catch (err) {
+  //     console.log("Controller Err: ", err);
+  //   } finally {
+  //     setTimeout(() => {
+  //       setSkipDonateActive(true);
+  //       ControllerService.updateController(uid, { donate_skip: false });
+  //     }, 500);
+  //   }
+  // };
 
   const handleChangeGoalValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoalValue(parseFloat(e.target.value));
@@ -69,16 +87,25 @@ const ControllerWidget = () => {
     <div className="w-screen h-screen grid grid-rows-6 gap-4 bg-gray-300">
       <div
         className={cn(
-          "bg-white w-full h-full flex items-center justify-center",
+          "bg-white w-full h-full flex items-center justify-center cursor-pointer",
           donateActive && "bg-green-500"
         )}
         onClick={onClickDonate}
       >
         {donateActive ? "Zatrzymaj Donejty" : "Wznów Donejty"}
       </div>
+      {/* <div
+        className={cn(
+          "bg-white w-full h-full flex items-center justify-center cursor-pointer",
+          skipDonateActive && "bg-green-500"
+        )}
+        onClick={onClickSkipDonate}
+      >
+        Pomiń donejt
+      </div> */}
       <div
         className={cn(
-          "bg-white w-full h-full flex items-center justify-center",
+          "bg-white w-full h-full flex items-center justify-center cursor-pointer",
           goalActive && "bg-green-500"
         )}
         onClick={onClickGoal}

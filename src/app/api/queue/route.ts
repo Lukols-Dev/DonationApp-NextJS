@@ -5,7 +5,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
   writeBatch,
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
@@ -26,9 +28,32 @@ export const POST = async (req: Request, { params }: { params: IParams }) => {
   }
 
   try {
-    const queueItemRef = doc(firestore, "users", uid, "queue", data.qid);
+    // const queueItemRef = doc(firestore, "users", uid, "queue", data.qid);
 
-    await deleteDoc(queueItemRef);
+    // await deleteDoc(queueItemRef);
+    // await updateDoc(doc(firestore, "users", uid, "messages", data.mid), {
+    //   status: ["displayed"],
+    // });
+
+    if (data.qid === "skip") {
+      const queueCollectionRef = collection(firestore, "users", uid, "queue");
+      const q = query(queueCollectionRef, where("mid", "==", data.mid));
+
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref;
+        await deleteDoc(docRef);
+      } else {
+        return NextResponse.json("Document not found for skip operation", {
+          status: 404,
+          statusText: "Not Found",
+        });
+      }
+    } else if (data.qid !== "skip") {
+      const queueItemRef = doc(firestore, "users", uid, "queue", data.qid);
+      await deleteDoc(queueItemRef);
+    }
+
     await updateDoc(doc(firestore, "users", uid, "messages", data.mid), {
       status: ["displayed"],
     });

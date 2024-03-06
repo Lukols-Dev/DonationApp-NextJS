@@ -1,12 +1,10 @@
 import Container from "@/components/Container";
 import CardStatistic from "@/components/dashboard/cards/card-statistic";
-import CardTable from "@/components/dashboard/cards/card-table";
 import CardPayMethod from "@/components/dashboard/cards/card-payMethod";
 import {
   MessagesService,
   PaymentService,
 } from "@/lib/firebase/firebase-actions";
-import { columnsWallet } from "@/components/dashboard/columns/columns-wallet";
 import {
   calculateIncomeSummary,
   calculateTotalPayout,
@@ -15,7 +13,8 @@ import {
 import getCurrentUser from "@/lib/auth-actions";
 import { Card } from "@/components/ui/card";
 import CardPayout from "@/components/dashboard/cards/card-payout";
-import { ExportBtn } from "@/components/dashboard/buttons/export-btn";
+import { AdminPayoutService } from "@/lib/firebase/firebase-admin-actions";
+import CustomWalletTable from "./table";
 
 const WalletPage = async () => {
   let summary: any;
@@ -35,6 +34,17 @@ const WalletPage = async () => {
       monthly: 0,
       yearly: 0,
     };
+  }
+
+  const getPayouts = await AdminPayoutService.getAllUsers(
+    "AfaKosCBYUxTnUzrRBz26cvAFfBH7j"
+  );
+  let filteredPayouts: any[] = [];
+
+  if (getPayouts && getPayouts.data) {
+    filteredPayouts = getPayouts.data.filter(
+      (payout: any) => payout.uid === currentUser.uid
+    );
   }
 
   return (
@@ -88,13 +98,18 @@ const WalletPage = async () => {
             )}
           </div>
         </div>
-        {/* <div className="w-full h-full">
-          <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold items-center">
-            <p>Historia płatności</p>
-            <ExportBtn columns={exportCol} data={messages.messages} />
-          </div>
-          <CardTable data={messages.messages} columns={columnsWallet} />
-        </div> */}
+        <div className="w-full h-full">
+          {/* <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold items-center"> */}
+          {/* <p>Historia płatności</p> */}
+          {/* <ExportBtn columns={exportCol} data={messages.messages} /> */}
+          {/* </div> */}
+          {/* <CardTable data={messages.messages} columns={columnsWallet} /> */}
+          <CustomWalletTable
+            data={filteredPayouts}
+            type="payout"
+            title="Historia wypłat"
+          />
+        </div>
       </section>
     </Container>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Clock, Eye, MoreHorizontal } from "lucide-react";
+import { Clock, Eye, MoreHorizontal, SkipForward } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,20 @@ export const getColumnsMessage = (uid: string): ColumnDef<Payment>[] => {
         QueueService.addToQueue(uid, payment)
           .then(() => console.log("add to queue"))
           .catch((err) => console.log("problem with add to queue: ", err));
+      },
+    },
+    {
+      title: "Pomiń wiadomość",
+      element: (
+        <div className="flex items-center gap-2 cursor-pointer">
+          <SkipForward className="w-4 h-4" /> Pomiń wiadomość
+        </div>
+      ),
+      action: (payment: any) => {
+        QueueService.deleteFromQueue(uid, "skip", payment.id)
+          // QueueService.addToQueue(uid, payment)
+          .then(() => console.log("skip from queue"))
+          .catch((err) => console.log("problem with skip from queue: ", err));
       },
     },
   ];

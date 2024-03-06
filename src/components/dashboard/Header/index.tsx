@@ -19,6 +19,9 @@ interface Props {
 }
 
 const HeaderDashboard = ({ uid, role, picture }: Props) => {
+  console.log("header dashboard dziala");
+  console.log(uid, role, picture);
+
   return (
     <header className="w-full bg-transparent">
       <Container>

@@ -34,6 +34,7 @@ const DonateComponent = (props: Props) => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [isRead, setRead] = useState<boolean>(false);
   const [donateActive, setDonateActive] = useState<boolean>(false);
+  const [donateSkip, setDonateSkip] = useState<boolean>(false);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -121,6 +122,16 @@ const DonateComponent = (props: Props) => {
       ) {
         const message = listItems[currentMessageIndex];
 
+        // if (donateSkip) {
+        //   // Natychmiast przechodzi do następnej wiadomości bez odczytywania aktualnej
+        //   setCurrentMessageIndex((currentIndex) =>
+        //     currentIndex !== null && currentIndex + 1 < listItems.length
+        //       ? currentIndex + 1
+        //       : null
+        //   );
+        //   return; // Zapobiega odczytaniu wiadomości jeśli skip jest aktywny
+        // }
+
         if (message[String(amountType)] >= Number(donateActivationAmount)) {
           setRead(true);
           speakText({
@@ -131,11 +142,13 @@ const DonateComponent = (props: Props) => {
             voice: "Google polski",
             onEnd: () => {
               setRead(false);
-              setCurrentMessageIndex((currentIndex) =>
-                currentIndex !== null && currentIndex + 1 < listItems.length
-                  ? currentIndex + 1
-                  : null
-              );
+              if (!donateSkip) {
+                setCurrentMessageIndex((currentIndex) =>
+                  currentIndex !== null && currentIndex + 1 < listItems.length
+                    ? currentIndex + 1
+                    : null
+                );
+              }
             },
           });
         }
@@ -159,6 +172,15 @@ const DonateComponent = (props: Props) => {
       currentMessageIndex < listItems.length
     ) {
       const timeoutId = setTimeout(() => {
+        // if (donateSkip) {
+        //   // Pominięcie aktualnej wiadomości i przejście do kolejnej
+        //   setCurrentMessageIndex((currentIndex) =>
+        //     currentIndex !== null && currentIndex + 1 < listItems.length
+        //       ? currentIndex + 1
+        //       : null
+        //   );
+        //   return; // Zatrzymuje dalsze działania jeśli skip jest aktywny
+        // }
         const currentMessage = listItems[currentMessageIndex];
 
         setCurrentMessageIndex((currentIndex) => {
@@ -198,6 +220,7 @@ const DonateComponent = (props: Props) => {
       if (doc.exists()) {
         const data = doc.data();
         setDonateActive(data.donate_active ?? false);
+        setDonateSkip(data.donate_skip || false);
       }
     });
 
@@ -209,8 +232,23 @@ const DonateComponent = (props: Props) => {
 
     ControllerService.updateController(props.uid, {
       donate_active: false,
+      donate_skip: false,
     });
   }, [is_controller]);
+
+  // useEffect(() => {
+  //   if (
+  //     donateSkip &&
+  //     currentMessageIndex !== null &&
+  //     currentMessageIndex + 1 < listItems.length
+  //   ) {
+  //     // Natychmiastowe przejście do kolejnej wiadomości, gdy donateSkip jest ustawione na true
+  //     setCurrentMessageIndex(currentMessageIndex + 1);
+
+  //     // Opcjonalnie, można tutaj zresetować stan donateSkip na false, jeśli jest to jednorazowa akcja
+  //     // setDonateSkip(false);
+  //   }
+  // }, [donateSkip, currentMessageIndex, listItems.length]);
 
   return (
     <div
