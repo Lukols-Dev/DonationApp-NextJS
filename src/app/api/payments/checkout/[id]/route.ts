@@ -67,6 +67,7 @@ export const POST = async (req: Request) => {
       payment_methods: [],
       nick: data.nick || "",
       profile_img: data.picture || "",
+      picture: data.picture || "",
       socials: {
         twitch: "",
         twitter: "",
