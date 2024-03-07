@@ -91,7 +91,7 @@ const menuItems = [
   },
   {
     id: "3",
-    name: "Portfel",
+    name: "Wypłata",
     link: "/user/wallet",
     icon: Wallet,
   },
@@ -103,7 +103,7 @@ const menuItems = [
   },
   {
     id: "5",
-    name: "Konfigurator",
+    name: "Widgety",
     link: "/user/configurator",
     icon: Video,
   },

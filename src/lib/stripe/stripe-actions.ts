@@ -13,7 +13,7 @@ export const createPaymentIntent = async (
     const intent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency: "pln",
-      description: `Wspardzie na dalszy rozwój działalności.`,
+      description: `Wsparcie rozwoju twórczości.`,
       payment_method_types: [method],
       application_fee_amount: Math.round(appFee * 100),
       metadata: {

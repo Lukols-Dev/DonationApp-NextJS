@@ -98,7 +98,7 @@ const StylesTab = (props: Props) => {
       defaultValue={["Typography", "Dimensions", "Decorations", "Flexbox"]}
     >
       <AccordionItem value="Custom" className="px-6 py-0  ">
-        <AccordionTrigger className="!no-underline">Custom</AccordionTrigger>
+        <AccordionTrigger className="!no-underline">Dodatki</AccordionTrigger>
         <AccordionContent>
           <div className="flex gap-4 flex-col">
             {state.editor.selectedElement.type === "list" &&
@@ -155,7 +155,7 @@ const StylesTab = (props: Props) => {
                 <>
                   <div>
                     <Label className="text-muted-foreground">
-                      Grafika Donejta
+                      Grafika donejta
                     </Label>
                     <Input
                       id="donate_url"
@@ -207,7 +207,9 @@ const StylesTab = (props: Props) => {
                     />
                   </div>
                   <div className="flex items-center gap-x-6">
-                    <Label className="text-muted-foreground">Kontroler</Label>
+                    <Label className="text-muted-foreground">
+                      Aktywacja kontrolera donejta
+                    </Label>
                     <Switch
                       id="donate_controller"
                       checked={
@@ -230,7 +232,7 @@ const StylesTab = (props: Props) => {
                 <>
                   <div>
                     <Label className="text-muted-foreground">
-                      Docelowa kwota PLN
+                      Maksymalna kwota celu
                     </Label>
                     <Input
                       id="goal_max_value"
@@ -259,7 +261,9 @@ const StylesTab = (props: Props) => {
                     />
                   </div>
                   <div className="flex items-center gap-x-6">
-                    <Label className="text-muted-foreground">Kontroler</Label>
+                    <Label className="text-muted-foreground">
+                      Aktywacja kontrolera celu
+                    </Label>
                     <Switch
                       id="goal_controller"
                       checked={
@@ -321,12 +325,9 @@ const StylesTab = (props: Props) => {
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="Typography" className="px-6 py-0  border-y-[1px]">
-        <AccordionTrigger className="!no-underline">
-          Typography
-        </AccordionTrigger>
+        <AccordionTrigger className="!no-underline">Tekst</AccordionTrigger>
         <AccordionContent className="flex flex-col gap-2 ">
           <div className="flex flex-col gap-2 ">
-            <p className="text-muted-foreground">Text Align</p>
             <Tabs
               onValueChange={(e) =>
                 handleOnChanges({
@@ -367,7 +368,7 @@ const StylesTab = (props: Props) => {
             </Tabs>
           </div>
           <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">Color</Label>
+            <Label className="text-muted-foreground">Kolor</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
               <div
                 className="w-12"
@@ -386,7 +387,7 @@ const StylesTab = (props: Props) => {
           </div>
           <div className="flex gap-4">
             <div>
-              <Label className="text-muted-foreground">Weight</Label>
+              <Label className="text-muted-foreground">Grubość czcionki</Label>
               <Select
                 onValueChange={(e) =>
                   handleOnChanges({
@@ -398,11 +399,10 @@ const StylesTab = (props: Props) => {
                 }
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a weight" />
+                  <SelectValue placeholder="Wybierz grubość" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Font Weights</SelectLabel>
                     <SelectItem value="bold">Bold</SelectItem>
                     <SelectItem value="normal">Regular</SelectItem>
                     <SelectItem value="lighter">Light</SelectItem>
@@ -411,7 +411,7 @@ const StylesTab = (props: Props) => {
               </Select>
             </div>
             <div>
-              <Label className="text-muted-foreground">Size</Label>
+              <Label className="text-muted-foreground">Rozmiar</Label>
               <Input
                 placeholder="px"
                 id="fontSize"
@@ -424,7 +424,7 @@ const StylesTab = (props: Props) => {
       </AccordionItem>
       <AccordionItem value="Dimensions" className=" px-6 py-0 ">
         <AccordionTrigger className="!no-underline">
-          Dimensions
+          Wymiary elementu
         </AccordionTrigger>
         <AccordionContent>
           <div className="flex flex-col gap-4">
@@ -432,7 +432,7 @@ const StylesTab = (props: Props) => {
               <div className="flex gap-4 flex-col">
                 <div className="flex gap-4">
                   <div>
-                    <Label className="text-muted-foreground">Height</Label>
+                    <Label className="text-muted-foreground">Wysokość</Label>
                     <Input
                       id="height"
                       placeholder="px"
@@ -441,7 +441,7 @@ const StylesTab = (props: Props) => {
                     />
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Width</Label>
+                    <Label className="text-muted-foreground">Szerokość</Label>
                     <Input
                       placeholder="px"
                       id="width"
@@ -451,141 +451,32 @@ const StylesTab = (props: Props) => {
                   </div>
                 </div>
               </div>
-              <p>Margin px</p>
-              <div className="flex gap-4 flex-col">
-                <div className="flex gap-4">
-                  <div>
-                    <Label className="text-muted-foreground">Top</Label>
-                    <Input
-                      id="marginTop"
-                      placeholder="px"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginTop}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-muted-foreground">Bottom</Label>
-                    <Input
-                      placeholder="px"
-                      id="marginBottom"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginBottom}
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div>
-                    <Label className="text-muted-foreground">Left</Label>
-                    <Input
-                      placeholder="px"
-                      id="marginLeft"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginLeft}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-muted-foreground">Right</Label>
-                    <Input
-                      placeholder="px"
-                      id="marginRight"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginRight}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <p>Padding px</p>
-              <div className="flex gap-4 flex-col">
-                <div className="flex gap-4">
-                  <div>
-                    <Label className="text-muted-foreground">Top</Label>
-                    <Input
-                      placeholder="px"
-                      id="paddingTop"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingTop}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-muted-foreground">Bottom</Label>
-                    <Input
-                      placeholder="px"
-                      id="paddingBottom"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingBottom}
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div>
-                    <Label className="text-muted-foreground">Left</Label>
-                    <Input
-                      placeholder="px"
-                      id="paddingLeft"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingLeft}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-muted-foreground">Right</Label>
-                    <Input
-                      placeholder="px"
-                      id="paddingRight"
-                      onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingRight}
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="Positions" className=" px-6 py-0 ">
-        <AccordionTrigger className="!no-underline">Positions</AccordionTrigger>
+      <AccordionItem value="Positions" className="px-6 py-0 ">
+        <AccordionTrigger className="!no-underline">
+          Pozycja elementu
+        </AccordionTrigger>
         <AccordionContent>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="flex gap-4 flex-col">
-                <div>
-                  <Label className="text-muted-foreground">Type</Label>
-                  <Select
-                    onValueChange={(e) =>
-                      handleOnChanges({
-                        target: {
-                          id: "position",
-                          value: e,
-                        },
-                      })
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a position" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="relative">Relative</SelectItem>
-                        <SelectItem value="absolute">Absolute</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <div className="flex gap-4">
                   <div>
-                    <Label className="text-muted-foreground">Top</Label>
+                    <Label className="text-muted-foreground">Góra</Label>
                     <Input
                       id="top"
-                      placeholder="px/%"
+                      placeholder="%"
                       onChange={handleOnChanges}
                       value={state.editor.selectedElement.styles.top}
                     />
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Bottom</Label>
+                    <Label className="text-muted-foreground">Dół</Label>
                     <Input
-                      placeholder="px/%"
+                      placeholder="%"
                       id="bottom"
                       onChange={handleOnChanges}
                       value={state.editor.selectedElement.styles.bottom}
@@ -594,304 +485,26 @@ const StylesTab = (props: Props) => {
                 </div>
                 <div className="flex gap-4">
                   <div>
-                    <Label className="text-muted-foreground">Left</Label>
+                    <Label className="text-muted-foreground">Lewo</Label>
                     <Input
-                      placeholder="px/%"
+                      placeholder="%"
                       id="left"
                       onChange={handleOnChanges}
                       value={state.editor.selectedElement.styles.left}
                     />
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Right</Label>
+                    <Label className="text-muted-foreground">Prawo</Label>
                     <Input
-                      placeholder="px/%"
+                      placeholder="%"
                       id="right"
                       onChange={handleOnChanges}
                       value={state.editor.selectedElement.styles.right}
                     />
                   </div>
                 </div>
-                <div>
-                  <Label className="text-muted-foreground">Z-Index</Label>
-                  <Input
-                    placeholder=""
-                    id="z-index"
-                    onChange={handleOnChanges}
-                    value={state.editor.selectedElement.styles.zIndex}
-                  />
-                </div>
               </div>
             </div>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="Decorations" className="px-6 py-0 ">
-        <AccordionTrigger className="!no-underline">
-          Decorations
-        </AccordionTrigger>
-        <AccordionContent className="flex flex-col gap-4">
-          <div>
-            <Label className="text-muted-foreground">Opacity</Label>
-            <div className="flex items-center justify-end">
-              <small className="p-2">
-                {typeof state.editor.selectedElement.styles?.opacity ===
-                "number"
-                  ? state.editor.selectedElement.styles?.opacity
-                  : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.opacity || "0"
-                      ).replace("%", "")
-                    ) || 0}
-                %
-              </small>
-            </div>
-            <Slider
-              onValueChange={(e) => {
-                handleOnChanges({
-                  target: {
-                    id: "opacity",
-                    value: `${e[0]}%`,
-                  },
-                });
-              }}
-              defaultValue={[
-                typeof state.editor.selectedElement.styles?.opacity === "number"
-                  ? state.editor.selectedElement.styles?.opacity
-                  : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.opacity || "0"
-                      ).replace("%", "")
-                    ) || 0,
-              ]}
-              max={100}
-              step={1}
-            />
-          </div>
-          <div>
-            <Label className="text-muted-foreground">Border Radius</Label>
-            <div className="flex items-center justify-end">
-              <small className="">
-                {typeof state.editor.selectedElement.styles?.borderRadius ===
-                "number"
-                  ? state.editor.selectedElement.styles?.borderRadius
-                  : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.borderRadius || "0"
-                      ).replace("px", "")
-                    ) || 0}
-                px
-              </small>
-            </div>
-            <Slider
-              onValueChange={(e) => {
-                handleOnChanges({
-                  target: {
-                    id: "borderRadius",
-                    value: `${e[0]}px`,
-                  },
-                });
-              }}
-              defaultValue={[
-                typeof state.editor.selectedElement.styles?.borderRadius ===
-                "number"
-                  ? state.editor.selectedElement.styles?.borderRadius
-                  : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.borderRadius || "0"
-                      ).replace("%", "")
-                    ) || 0,
-              ]}
-              max={100}
-              step={1}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">Background Color</Label>
-            <div className="flex  border-[1px] rounded-md overflow-clip">
-              <div
-                className="w-12 "
-                style={{
-                  backgroundColor:
-                    state.editor.selectedElement.styles.backgroundColor,
-                }}
-              />
-              <Input
-                placeholder="#HFI245"
-                className="!border-y-0 rounded-none !border-r-0 mr-2"
-                id="backgroundColor"
-                onChange={handleOnChanges}
-                value={state.editor.selectedElement.styles.backgroundColor}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">Background Image</Label>
-            <div className="flex  border-[1px] rounded-md overflow-clip">
-              <div
-                className="w-12 bg-center bg-cover"
-                style={{
-                  backgroundPosition: "center",
-                  backgroundSize: "100%",
-                  backgroundImage: `url(${
-                    state.editor.selectedElement.styles.backgroundImage &&
-                    String(state.editor.selectedElement.styles.backgroundImage)
-                      .replace("url(", "")
-                      .replace(")", "")
-                  })`,
-                }}
-              ></div>
-              <Input
-                placeholder="url()"
-                className="!border-y-0 rounded-none !border-r-0 mr-2"
-                id="backgroundImage"
-                onChange={handleOnChanges}
-                value={
-                  state.editor.selectedElement.styles.backgroundImage &&
-                  String(state.editor.selectedElement.styles.backgroundImage)
-                    .replace("url(", "")
-                    .replace(")", "")
-                }
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">Image Position</Label>
-            <Tabs
-              onValueChange={(e) =>
-                handleOnChanges({
-                  target: {
-                    id: "backgroundSize",
-                    value: e,
-                  },
-                })
-              }
-              value={state.editor.selectedElement.styles.backgroundSize?.toString()}
-            >
-              <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-                <TabsTrigger
-                  value="cover"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <ChevronsLeftRightIcon size={18} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contain"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <AlignVerticalJustifyCenter size={22} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="auto"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <LucideImageDown size={18} />
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="Flexbox" className="px-6 py-0  ">
-        <AccordionTrigger className="!no-underline">Flexbox</AccordionTrigger>
-        <AccordionContent>
-          <Label className="text-muted-foreground">Justify Content</Label>
-          <Tabs
-            onValueChange={(e) =>
-              handleOnChanges({
-                target: {
-                  id: "justifyContent",
-                  value: e,
-                },
-              })
-            }
-            value={state.editor.selectedElement.styles.justifyContent}
-          >
-            <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-              <TabsTrigger
-                value="space-between"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalSpaceBetween size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="space-evenly"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalSpaceAround size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="center"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalJustifyCenterIcon size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="start"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignHorizontalJustifyStart size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="end"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignHorizontalJustifyEndIcon size={18} />
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Label className="text-muted-foreground">Align Items</Label>
-          <Tabs
-            onValueChange={(e) =>
-              handleOnChanges({
-                target: {
-                  id: "alignItems",
-                  value: e,
-                },
-              })
-            }
-            value={state.editor.selectedElement.styles.alignItems}
-          >
-            <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-              <TabsTrigger
-                value="center"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignVerticalJustifyCenter size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="normal"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignVerticalJustifyStart size={18} />
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <div className="flex items-center gap-2">
-            <Input
-              className="h-4 w-4"
-              placeholder="px"
-              type="checkbox"
-              id="display"
-              onChange={(va) => {
-                handleOnChanges({
-                  target: {
-                    id: "display",
-                    value: va.target.checked ? "flex" : "block",
-                  },
-                });
-              }}
-            />
-            <Label className="text-muted-foreground">Flex</Label>
-          </div>
-          <div>
-            <Label className="text-muted-foreground">Direction</Label>
-            <Input
-              placeholder="px"
-              id="flexDirection"
-              onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.flexDirection}
-            />
           </div>
         </AccordionContent>
       </AccordionItem>
