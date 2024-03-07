@@ -189,9 +189,20 @@ const CheckoutForm = ({
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       field: keyof MessageData
     ) => {
-      const newValue =
-        field === "amount" ? parseFloat(e.target.value) : e.target.value;
+      let newValue: string | number = e.target.value;
+
+      // Jeśli pole to 'description', ogranicz długość wartości do 250 znaków
+      if (field === "description") {
+        newValue = newValue.slice(0, 250);
+      } else if (field === "amount") {
+        // Jeśli pole to 'amount', konwertuj wartość na liczbę
+        newValue = parseFloat(newValue);
+      }
+
       setValues((prevValues) => ({ ...prevValues, [field]: newValue }));
+      // const newValue =
+      //   field === "amount" ? parseFloat(e.target.value) : e.target.value;
+      // setValues((prevValues) => ({ ...prevValues, [field]: newValue }));
     },
     []
   );
@@ -337,7 +348,9 @@ const CheckoutForm = ({
         </div>
         <Textarea
           id="message"
-          label="Treść wiadomości"
+          label={`Treść wiadomości ${
+            values.description ? values.description.length : 0
+          }/250`}
           value={values.description}
           onChange={(e) => handleChange(e, "description")}
         />
