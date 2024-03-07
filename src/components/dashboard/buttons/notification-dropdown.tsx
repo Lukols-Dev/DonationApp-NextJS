@@ -49,7 +49,7 @@ const NotificationBtn = ({ uid }: Props) => {
 
   return (
     <div className="relative" onClick={() => setOpen((prev) => !prev)}>
-      <TooltipWrapper description={`Powiadomienia: ${notifications?.count}`}>
+      <TooltipWrapper description={`Komunikaty: ${notifications?.count}`}>
         <Bell className="w-7 h-7 cursor-pointer text-[#343C6A] hover:text-blue-700" />
       </TooltipWrapper>
 
@@ -84,7 +84,7 @@ const NotificationBtn = ({ uid }: Props) => {
               </button>
             </div>
           ) : (
-            <div>Brak powiadomień</div>
+            <div>Brak komunikatów</div>
           )}
         </div>
       )}
