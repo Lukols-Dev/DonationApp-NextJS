@@ -52,6 +52,33 @@ const StylesTab = (props: Props) => {
       styleSettings === "backgroundImage"
         ? `url(${e.target.value})`
         : e.target.value;
+
+    // Sprawdzanie, czy styleSettings to jedno z pozycjonowań CSS
+    if (["top", "left", "right", "bottom"].includes(styleSettings)) {
+      // Sprawdzanie, czy wartość jest liczbą i znajduje się w zakresie od 0 do 100
+      let numericValue = Number(value);
+      if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 100) {
+        // Jeśli tak, to formatujemy wartość jako liczbę z procentem
+        value = `${numericValue}%`;
+      } else {
+        // Jeśli wartość jest poza zakresem lub nie jest liczbą, resetujemy ją do bezpiecznej wartości
+        value = "0%";
+      }
+    }
+
+    // Sprawdzanie, czy styleSettings to jedno z pozycjonowań CSS
+    if (["height", "width"].includes(styleSettings)) {
+      // Sprawdzanie, czy wartość jest liczbą i znajduje się w zakresie od 0 do 100
+      let numericValue = Number(value);
+      if (!isNaN(numericValue)) {
+        // Jeśli tak, to formatujemy wartość jako liczbę z procentem
+        value = `${numericValue}px`;
+      } else {
+        // Jeśli wartość jest poza zakresem lub nie jest liczbą, resetujemy ją do bezpiecznej wartości
+        value = "auto";
+      }
+    }
+
     const styleObject = {
       [styleSettings]: value,
     };
@@ -437,7 +464,15 @@ const StylesTab = (props: Props) => {
                       id="height"
                       placeholder="px"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.height}
+                      value={
+                        typeof state.editor.selectedElement.styles.height ===
+                        "string"
+                          ? state.editor.selectedElement.styles.height.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                   <div>
@@ -446,7 +481,15 @@ const StylesTab = (props: Props) => {
                       placeholder="px"
                       id="width"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.width}
+                      value={
+                        typeof state.editor.selectedElement.styles.width ===
+                        "string"
+                          ? state.editor.selectedElement.styles.width.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                 </div>
@@ -470,7 +513,15 @@ const StylesTab = (props: Props) => {
                       id="top"
                       placeholder="%"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.top}
+                      value={
+                        typeof state.editor.selectedElement.styles.top ===
+                        "string"
+                          ? state.editor.selectedElement.styles.top.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                   <div>
@@ -479,7 +530,15 @@ const StylesTab = (props: Props) => {
                       placeholder="%"
                       id="bottom"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.bottom}
+                      value={
+                        typeof state.editor.selectedElement.styles.bottom ===
+                        "string"
+                          ? state.editor.selectedElement.styles.bottom.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                 </div>
@@ -490,7 +549,15 @@ const StylesTab = (props: Props) => {
                       placeholder="%"
                       id="left"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.left}
+                      value={
+                        typeof state.editor.selectedElement.styles.left ===
+                        "string"
+                          ? state.editor.selectedElement.styles.left.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                   <div>
@@ -499,7 +566,15 @@ const StylesTab = (props: Props) => {
                       placeholder="%"
                       id="right"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.right}
+                      value={
+                        typeof state.editor.selectedElement.styles.right ===
+                        "string"
+                          ? state.editor.selectedElement.styles.right.replace(
+                              /[^0-9]/g,
+                              ""
+                            )
+                          : ""
+                      }
                     />
                   </div>
                 </div>

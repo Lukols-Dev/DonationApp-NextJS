@@ -98,7 +98,7 @@ const ListComponent = (props: Props) => {
     <div
       style={styles}
       className={clsx(
-        "p-[2px] w-full m-[5px] relative text-[16px] transition-all",
+        "p-[2px] w-full m-[5px] absolute text-[16px] transition-all",
         {
           "!border-blue-500":
             state.editor.selectedElement.id === props.element.id,

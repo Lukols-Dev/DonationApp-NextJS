@@ -138,7 +138,7 @@ const GoalsComponent = (props: Props) => {
     <div
       style={styles}
       className={clsx(
-        "p-[2px] m-[5px] relative text-[16px] transition-all w-full",
+        "p-[2px] m-[5px] absolute text-[16px] transition-all w-full",
         {
           "!border-blue-500":
             state.editor.selectedElement.id === props.element.id,
