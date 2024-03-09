@@ -14,7 +14,7 @@ import {
   query,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
-import { cancelSpeaking, speakText } from "@/lib/utils";
+import { cancelSpeaking, formatAmountToText, speakText } from "@/lib/utils";
 import {
   ControllerService,
   QueueService,
@@ -36,6 +36,7 @@ const DonateComponent = (props: Props) => {
   const [isRead, setRead] = useState<boolean>(false);
   const [donateActive, setDonateActive] = useState<boolean>(false);
   const [donateSkip, setDonateSkip] = useState<boolean>(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const handleDeleteElement = () => {
     dispatch({
@@ -65,34 +66,6 @@ const DonateComponent = (props: Props) => {
     setDonateSkip(false);
   };
 
-  const readMessage = () => {
-    if (
-      currentMessageIndex !== null &&
-      currentMessageIndex < listItems.length
-    ) {
-      const message = listItems[currentMessageIndex];
-      console.log("read object message: ", {
-        index: currentMessageIndex,
-        message: message,
-      });
-
-      setRead(true);
-      speakText({
-        text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
-        rate: 0.9,
-        volume: 0.8,
-        pitch: 1.2,
-        voice: "Google polski",
-        onEnd: () => {
-          setRead(false);
-          if (!donateSkip) {
-            goToNextMessage();
-          }
-        },
-      });
-    }
-  };
-
   const donateUrl = !Array.isArray(props.element.content)
     ? props.element.content.donate_url
     : "";
@@ -112,6 +85,48 @@ const DonateComponent = (props: Props) => {
   const is_controller = !Array.isArray(props.element.content)
     ? props.element.content.donate_controller
     : false;
+
+  const playSound = (src: string, callback: any) => {
+    const sound = new Audio(src);
+    sound.play();
+    sound.onended = callback;
+    setAudio(sound);
+  };
+
+  const stopSound = () => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  };
+
+  const readMessage = () => {
+    if (
+      currentMessageIndex !== null &&
+      currentMessageIndex < listItems.length
+    ) {
+      const message = listItems[currentMessageIndex];
+
+      setRead(true);
+      speakText({
+        text: `Użytkownik ${
+          message.nick || ""
+        } wysłał wiadomość za ${formatAmountToText(
+          message[String(amountType)]
+        )} o treści ${message.description}`,
+        rate: 0.9,
+        volume: 0.8,
+        pitch: 1.2,
+        voice: "Google polski",
+        onEnd: () => {
+          setRead(false);
+          if (!donateSkip) {
+            goToNextMessage();
+          }
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     if (!donateLector) return;
@@ -139,7 +154,6 @@ const DonateComponent = (props: Props) => {
             id: doc.id,
             ...doc.data(),
           }));
-          console.log("fetchedItems: ", fetchedItems);
           setListItems(fetchedItems);
           setCurrentMessageIndex(0);
         },
@@ -271,30 +285,57 @@ const DonateComponent = (props: Props) => {
 
       // if controller have set Skip donate, skip and end display current message go to next
       if (donateSkip) {
+        stopSound(); // Zatrzymaj odtwarzanie dźwięku
         cancelSpeaking();
         goToNextMessage();
         return; //end without delay
       }
 
       if (!donateLector || isRead) {
-        // Set auto switch message after delay
-        const timeoutId = setTimeout(() => {
-          const currentMessage = listItems[currentMessageIndex];
+        if (
+          listItems[currentMessageIndex].voice_url &&
+          listItems[currentMessageIndex].voice_url.lenght > 0
+        ) {
+          playSound(listItems[currentMessageIndex].voice_url, () => {
+            const timeoutId = setTimeout(() => {
+              const currentMessage = listItems[currentMessageIndex];
 
-          goToNextMessage();
+              goToNextMessage();
 
-          // Display and delete from queue
-          console.log("nextIndex after delay");
+              // Display and delete from queue
+              console.log("nextIndex after delay and audio");
 
-          return () => clearTimeout(timeoutId);
-        }, donateDelay || 2000);
+              return () => clearTimeout(timeoutId);
+            }, donateDelay || 2000);
+          }); // Set auto switch message after delay
+        } else {
+          const timeoutId = setTimeout(() => {
+            const currentMessage = listItems[currentMessageIndex];
+
+            goToNextMessage();
+
+            // Display and delete from queue
+            console.log("nextIndex after delay");
+
+            return () => clearTimeout(timeoutId);
+          }, donateDelay || 2000);
+        }
       } else if (
         donateLector &&
         !isRead &&
         currentMessageIndex !== null &&
         currentMessageIndex < listItems.length
       ) {
-        readMessage();
+        if (
+          !!listItems[currentMessageIndex].voice_url &&
+          listItems[currentMessageIndex].voice_url.length > 0
+        ) {
+          playSound(listItems[currentMessageIndex].voice_url, () => {
+            readMessage();
+          });
+        } else {
+          readMessage();
+        }
       }
     } else if (isRead && donateSkip) {
       //if donate i reading and we need skip donate and end reading i the same time

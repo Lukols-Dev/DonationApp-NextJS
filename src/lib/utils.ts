@@ -302,6 +302,26 @@ export const cancelSpeaking = () => {
   synth.cancel();
 };
 
+export const formatAmountToText = (amount: number): string => {
+  const zlote = Math.floor(amount);
+  const grosze = Math.round((amount - zlote) * 100);
+
+  let result = "";
+
+  if (zlote > 0) {
+    result += `${zlote} złot${zlote === 1 ? "y" : zlote < 5 ? "e" : "ych"}`;
+  }
+
+  if (grosze > 0) {
+    if (result.length > 0) result += " i ";
+    result += `${grosze} grosz${grosze === 1 ? "" : grosze < 5 ? "e" : "y"}`;
+  } else if (zlote === 0) {
+    result = "0 groszy";
+  }
+
+  return result;
+};
+
 // export const calculateIncomeSummary = (props: any) => {
 //   const { messages, year, month } = props;
 
