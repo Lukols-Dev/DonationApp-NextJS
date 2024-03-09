@@ -14,7 +14,7 @@ import {
   query,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
-import { speakText } from "@/lib/utils";
+import { cancelSpeaking, speakText } from "@/lib/utils";
 import {
   ControllerService,
   QueueService,
@@ -27,6 +27,7 @@ interface Props {
 
 const DonateComponent = (props: Props) => {
   const { dispatch, state } = useEditor();
+
   const [listItems, setListItems] = useState<any[]>([]);
   const [currentMessageIndex, setCurrentMessageIndex] = useState<number | null>(
     null
@@ -53,6 +54,45 @@ const DonateComponent = (props: Props) => {
       },
     });
   };
+
+  const goToNextMessage = () => {
+    setCurrentMessageIndex((currentIndex) =>
+      currentIndex !== null && currentIndex + 1 < listItems.length
+        ? currentIndex + 1
+        : null
+    );
+    // Resetowanie stanu `donateSkip` na `false` po wymuszeniu zmiany
+    setDonateSkip(false);
+  };
+
+  const readMessage = () => {
+    if (
+      currentMessageIndex !== null &&
+      currentMessageIndex < listItems.length
+    ) {
+      const message = listItems[currentMessageIndex];
+      console.log("read object message: ", {
+        index: currentMessageIndex,
+        message: message,
+      });
+
+      setRead(true);
+      speakText({
+        text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
+        rate: 0.9,
+        volume: 0.8,
+        pitch: 1.2,
+        voice: "Google polski",
+        onEnd: () => {
+          setRead(false);
+          if (!donateSkip) {
+            goToNextMessage();
+          }
+        },
+      });
+    }
+  };
+
   const donateUrl = !Array.isArray(props.element.content)
     ? props.element.content.donate_url
     : "";
@@ -99,6 +139,7 @@ const DonateComponent = (props: Props) => {
             id: doc.id,
             ...doc.data(),
           }));
+          console.log("fetchedItems: ", fetchedItems);
           setListItems(fetchedItems);
           setCurrentMessageIndex(0);
         },
@@ -114,56 +155,108 @@ const DonateComponent = (props: Props) => {
     }
   }, [state.editor.liveMode, props.uid, donateActive]);
 
-  useEffect(() => {
-    const readMessage = () => {
-      if (
-        currentMessageIndex !== null &&
-        currentMessageIndex < listItems.length
-      ) {
-        const message = listItems[currentMessageIndex];
+  // useEffect(() => {
+  //   const readMessage = () => {
+  //     if (
+  //       currentMessageIndex !== null &&
+  //       currentMessageIndex < listItems.length
+  //     ) {
+  //       const message = listItems[currentMessageIndex];
+  //       console.log("read object message: ", {
+  //         index: currentMessageIndex,
+  //         message: message,
+  //       });
+  //       // if (donateSkip) {
+  //       //   // Natychmiast przechodzi do następnej wiadomości bez odczytywania aktualnej
+  //       //   setCurrentMessageIndex((currentIndex) =>
+  //       //     currentIndex !== null && currentIndex + 1 < listItems.length
+  //       //       ? currentIndex + 1
+  //       //       : null
+  //       //   );
+  //       //   return; // Zapobiega odczytaniu wiadomości jeśli skip jest aktywny
+  //       // }
 
-        // if (donateSkip) {
-        //   // Natychmiast przechodzi do następnej wiadomości bez odczytywania aktualnej
-        //   setCurrentMessageIndex((currentIndex) =>
-        //     currentIndex !== null && currentIndex + 1 < listItems.length
-        //       ? currentIndex + 1
-        //       : null
-        //   );
-        //   return; // Zapobiega odczytaniu wiadomości jeśli skip jest aktywny
-        // }
+  //       if (message[String(amountType)] >= Number(donateActivationAmount)) {
+  //         setRead(true);
+  //         speakText({
+  //           text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
+  //           rate: 0.9,
+  //           volume: 0.8,
+  //           pitch: 1.2,
+  //           voice: "Google polski",
 
-        if (message[String(amountType)] >= Number(donateActivationAmount)) {
-          setRead(true);
-          speakText({
-            text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
-            rate: 0.9,
-            volume: 0.8,
-            pitch: 1.2,
-            voice: "Google polski",
-            onEnd: () => {
-              setRead(false);
-              if (!donateSkip) {
-                setCurrentMessageIndex((currentIndex) =>
-                  currentIndex !== null && currentIndex + 1 < listItems.length
-                    ? currentIndex + 1
-                    : null
-                );
-              }
-            },
-          });
-        }
-      }
-    };
+  //           onEnd: () => {
+  //             setRead(false);
+  //             if (!donateSkip) {
+  //               setCurrentMessageIndex((currentIndex) =>
+  //                 currentIndex !== null && currentIndex + 1 < listItems.length
+  //                   ? currentIndex + 1
+  //                   : null
+  //               );
+  //             }
+  //           },
+  //         });
+  //       }
+  //     }
+  //   };
 
-    if (
-      donateLector &&
-      state.editor.liveMode &&
-      listItems.length > 0 &&
-      !donateActive
-    ) {
-      readMessage();
-    }
-  }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
+  //   if (
+  //     donateLector &&
+  //     state.editor.liveMode &&
+  //     listItems.length > 0 &&
+  //     !donateActive
+  //   ) {
+  //     readMessage();
+  //   }
+  // }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
+
+  // useEffect(() => {
+  //   if (
+  //     !isRead &&
+  //     currentMessageIndex !== null &&
+  //     currentMessageIndex < listItems.length
+  //   ) {
+  //     console.log("displayed object message: ", {
+  //       index: currentMessageIndex,
+  //       message: listItems[currentMessageIndex],
+  //     });
+  //     const timeoutId = setTimeout(() => {
+  //       console.log("donateSkip setter: ", donateSkip);
+  //       if (donateSkip) {
+  //         console.log("robimy skips: ", donateSkip);
+  //         // Pominięcie aktualnej wiadomości i przejście do kolejnej
+  //         setCurrentMessageIndex((currentIndex) =>
+  //           currentIndex !== null && currentIndex + 1 < listItems.length
+  //             ? currentIndex + 1
+  //             : null
+  //         );
+  //         return; // Zatrzymuje dalsze działania jeśli skip jest aktywny
+  //       }
+  //       const currentMessage = listItems[currentMessageIndex];
+
+  //       setCurrentMessageIndex((currentIndex) => {
+  //         const nextIndex =
+  //           currentIndex !== null && currentIndex + 1 < listItems.length
+  //             ? currentIndex + 1
+  //             : null;
+  //         //Potem zajme sie usuwaniem z kolejki
+  //         if (currentMessage && currentMessage.id && currentMessage.mid) {
+  //           //   QueueService.deleteFromQueue(
+  //           //     props.uid,
+  //           //     currentMessage.id,
+  //           //     currentMessage.mid
+  //           //   )
+  //           //     .then(() => console.log("delete"))
+  //           //     .catch((error) => console.error("Delete queue:", error));
+  //         }
+  //         console.log("nextIndex: ", nextIndex);
+  //         return nextIndex;
+  //       });
+
+  //       return () => clearTimeout(timeoutId);
+  //     }, donateDelay || 2000);
+  //   }
+  // }, [currentMessageIndex, listItems, isRead, donateSkip]);
 
   useEffect(() => {
     if (
@@ -171,41 +264,53 @@ const DonateComponent = (props: Props) => {
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
-      const timeoutId = setTimeout(() => {
-        // if (donateSkip) {
-        //   // Pominięcie aktualnej wiadomości i przejście do kolejnej
-        //   setCurrentMessageIndex((currentIndex) =>
-        //     currentIndex !== null && currentIndex + 1 < listItems.length
-        //       ? currentIndex + 1
-        //       : null
-        //   );
-        //   return; // Zatrzymuje dalsze działania jeśli skip jest aktywny
-        // }
-        const currentMessage = listItems[currentMessageIndex];
+      console.log("displayed object message: ", {
+        index: currentMessageIndex,
+        message: listItems[currentMessageIndex],
+      });
 
-        setCurrentMessageIndex((currentIndex) => {
-          const nextIndex =
-            currentIndex !== null && currentIndex + 1 < listItems.length
-              ? currentIndex + 1
-              : null;
+      // if controller have set Skip donate, skip and end display current message go to next
+      if (donateSkip) {
+        cancelSpeaking();
+        goToNextMessage();
+        return; //end without delay
+      }
 
-          if (currentMessage && currentMessage.id && currentMessage.mid) {
-            QueueService.deleteFromQueue(
-              props.uid,
-              currentMessage.id,
-              currentMessage.mid
-            )
-              .then(() => console.log("delete"))
-              .catch((error) => console.error("Delete queue:", error));
-          }
+      if (!donateLector || isRead) {
+        // Set auto switch message after delay
+        const timeoutId = setTimeout(() => {
+          const currentMessage = listItems[currentMessageIndex];
 
-          return nextIndex;
-        });
+          goToNextMessage();
 
-        return () => clearTimeout(timeoutId);
-      }, donateDelay || 2000);
+          // Display and delete from queue
+          console.log("nextIndex after delay");
+
+          return () => clearTimeout(timeoutId);
+        }, donateDelay || 2000);
+      } else if (
+        donateLector &&
+        !isRead &&
+        currentMessageIndex !== null &&
+        currentMessageIndex < listItems.length
+      ) {
+        readMessage();
+      }
+    } else if (isRead && donateSkip) {
+      //if donate i reading and we need skip donate and end reading i the same time
+      cancelSpeaking();
+      setRead(false);
+      goToNextMessage();
+      return; //end without delay
     }
-  }, [currentMessageIndex, listItems, isRead]);
+  }, [
+    currentMessageIndex,
+    listItems,
+    isRead,
+    donateSkip,
+    donateDelay,
+    setDonateSkip,
+  ]);
 
   useEffect(() => {
     const controllerRef = doc(
@@ -220,7 +325,6 @@ const DonateComponent = (props: Props) => {
       if (doc.exists()) {
         const data = doc.data();
         setDonateActive(data.donate_active ?? false);
-        setDonateSkip(data.donate_skip || false);
       }
     });
 
@@ -236,19 +340,26 @@ const DonateComponent = (props: Props) => {
     });
   }, [is_controller]);
 
-  // useEffect(() => {
-  //   if (
-  //     donateSkip &&
-  //     currentMessageIndex !== null &&
-  //     currentMessageIndex + 1 < listItems.length
-  //   ) {
-  //     // Natychmiastowe przejście do kolejnej wiadomości, gdy donateSkip jest ustawione na true
-  //     setCurrentMessageIndex(currentMessageIndex + 1);
+  useEffect(() => {
+    const controllerRef = doc(
+      firestore,
+      "users",
+      props.uid,
+      "controller",
+      "controller"
+    );
 
-  //     // Opcjonalnie, można tutaj zresetować stan donateSkip na false, jeśli jest to jednorazowa akcja
-  //     // setDonateSkip(false);
-  //   }
-  // }, [donateSkip, currentMessageIndex, listItems.length]);
+    const unsubscribe = onSnapshot(controllerRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setDonateSkip(data.skip_donate);
+      } else {
+        console.log("Nie znaleziono dokumentu!");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div
@@ -274,8 +385,8 @@ const DonateComponent = (props: Props) => {
       <div className="text-center relative z-10">
         {!state.editor.liveMode ? (
           <>
-            <h1 className="font-bold text-4xl text-green-500">500 PLN</h1>
             <h2 className="font-bold text-xl">Nick</h2>
+            <h1 className="font-bold text-4xl text-green-500">500 PLN</h1>
             <p className="font-bold text-lg">Opis wpłaty</p>
             {donateUrl && (
               <img
@@ -292,15 +403,15 @@ const DonateComponent = (props: Props) => {
           listItems.length > 0 &&
           currentMessageIndex !== null ? (
           <>
+            <h2 className="font-bold text-xl text-black">
+              {listItems[currentMessageIndex]?.nick}
+            </h2>
             <h1 className="font-bold text-4xl text-green-500">
               {listItems[currentMessageIndex] && amountType
                 ? listItems[currentMessageIndex][amountType]
                 : listItems[currentMessageIndex]?.amount}{" "}
               PLN
             </h1>
-            <h2 className="font-bold text-xl text-black">
-              {listItems[currentMessageIndex]?.nick}
-            </h2>
             <p className="font-bold text-lg text-black">
               {listItems[currentMessageIndex]?.description}
             </p>

@@ -296,6 +296,12 @@ export const speakText = (options: SpeakOptions) => {
   synth.speak(utterance);
 };
 
+export const cancelSpeaking = () => {
+  console.log("skip donejt");
+  const synth = window.speechSynthesis;
+  synth.cancel();
+};
+
 // export const calculateIncomeSummary = (props: any) => {
 //   const { messages, year, month } = props;
 

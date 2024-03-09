@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import InputCopy from "@/components/ui/input-copy";
 import { ConfiguratorService } from "@/lib/firebase/firebase-actions";
 import Link from "next/link";
+import { useDonateModal } from "@/hooks/useDonate";
+import { useEffect, useState } from "react";
 
 interface Props {
   uid: string;

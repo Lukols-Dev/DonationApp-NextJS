@@ -10,7 +10,6 @@ const WidgetPage = async (props: Page) => {
   if (isEmpty(params) || !params.id) {
     return notFound();
   }
-
   return (
     <div className="h-screen w-screen">
       <EditorProvider subaccountId={"1"} funnelId={"2"} pageDetails={1}>

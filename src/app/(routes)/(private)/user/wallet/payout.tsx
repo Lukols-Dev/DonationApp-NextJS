@@ -8,8 +8,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Payment } from "@/components/ui/table";
 import TooltipWrapper from "@/components/ui/tooltip";
 import { formatTimestamp } from "@/lib/utils";
+import { useDonateModal } from "@/hooks/useDonateC";
 
 export const getColumnsPayoutsPerUser = (): ColumnDef<Payment>[] => {
+  const { isSkip, skipCount } = useDonateModal();
+
   return [
     {
       id: "select",

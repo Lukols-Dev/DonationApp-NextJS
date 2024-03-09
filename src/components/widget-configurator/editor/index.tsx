@@ -13,7 +13,6 @@ interface Props {
 
 const WidgetEditor = ({ uid, liveMode }: Props) => {
   const { dispatch, state } = useEditor();
-
   const handleClick = () => {
     dispatch({
       type: "CHANGE_CLICKED_ELEMENT",

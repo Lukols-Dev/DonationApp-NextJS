@@ -12,7 +12,7 @@ const ControllerWidget = () => {
   const pathname = usePathname();
   const [uid, setId] = useState<string>("");
   const [donateActive, setDonateActive] = useState<boolean>(true);
-  const [skipDonateActive, setSkipDonateActive] = useState<boolean>(true);
+  const [skipDonateActive, setSkipDonateActive] = useState<boolean>(false);
   const [goalActive, setGoalActive] = useState<boolean>(true);
   const [goalValue, setGoalValue] = useState<number>(0);
 
@@ -36,22 +36,24 @@ const ControllerWidget = () => {
     }
   };
 
-  // const onClickSkipDonate = () => {
-  //   setSkipDonateActive(false);
+  const onClickSkipDonate = async () => {
+    setSkipDonateActive(true);
 
-  //   try {
-  //     setTimeout(() => {
-  //       ControllerService.updateController(uid, { donate_skip: true });
-  //     }, 500);
-  //   } catch (err) {
-  //     console.log("Controller Err: ", err);
-  //   } finally {
-  //     setTimeout(() => {
-  //       setSkipDonateActive(true);
-  //       ControllerService.updateController(uid, { donate_skip: false });
-  //     }, 500);
-  //   }
-  // };
+    try {
+      await ControllerService.updateController(uid, {
+        skip_donate: true,
+      });
+      setTimeout(async () => {
+        await ControllerService.updateController(uid, {
+          skip_donate: false,
+        });
+        setSkipDonateActive(false);
+      }, 500);
+    } catch (err) {
+      setSkipDonateActive(false);
+      console.log("Controller Err: ", err);
+    }
+  };
 
   const handleChangeGoalValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoalValue(parseFloat(e.target.value));
@@ -94,7 +96,7 @@ const ControllerWidget = () => {
       >
         {donateActive ? "Zatrzymaj Donejty" : "Wznów Donejty"}
       </div>
-      {/* <div
+      <div
         className={cn(
           "bg-white w-full h-full flex items-center justify-center cursor-pointer",
           skipDonateActive && "bg-green-500"
@@ -102,7 +104,7 @@ const ControllerWidget = () => {
         onClick={onClickSkipDonate}
       >
         Pomiń donejt
-      </div> */}
+      </div>
       <div
         className={cn(
           "bg-white w-full h-full flex items-center justify-center cursor-pointer",
