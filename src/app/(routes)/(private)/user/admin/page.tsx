@@ -12,7 +12,6 @@ import { Banknote, MessageCircleMore } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputFees } from "./inputFees";
 import Link from "next/link";
-import GifComponentUpdated from "@/components/ui/gif-selector";
 
 const AdminPage = async () => {
   const currentUser: {

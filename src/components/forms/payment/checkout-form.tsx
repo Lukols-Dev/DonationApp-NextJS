@@ -125,7 +125,9 @@ const CheckoutForm = ({
       const res = await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
-          amount_after_fees: values.amount_fees.amount_after_app_fee,
+          amount_after_fees: parseFloat(
+            values.amount_fees.amount_after_app_fee.toFixed(2)
+          ),
           url: url,
           voice_url: audioUrl || "",
         },
@@ -236,7 +238,6 @@ const CheckoutForm = ({
 
   const getTotalPrice = useCallback(() => {
     let totalPrice = values.amount || 0; // default amount
-    console.log("values.amount: ", values.amount);
     // Add gif price
     if (custom_elements.is_gif && values.gif_url) {
       totalPrice += Number(custom_elements.gif_price) || 0;
