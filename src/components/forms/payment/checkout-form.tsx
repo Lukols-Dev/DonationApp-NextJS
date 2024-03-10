@@ -197,20 +197,20 @@ const CheckoutForm = ({
     ) => {
       let newValue: string | number = e.target.value;
 
-      // Jeśli pole to 'description', ogranicz długość wartości do 250 znaków
       if (field === "description") {
         newValue = newValue.slice(0, 250);
       } else if (field === "nick") {
         newValue = newValue.slice(0, 25);
       } else if (field === "amount") {
-        // Jeśli pole to 'amount', konwertuj wartość na liczbę
-        newValue = parseFloat(newValue);
+        const regex = /^\d+(\.\d{0,2})?$/;
+        if (regex.test(newValue)) {
+          newValue = parseFloat(newValue);
+        } else {
+          return;
+        }
       }
 
       setValues((prevValues) => ({ ...prevValues, [field]: newValue }));
-      // const newValue =
-      //   field === "amount" ? parseFloat(e.target.value) : e.target.value;
-      // setValues((prevValues) => ({ ...prevValues, [field]: newValue }));
     },
     []
   );
