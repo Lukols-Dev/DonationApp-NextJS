@@ -70,11 +70,10 @@ const GoalsComponent = (props: Props) => {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate());
     const dateTime = Timestamp.fromDate(currentDate);
-
     const messagesQuery = query(
       collection(firestore, "users", props.uid, "messages"),
       where("create_at", ">=", dateTime),
-      where("payment_status", "==", "succeeded"),
+      where("payment_status", "==", "complete"),
       orderBy("create_at", "desc")
     );
 
@@ -83,6 +82,7 @@ const GoalsComponent = (props: Props) => {
       (snapshot) => {
         const fetchedItems = snapshot.docs.map((doc) => {
           const data = doc.data();
+
           return {
             id: doc.id,
             amount: data.amount,

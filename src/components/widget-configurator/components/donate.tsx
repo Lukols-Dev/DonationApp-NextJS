@@ -146,6 +146,11 @@ const DonateComponent = (props: Props) => {
         onEnd: () => {
           setRead(false);
           if (!donateSkip) {
+            // const timeoutId = setTimeout(() => {
+            //   goToNextMessage();
+
+            //   return () => clearTimeout(timeoutId);
+            // }, donateDelay || 2000);
             goToNextMessage();
           }
         },
@@ -202,7 +207,7 @@ const DonateComponent = (props: Props) => {
     ) {
       // if controller have set Skip donate, skip and end display current message go to next
       if (donateSkip || donateActive) {
-        stopSound(); // Zatrzymaj odtwarzanie dźwięku
+        stopSound();
         cancelSpeaking();
         goToNextMessage();
         return; //end without delay
@@ -215,6 +220,7 @@ const DonateComponent = (props: Props) => {
         ) {
           playSound(listItems[currentMessageIndex].voice_url, () => {
             const timeoutId = setTimeout(() => {
+              stopSound();
               goToNextMessage();
 
               return () => clearTimeout(timeoutId);
@@ -238,6 +244,7 @@ const DonateComponent = (props: Props) => {
           listItems[currentMessageIndex].voice_url.length > 0
         ) {
           playSound(listItems[currentMessageIndex].voice_url, () => {
+            stopSound();
             readMessage();
           });
         } else {
@@ -352,7 +359,7 @@ const DonateComponent = (props: Props) => {
           listItems.length > 0 &&
           currentMessageIndex !== null ? (
           <>
-            <h2 className="font-bold text-xl text-black">
+            <h2 className="font-bold text-xl ">
               {listItems[currentMessageIndex]?.nick}
             </h2>
             <h1 className="font-bold text-4xl text-green-500">
@@ -361,7 +368,7 @@ const DonateComponent = (props: Props) => {
                 : listItems[currentMessageIndex]?.amount}{" "}
               PLN
             </h1>
-            <p className="font-bold text-lg text-black">
+            <p className="font-bold text-lg ">
               {listItems[currentMessageIndex]?.description}
             </p>
             {donateUrl && (
