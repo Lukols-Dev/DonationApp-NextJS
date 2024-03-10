@@ -159,14 +159,3 @@ export const createPayout = async (
     console.log(`Payout failed: `, err);
   }
 };
-
-// export function getStripeOAuthLink(
-//   accountType: "individual" | "company",
-//   state: string
-// ) {
-//   return `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
-//     process.env.NEXT_PUBLIC_STRIPE_CLIEND_ID
-//   }&scope=read_write&redirect_uri=${
-//     process.env.NEXT_PUBLIC_URL
-//   }/${"user/wallet"}&state=${state}`;
-// }

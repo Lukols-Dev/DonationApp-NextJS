@@ -7,6 +7,7 @@ const SMSCheckout = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    // Klient został poinformowany ze musi dla paysafecard i sms przejsc autoryzacje z cashbill
     // Logika do integracji z CashBill dla płatności SMS
     // Tutaj należy zaimplementować wysyłanie żądania do API CashBill zgodnie z dokumentacją,
     // np. poprzez wywołanie funkcji, która generuje kod SMS i instrukcje dla użytkownika.
