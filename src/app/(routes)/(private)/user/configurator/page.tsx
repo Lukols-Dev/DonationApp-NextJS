@@ -1,7 +1,6 @@
 import WidgetEditor from "@/components/widget-configurator/editor";
 import EditorFooter from "@/components/widget-configurator/footer";
 import EditorSidebar from "@/components/widget-configurator/sidebar";
-import { useDonateModal } from "@/hooks/useDonate";
 import getCurrentUser from "@/lib/auth-actions";
 import EditorProvider from "@/providers/widget-configurator/configurator-provider";
 

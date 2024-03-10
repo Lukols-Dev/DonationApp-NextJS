@@ -46,6 +46,10 @@ const WalletPage = async () => {
       (payout: any) => payout.uid === currentUser.uid
     );
   }
+  let totalPayout = 0;
+  if (payments && payments.payments.length > 0) {
+    totalPayout = calculateTotalPayout(payments.payments);
+  }
 
   return (
     <Container>
@@ -65,7 +69,7 @@ const WalletPage = async () => {
             />
             <CardPayout
               title="Do wypłaty"
-              value={calculateTotalPayout(payments.payments)}
+              value={totalPayout.toFixed(2)}
               icon="PLN"
               payments={payments}
               user={currentUser}
@@ -99,11 +103,6 @@ const WalletPage = async () => {
           </div>
         </div>
         <div className="w-full h-full">
-          {/* <div className="flex gap-2 text-2xl text-[#333B69] my-2 font-semibold items-center"> */}
-          {/* <p>Historia płatności</p> */}
-          {/* <ExportBtn columns={exportCol} data={messages.messages} /> */}
-          {/* </div> */}
-          {/* <CardTable data={messages.messages} columns={columnsWallet} /> */}
           <CustomWalletTable
             data={filteredPayouts}
             type="payout"

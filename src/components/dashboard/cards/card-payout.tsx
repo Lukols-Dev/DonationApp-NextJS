@@ -95,9 +95,9 @@ const PayoutForm = ({ payments, user }: { payments?: any; user: any }) => {
           payment.name === "smspremium" ||
           payment.name === "paysafecard"
         ) {
-          payoutSummary[payment.name] += payout;
+          payoutSummary[payment.name] += Number(payout.toFixed(2));
         } else {
-          payoutSummary.other += payout;
+          payoutSummary.other += Number(payout.toFixed(2));
         }
       }
     });

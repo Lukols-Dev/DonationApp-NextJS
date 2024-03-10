@@ -23,7 +23,7 @@ const CardPayMethod = ({ value, descValue, icon }: Props) => {
           <div className="flex flex-col justify-center items-end">
             <p className="text-2xl font-bold">{value || 0}</p>
             <p className="text-[#B1B1B1] text-sm">
-              zarobiłeś: {descValue || 0} PLN
+              zarobiłeś: {descValue ? descValue.toFixed(2) : 0} PLN
             </p>
           </div>
         </div>

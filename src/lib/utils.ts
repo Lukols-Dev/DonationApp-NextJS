@@ -212,7 +212,6 @@ export const calculateApplicationFeeAmount = (
   customElementsFees: { gif?: number; voice?: number }
 ): FeeCalculationResult => {
   let feeAmount = totalAmount * (applicationFeePercent / 100);
-
   if (paymentMethod in paymentMethodFees) {
     const additionalFeePercent = paymentMethodFees[paymentMethod];
     feeAmount += totalAmount * (additionalFeePercent / 100);
@@ -226,7 +225,6 @@ export const calculateApplicationFeeAmount = (
     customFee += totalAmount * (customElementsFees.voice / 100);
   }
   feeAmount += customFee;
-
   return {
     amountAppFee: Math.round((feeAmount + Number.EPSILON) * 100) / 100,
     amountBeforeAppFee: totalAmount,
