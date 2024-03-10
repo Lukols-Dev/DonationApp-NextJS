@@ -17,10 +17,8 @@ import TooltipWrapper from "@/components/ui/tooltip";
 import { DropDownMenuItem } from "@/types";
 import { formatTimestamp } from "@/lib/utils";
 import { AdminUsersService } from "@/lib/firebase/firebase-admin-actions";
-// import { useRouter } from "next/navigation";
 
 export const getColumnsUsers = (): ColumnDef<Payment>[] => {
-  // const route = useRouter();
   const generateDropdownItems = (user: any): DropDownMenuItem[] => {
     let accountStatusAction: DropDownMenuItem;
     let deleteAccount: DropDownMenuItem;
@@ -41,7 +39,6 @@ export const getColumnsUsers = (): ColumnDef<Payment>[] => {
           )
             .then(() => {
               console.log("User unblocked");
-              // route.refresh();
             })
             .catch((err) => console.log("Problem with unblocked: ", err));
         },
@@ -62,7 +59,6 @@ export const getColumnsUsers = (): ColumnDef<Payment>[] => {
           )
             .then(() => {
               console.log("User blocked");
-              // route.refresh();
             })
             .catch((err) => console.log("Problem with blocked: ", err));
         },
@@ -80,7 +76,6 @@ export const getColumnsUsers = (): ColumnDef<Payment>[] => {
         AdminUsersService.deleteUser("AfaKosCBYUxTnUzrRBz26cvAFfBH7j", user.id)
           .then(() => {
             console.log("delete user");
-            // route.refresh();
           })
           .catch((err) => console.log("problem with delete user: ", err));
       },
