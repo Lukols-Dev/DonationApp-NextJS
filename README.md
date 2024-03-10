@@ -1,7 +1,7 @@
 ## Tipey Donate No Code App: NextJS, React, Node, NPM, Tailwindcss, Firebase
 
 Information on the packages used can be found in the package.json file . Application programmed using Visual Studio Code tool.
-The keys to the application are in the .env.example file, fill in the missing ones and rename the file to .env.local
+The keys to the application are in the .env.example file, fill in the missing ones and rename the file to .env.local. Vercel servers can be used to host applications.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
