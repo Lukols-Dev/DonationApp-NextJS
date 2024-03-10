@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <div className="z-[200] w-screen h-screen fixed"></div>
         <LoginModal />
         <Toaster />
         <AuthProvider>{children}</AuthProvider>
