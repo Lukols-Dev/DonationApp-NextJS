@@ -111,6 +111,10 @@ const DonateComponent = (props: Props) => {
     : false;
 
   const playSound = (src: string, callback: any) => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
     const sound = new Audio(src);
     sound.play();
     sound.onended = callback;
@@ -125,8 +129,8 @@ const DonateComponent = (props: Props) => {
   };
 
   const readMessage = () => {
+    if (!state.editor.liveMode) return;
     if (
-      state.editor.liveMode &&
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
@@ -205,8 +209,14 @@ const DonateComponent = (props: Props) => {
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
-      // if controller have set Skip donate, skip and end display current message go to next
-      if (donateSkip || donateActive) {
+      // if (donateActive) {
+      //   stopSound();
+      //   cancelSpeaking();
+      //   return; //end without delay
+      // }
+
+      // // if controller have set Skip donate, skip and end display current message go to next
+      if (donateSkip) {
         stopSound();
         cancelSpeaking();
         goToNextMessage();

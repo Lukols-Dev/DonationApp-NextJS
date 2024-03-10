@@ -48,7 +48,7 @@ const ControllerWidget = () => {
           skip_donate: false,
         });
         setSkipDonateActive(false);
-      }, 500);
+      }, 1000);
     } catch (err) {
       setSkipDonateActive(false);
       console.log("Controller Err: ", err);

@@ -297,7 +297,6 @@ export const speakText = (options: SpeakOptions) => {
 };
 
 export const cancelSpeaking = () => {
-  console.log("skip donejt");
   const synth = window.speechSynthesis;
   synth.cancel();
 };
