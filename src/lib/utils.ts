@@ -322,44 +322,28 @@ export const formatAmountToText = (amount: number): string => {
   return result;
 };
 
-// export const calculateIncomeSummary = (props: any) => {
-//   const { messages, year, month } = props;
+export const getLibGifs = async (searchTerm: string) => {
+  const apikey = "AIzaSyDeg-t8jWJU4ngd0GpYm-2L4dB-7tMBjlM";
+  const clientkey = "tipey";
+  const lmt = 20;
+  const search_term = searchTerm;
+  const search_url = `https://tenor.googleapis.com/v2/search?q=${search_term}&key=${apikey}&client_key=${clientkey}&limit=${lmt}`;
 
-//   const summaries = {
-//     monthly: null,
-//     yearly: null,
-//   };
-
-//   const currentYear = year || new Date().getFullYear();
-//   const currentMonth = month !== undefined ? month - 1 : new Date().getMonth();
-
-//   const yearlyMessages = messages.filter((message: any) => {
-//     const messageDate = new Date(message.create_at.seconds * 1000);
-//     return messageDate.getFullYear() === currentYear;
-//   });
-
-//   summaries.yearly = yearlyMessages.reduce(
-//     (sum: any, message: any) => sum + message.amount,
-//     0
-//   );
-
-//   if (month !== undefined || year === undefined) {
-//     const monthlyMessages = yearlyMessages.filter((message: any) => {
-//       const messageDate = new Date(message.create_at.seconds * 1000);
-//       return messageDate.getMonth() === currentMonth;
-//     });
-
-//     summaries.monthly = monthlyMessages.reduce(
-//       (sum: any, message: any) => sum + message.amount,
-//       0
-//     );
-//   }
-
-//   if (year === undefined && month === undefined) {
-//     return summaries;
-//   } else if (month !== undefined) {
-//     return { monthly: summaries.monthly };
-//   } else {
-//     return { yearly: summaries.yearly };
-//   }
-// };
+  try {
+    const response = await fetch(search_url);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      const gifs = jsonResponse.results.map((gif: any) => ({
+        preview: gif.media_formats.nanogif.url,
+        share: gif.media_formats.gif.url,
+      }));
+      return gifs;
+    } else {
+      console.error("HTTP Error:", response.statusText);
+      return [];
+    }
+  } catch (error) {
+    console.error("Fetching error:", error);
+    return [];
+  }
+};

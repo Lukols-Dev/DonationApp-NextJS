@@ -12,7 +12,7 @@ import {
 } from "@/lib/firebase/firebase-actions";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { calculateApplicationFeeAmount, cn } from "@/lib/utils";
+import { calculateApplicationFeeAmount, cn, getLibGifs } from "@/lib/utils";
 import { PaymentMethodFees } from "@/types";
 import PaypalCheckout from "./checkout-paypal";
 import PaysafecardCheckout from "./checkout-paysafecard";
@@ -81,6 +81,7 @@ const CheckoutForm = ({
   const url = uuidv4();
   const { toast } = useToast();
   const [recordingLength, setRecordingLength] = useState(0); // Dodajemy stan dla długości nagrania
+  const [search, setSearch] = useState("");
   const [values, setValues] = useState<MessageData>({
     nick: "",
     amount: 5,
@@ -226,9 +227,16 @@ const CheckoutForm = ({
     }));
   };
 
-  const getTotalPrice = useCallback(() => {
-    let totalPrice = values.amount; // default amount
+  const onSearch = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setSearch(e.target.value);
+    },
+    []
+  );
 
+  const getTotalPrice = useCallback(() => {
+    let totalPrice = values.amount || 0; // default amount
+    console.log("values.amount: ", values.amount);
     // Add gif price
     if (custom_elements.is_gif && values.gif_url) {
       totalPrice += Number(custom_elements.gif_price) || 0;
@@ -293,10 +301,17 @@ const CheckoutForm = ({
   };
 
   const getGifsLib = async () => {
-    const resp = await PaymentPageService.getAllGifs();
-    if (resp && resp.count > 0) {
-      setGifs(resp.data);
+    try {
+      const resp = await getLibGifs(search);
+      console.log("resp GIF: ", resp.pe);
+      setGifs(resp);
+    } catch (err) {
+      console.log("Err gifs: ", err);
     }
+    // const resp = await PaymentPageService.getAllGifs();
+    // if (resp && resp.count > 0) {
+    //   setGifs(resp.data);
+    // }
   };
 
   const handleRecordingComplete = async (
@@ -329,9 +344,9 @@ const CheckoutForm = ({
   }, [values.summaryPrice]);
 
   useEffect(() => {
-    // if(true) return
+    if (!search) return;
     getGifsLib();
-  }, []);
+  }, [search]);
 
   return (
     <>
@@ -348,6 +363,8 @@ const CheckoutForm = ({
             id="amount"
             className="pr-9"
             label="Kwota"
+            step="0.01"
+            min={0}
             type="number"
             value={values.amount}
             onChange={(e) => handleChange(e, "amount")}
@@ -380,17 +397,22 @@ const CheckoutForm = ({
                 <SelectValue placeholder="Wybierz gif" />
               </SelectTrigger>
               <SelectContent>
-                <SelectGroup>
-                  {gifs.map((item, index) => (
-                    <SelectItem key={index} value={item.url}>
+                <Input
+                  placeholder="Wyszukaj gifa"
+                  value={search}
+                  onChange={(e) => onSearch(e)}
+                />
+                <SelectGroup className="grid grid-cols-4 md:grid-cols-7">
+                  {gifs.map((item: any, index) => (
+                    <SelectItem key={index} value={item.share}>
                       <div className="flex gap-2 items-center">
                         <img
                           alt="GIF DONATE"
-                          width={30}
-                          height={30}
-                          src={item.url}
+                          width={50}
+                          height={50}
+                          src={item.preview}
                         />
-                        {item.name}
+                        {/* {item.name} */}
                       </div>
                     </SelectItem>
                   ))}
