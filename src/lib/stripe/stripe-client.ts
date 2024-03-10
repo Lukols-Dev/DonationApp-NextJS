@@ -5,8 +5,7 @@ let stripePromise: Promise<Stripe | null>;
 export const getStripe = (connectedAccountId?: string) => {
   if (!stripePromise) {
     stripePromise = loadStripe(
-      "pk_test_51OG5rjFSmbAcuqgT6CrMA7i1IJNIAPLWRDuFEmqFyxDFADBzDBqh7VJLX4otVjDiZtACEw9MePNBYtINgGlTz89700vAtnccSc" ??
-        ""
+      process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ?? ""
       // { stripeAccount: connectedAccountId }
     );
   }
