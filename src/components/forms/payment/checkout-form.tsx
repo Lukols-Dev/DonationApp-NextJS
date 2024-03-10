@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import VoiceRecorder from "@/components/ui/voice-recorder";
+import AudioUploader from "@/components/ui/input-audio";
 
 interface Props {
   uid: string;
@@ -104,6 +105,7 @@ const CheckoutForm = ({
   const [appFee, setAppFee] = useState<number>(0);
   const [voiceFile, setVoiceFile] = useState<Blob | null>(null);
   const [gifs, setGifs] = useState<{ name: string; url: string }[]>([]);
+  const [typeAudio, setTypeAudio] = useState<"file" | "voice">("voice");
 
   const onSubmit = async () => {
     if (
@@ -118,6 +120,7 @@ const CheckoutForm = ({
       if (voiceFile) {
         audioUrl = await FileService.addAudio(uid, voiceFile); // Załóżmy, że addAudio przyjmuje Blob
       }
+
       const res = await MessagesService.addNewMessage(uid, {
         ...values,
         ...{
@@ -194,6 +197,8 @@ const CheckoutForm = ({
       // Jeśli pole to 'description', ogranicz długość wartości do 250 znaków
       if (field === "description") {
         newValue = newValue.slice(0, 250);
+      } else if (field === "nick") {
+        newValue = newValue.slice(0, 25);
       } else if (field === "amount") {
         // Jeśli pole to 'amount', konwertuj wartość na liczbę
         newValue = parseFloat(newValue);
@@ -234,6 +239,8 @@ const CheckoutForm = ({
       totalPrice +=
         recordingLength * (Number(custom_elements.voice_price) || 0);
     }
+
+    totalPrice = parseFloat(totalPrice.toFixed(2));
 
     setValues((prevValues) => ({
       ...prevValues,
@@ -333,7 +340,7 @@ const CheckoutForm = ({
           <Input
             id="nick"
             className="pr-9"
-            label="Nick"
+            label={`Nick ${values.nick ? values.nick.length : 0}/25`}
             value={values.nick}
             onChange={(e) => handleChange(e, "nick")}
           />
@@ -394,11 +401,32 @@ const CheckoutForm = ({
         )}
         {custom_elements.is_voice && (
           <div>
-            <VoiceRecorder
-              maxRecordingTime={10}
-              price={custom_elements.voice_price}
-              onRecordingComplete={handleRecordingComplete}
-            />
+            <div className="flex gap-4 mb-4">
+              <button
+                className="px-3 py-2 flex items-center justify-center text-[#1814F3] border border-[#1814F3] hover:text-white hover:bg-[#1814F3] rounded-md"
+                onClick={() => setTypeAudio("voice")}
+              >
+                Nagraj dźwięk
+              </button>
+              <button
+                className="px-3 py-2 flex items-center justify-center text-[#1814F3] border border-[#1814F3] hover:text-white hover:bg-[#1814F3] rounded-md"
+                onClick={() => setTypeAudio("file")}
+              >
+                Dodaj plik z dźwiękiem
+              </button>
+            </div>
+            {typeAudio === "voice" ? (
+              <VoiceRecorder
+                maxRecordingTime={10}
+                price={custom_elements.voice_price}
+                onRecordingComplete={handleRecordingComplete}
+              />
+            ) : (
+              <AudioUploader
+                price={custom_elements.voice_price}
+                onFileLoaded={handleRecordingComplete}
+              />
+            )}
           </div>
         )}
         <div>Podsumowanie: {values.summaryPrice}</div>

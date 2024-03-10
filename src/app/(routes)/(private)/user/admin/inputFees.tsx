@@ -8,9 +8,11 @@ import { useState } from "react";
 
 interface Props {
   id: string;
+  custom?: boolean;
+  payments?: boolean;
 }
 
-export const InputFees = ({ id }: Props) => {
+export const InputFees = ({ id, custom, payments }: Props) => {
   const route = useRouter();
   const [feesValue, setFeesValue] = useState<number>(0);
 
@@ -20,11 +22,21 @@ export const InputFees = ({ id }: Props) => {
 
   const updateFeesAmount = async () => {
     let data;
-    if (id === "app_fee") {
+    if (id === "app_fee" && !payments && !custom) {
       data = {
         app_fee: feesValue,
       };
-    } else {
+    }
+
+    if (id !== "app_fee" && payments && !custom) {
+      data = {
+        fees: {
+          [id]: feesValue,
+        },
+      };
+    }
+
+    if (id !== "app_fee" && !payments && custom) {
       data = {
         custom_elements: {
           [id]: feesValue,
@@ -46,6 +58,7 @@ export const InputFees = ({ id }: Props) => {
     <div className="flex items-end gap-4">
       <div>
         <Input
+          className="w-[80px]"
           id="fees_value"
           placeholder="0"
           type="number"
