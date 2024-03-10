@@ -1,8 +1,20 @@
+## Tipey Donate No Code App: NextJS, React, Node, NPM, Tailwindcss, Firebase
+
+Information on the packages used can be found in the package.json file . Application programmed using Visual Studio Code tool.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
 First, run the development server:
+
+For instal all libs and packages:
+
+```bash
+npm install
+```
+
+for run app in visualstudio code:
 
 ```bash
 npm run dev
