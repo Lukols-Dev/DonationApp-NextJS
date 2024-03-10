@@ -304,15 +304,10 @@ const CheckoutForm = ({
   const getGifsLib = async () => {
     try {
       const resp = await getLibGifs(search);
-      console.log("resp GIF: ", resp.pe);
       setGifs(resp);
     } catch (err) {
       console.log("Err gifs: ", err);
     }
-    // const resp = await PaymentPageService.getAllGifs();
-    // if (resp && resp.count > 0) {
-    //   setGifs(resp.data);
-    // }
   };
 
   const handleRecordingComplete = async (

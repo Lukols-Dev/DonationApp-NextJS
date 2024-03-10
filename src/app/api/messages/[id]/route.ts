@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   increment,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -28,7 +29,8 @@ export const GET = async (req: Request, { params }: { params: IParams }) => {
 
   try {
     const messagesColl = collection(firestore, "users", id, "messages");
-    const messagesDocs = await getDocs(messagesColl);
+    const queryRef = query(messagesColl, orderBy("create_at", "desc"));
+    const messagesDocs = await getDocs(queryRef);
 
     const messages = messagesDocs.docs.map((doc) => ({
       id: doc.id,

@@ -57,13 +57,37 @@ const DonateComponent = (props: Props) => {
   };
 
   const goToNextMessage = () => {
-    setCurrentMessageIndex((currentIndex) =>
-      currentIndex !== null && currentIndex + 1 < listItems.length
-        ? currentIndex + 1
-        : null
-    );
+    if (
+      currentMessageIndex !== null &&
+      currentMessageIndex < listItems.length
+    ) {
+      const currentMessage = listItems[currentMessageIndex];
+
+      // Usuwanie bieżącej wiadomości z kolejki
+      QueueService.deleteFromQueue(
+        props.uid,
+        currentMessage.id,
+        currentMessage.mid
+      )
+        .then(() => console.log("Wiadomość usunięta z kolejki"))
+        .catch((error) => console.error("Błąd usuwania z kolejki:", error));
+
+      // Przejście do następnej wiadomości
+      setCurrentMessageIndex((currentIndex) =>
+        currentIndex !== null && currentIndex + 1 < listItems.length
+          ? currentIndex + 1
+          : null
+      );
+    }
     // Resetowanie stanu `donateSkip` na `false` po wymuszeniu zmiany
     setDonateSkip(false);
+    // setCurrentMessageIndex((currentIndex) =>
+    //   currentIndex !== null && currentIndex + 1 < listItems.length
+    //     ? currentIndex + 1
+    //     : null
+    // );
+    // // Resetowanie stanu `donateSkip` na `false` po wymuszeniu zmiany
+    // setDonateSkip(false);
   };
 
   const donateUrl = !Array.isArray(props.element.content)
@@ -168,109 +192,6 @@ const DonateComponent = (props: Props) => {
       setCurrentMessageIndex(0);
     }
   }, [state.editor.liveMode, props.uid, donateActive]);
-
-  // useEffect(() => {
-  //   const readMessage = () => {
-  //     if (
-  //       currentMessageIndex !== null &&
-  //       currentMessageIndex < listItems.length
-  //     ) {
-  //       const message = listItems[currentMessageIndex];
-  //       console.log("read object message: ", {
-  //         index: currentMessageIndex,
-  //         message: message,
-  //       });
-  //       // if (donateSkip) {
-  //       //   // Natychmiast przechodzi do następnej wiadomości bez odczytywania aktualnej
-  //       //   setCurrentMessageIndex((currentIndex) =>
-  //       //     currentIndex !== null && currentIndex + 1 < listItems.length
-  //       //       ? currentIndex + 1
-  //       //       : null
-  //       //   );
-  //       //   return; // Zapobiega odczytaniu wiadomości jeśli skip jest aktywny
-  //       // }
-
-  //       if (message[String(amountType)] >= Number(donateActivationAmount)) {
-  //         setRead(true);
-  //         speakText({
-  //           text: `Użytkownik ${message.nick} wysłał wiadomość ${message.description}`,
-  //           rate: 0.9,
-  //           volume: 0.8,
-  //           pitch: 1.2,
-  //           voice: "Google polski",
-
-  //           onEnd: () => {
-  //             setRead(false);
-  //             if (!donateSkip) {
-  //               setCurrentMessageIndex((currentIndex) =>
-  //                 currentIndex !== null && currentIndex + 1 < listItems.length
-  //                   ? currentIndex + 1
-  //                   : null
-  //               );
-  //             }
-  //           },
-  //         });
-  //       }
-  //     }
-  //   };
-
-  //   if (
-  //     donateLector &&
-  //     state.editor.liveMode &&
-  //     listItems.length > 0 &&
-  //     !donateActive
-  //   ) {
-  //     readMessage();
-  //   }
-  // }, [currentMessageIndex, listItems, state.editor.liveMode, donateActive]);
-
-  // useEffect(() => {
-  //   if (
-  //     !isRead &&
-  //     currentMessageIndex !== null &&
-  //     currentMessageIndex < listItems.length
-  //   ) {
-  //     console.log("displayed object message: ", {
-  //       index: currentMessageIndex,
-  //       message: listItems[currentMessageIndex],
-  //     });
-  //     const timeoutId = setTimeout(() => {
-  //       console.log("donateSkip setter: ", donateSkip);
-  //       if (donateSkip) {
-  //         console.log("robimy skips: ", donateSkip);
-  //         // Pominięcie aktualnej wiadomości i przejście do kolejnej
-  //         setCurrentMessageIndex((currentIndex) =>
-  //           currentIndex !== null && currentIndex + 1 < listItems.length
-  //             ? currentIndex + 1
-  //             : null
-  //         );
-  //         return; // Zatrzymuje dalsze działania jeśli skip jest aktywny
-  //       }
-  //       const currentMessage = listItems[currentMessageIndex];
-
-  //       setCurrentMessageIndex((currentIndex) => {
-  //         const nextIndex =
-  //           currentIndex !== null && currentIndex + 1 < listItems.length
-  //             ? currentIndex + 1
-  //             : null;
-  //         //Potem zajme sie usuwaniem z kolejki
-  //         if (currentMessage && currentMessage.id && currentMessage.mid) {
-  //           //   QueueService.deleteFromQueue(
-  //           //     props.uid,
-  //           //     currentMessage.id,
-  //           //     currentMessage.mid
-  //           //   )
-  //           //     .then(() => console.log("delete"))
-  //           //     .catch((error) => console.error("Delete queue:", error));
-  //         }
-  //         console.log("nextIndex: ", nextIndex);
-  //         return nextIndex;
-  //       });
-
-  //       return () => clearTimeout(timeoutId);
-  //     }, donateDelay || 2000);
-  //   }
-  // }, [currentMessageIndex, listItems, isRead, donateSkip]);
 
   useEffect(() => {
     if (

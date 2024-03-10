@@ -23,10 +23,9 @@ export const POST = async (req: Request) => {
   try {
     const collRef = collection(firestore, "users", uid, "messages");
     const paymentsColl = collection(firestore, "users", uid, "payment");
-
     const messageData = {
       ...data,
-      ...{ create_at: Timestamp.fromDate(new Date()), mid: collRef.id },
+      ...{ create_at: Timestamp.fromDate(new Date()) },
     };
 
     const existingPaymentQuery = query(
@@ -38,6 +37,12 @@ export const POST = async (req: Request) => {
     if (!existingPayments.empty) {
       const paymentDoc = existingPayments.docs[0];
       const messageRes = await addDoc(collRef, messageData);
+
+      const messageId = messageRes.id;
+      await updateDoc(doc(firestore, "users", uid, "messages", messageId), {
+        mid: messageId,
+      });
+
       await updateDoc(doc(firestore, "users", uid, "payment", paymentDoc.id), {
         used: increment(1),
         current_amount: increment(data.amount),

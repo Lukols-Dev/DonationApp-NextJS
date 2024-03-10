@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     console.log(`🔴 Error ${error.message}`);
     return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
   }
-  console.log("stripeEvent webhook: ", stripeEvent.type);
+  // console.log("stripeEvent webhook: ", stripeEvent.type);
 
   try {
     if (stripeWebhookEvents.has(stripeEvent.type)) {
@@ -100,10 +100,6 @@ export async function POST(req: NextRequest) {
         case "payment_intent.succeeded": {
           const dataPaymentIntentSucceeded = stripeEvent.data
             .object as Stripe.PaymentIntent;
-          console.log(
-            "dataPaymentIntentSucceeded: ",
-            dataPaymentIntentSucceeded
-          );
           //   const userColl = collection(firestore, "users");
           //   const existingQuery = query(
           //     userColl,
@@ -141,10 +137,6 @@ export async function POST(req: NextRequest) {
         }
         case "checkout.session.completed": {
           const dataPaymentIntentSucceeded = stripeEvent.data.object as any;
-          console.log(
-            "dataPaymentIntentSucceeded: ",
-            dataPaymentIntentSucceeded
-          );
           const userColl = collection(firestore, "users");
           const existingQuery = query(
             userColl,

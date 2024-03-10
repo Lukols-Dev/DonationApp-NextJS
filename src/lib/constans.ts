@@ -34,7 +34,7 @@ export const FOOTER_MENU: MenuItem[] = [
   },
   {
     title: "Regulamin aplikacji",
-    path: "/",
+    path: "/docs/Regulamin.pdf",
   },
   {
     title: "Polityka prywatności",
