@@ -3,12 +3,9 @@ import {
   Timestamp,
   addDoc,
   collection,
-  doc,
   getDocs,
-  increment,
-  query,
+  doc,
   updateDoc,
-  where,
   writeBatch,
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
@@ -52,7 +49,11 @@ export const GET = async (req: Request, { params }: { params: IParams }) => {
 
 // Add new doc to queue
 export const POST = async (req: Request) => {
-  const { uid, data }: { uid: string; data: any } = await req.json();
+  const {
+    uid,
+    data,
+    statusUpdate,
+  }: { uid: string; data: any; statusUpdate?: boolean } = await req.json();
 
   if (!uid || !data) {
     return NextResponse.json("Missing data", { status: 400 });
@@ -73,8 +74,15 @@ export const POST = async (req: Request) => {
       voice_url: data.voice_url,
     };
 
-    const doc = await addDoc(collRef, queueData);
-    await updateDoc(doc, { id: doc.id });
+    const docQueue = await addDoc(collRef, queueData);
+    await updateDoc(docQueue, { id: docQueue.id });
+
+    if (statusUpdate && data.mid) {
+      const messageDocRef = doc(firestore, "users", uid, "messages", data.mid);
+      await updateDoc(messageDocRef, {
+        status: ["queue"],
+      });
+    }
 
     return NextResponse.json("Add message to queue.", {
       status: 200,

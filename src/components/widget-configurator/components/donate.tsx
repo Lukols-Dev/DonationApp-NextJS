@@ -126,6 +126,7 @@ const DonateComponent = (props: Props) => {
 
   const readMessage = () => {
     if (
+      state.editor.liveMode &&
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
@@ -199,13 +200,8 @@ const DonateComponent = (props: Props) => {
       currentMessageIndex !== null &&
       currentMessageIndex < listItems.length
     ) {
-      console.log("displayed object message: ", {
-        index: currentMessageIndex,
-        message: listItems[currentMessageIndex],
-      });
-
       // if controller have set Skip donate, skip and end display current message go to next
-      if (donateSkip) {
+      if (donateSkip || donateActive) {
         stopSound(); // Zatrzymaj odtwarzanie dźwięku
         cancelSpeaking();
         goToNextMessage();
@@ -219,24 +215,14 @@ const DonateComponent = (props: Props) => {
         ) {
           playSound(listItems[currentMessageIndex].voice_url, () => {
             const timeoutId = setTimeout(() => {
-              const currentMessage = listItems[currentMessageIndex];
-
               goToNextMessage();
-
-              // Display and delete from queue
-              console.log("nextIndex after delay and audio");
 
               return () => clearTimeout(timeoutId);
             }, donateDelay || 2000);
           }); // Set auto switch message after delay
         } else {
           const timeoutId = setTimeout(() => {
-            const currentMessage = listItems[currentMessageIndex];
-
             goToNextMessage();
-
-            // Display and delete from queue
-            console.log("nextIndex after delay");
 
             return () => clearTimeout(timeoutId);
           }, donateDelay || 2000);
@@ -271,6 +257,7 @@ const DonateComponent = (props: Props) => {
     isRead,
     donateSkip,
     donateDelay,
+    donateActive,
     setDonateSkip,
   ]);
 

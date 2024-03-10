@@ -93,14 +93,14 @@ export class QueueService {
     ).json();
   }
 
-  static async addToQueue(uid: string, data: any) {
+  static async addToQueue(uid: string, data: any, statusUpdate?: boolean) {
     return (
       await fetch(`${process.env.NEXT_PUBLIC_URL}/api/queue/${uid}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: data, uid }),
+        body: JSON.stringify({ data: data, uid, statusUpdate }),
       })
     ).json();
   }

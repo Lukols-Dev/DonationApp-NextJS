@@ -22,7 +22,7 @@ export const getColumnsMessage = (uid: string): ColumnDef<Payment>[] => {
         </div>
       ),
       action: (payment: any) => {
-        QueueService.addToQueue(uid, payment)
+        QueueService.addToQueue(uid, payment, true)
           .then(() => console.log("add to queue"))
           .catch((err) => console.log("problem with add to queue: ", err));
       },
