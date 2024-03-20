@@ -126,7 +126,7 @@ const ControllerWidget = () => {
               value={goalValue}
             />
           </div>
-          <Button onClick={updateGoalAmount}>Wślij</Button>
+          <Button onClick={updateGoalAmount}>Wyślij</Button>
           <Button onClick={resetGoalAmount}>Reset</Button>
         </div>
       </div>
