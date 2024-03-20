@@ -84,7 +84,7 @@ const FeatureSection = () => {
                   </p>
                   <p className="text-[20px] sm:text-[30px] md:text-[40px]">
                     Stwórz bez kodowania widgety w własnym stylu lub skorzystaj
-                    z godowych opcji.
+                    z gotowych opcji.
                   </p>
                 </div>
                 <div className="w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] relative">
