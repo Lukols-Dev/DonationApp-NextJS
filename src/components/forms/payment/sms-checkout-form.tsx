@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 
-const SMSCheckout = () => {
+interface Props {
+  uid: string;
+  amount: number;
+  appFee: number;
+  isblock?: boolean;
+  onSumbit: () => void;
+}
+
+const SMSCheckout = ({ uid, amount, appFee, isblock, onSumbit }: Props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleSubmit = async (e: any) => {

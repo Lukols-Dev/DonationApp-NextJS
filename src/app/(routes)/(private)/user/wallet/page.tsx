@@ -57,14 +57,18 @@ const WalletPage = async () => {
         <div className="w-full h-full overflow-x-auto">
           <div className="flex gap-4 h-[144px]">
             <CardStatistic
-              title="Aktualny przychód od początku"
+              title="Aktualny przychód"
               value={formatNumber(summary.yearly)}
               icon="PLN"
             />
             <CardStatistic
               title="W tym miesiącu"
               value={formatNumber(summary.monthly)}
-              valueDesc={`${summary.percentageChange} ostatni miesiąc`}
+              valueDesc={
+                summary.percentageChange
+                  ? `${summary.percentageChange} ostatni miesiąc`
+                  : ""
+              }
               icon="PLN"
             />
             <CardPayout

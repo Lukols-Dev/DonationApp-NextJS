@@ -38,7 +38,7 @@ export const FOOTER_MENU: MenuItem[] = [
   },
   {
     title: "Polityka prywatności",
-    path: "/",
+    path: "/docs/Polityka.pdf",
   },
 ];
 
