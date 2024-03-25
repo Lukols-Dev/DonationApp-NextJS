@@ -79,17 +79,25 @@ const PaymentPage = async (props: Page) => {
             )}
           </div>
           <div className="w-full h-auto sm:w-[250px] sm:h-screen sm:min-h-[700px] flex flex-col gap-4 items-center">
-            <div className="bg-white w-full h-[200px] sm:w-[250px] sm:h-[350px] rounded-lg overflow-hidden relative">
-              <Image
-                className="object-cover object-center"
-                alt="Payment User"
-                fill
-                src={picture || ""}
-              />
-            </div>
-            <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">
-              <p>{nick}</p>
-            </div>
+            {picture ? (
+              <div className="bg-white w-full h-[200px] sm:w-[250px] sm:h-[350px] rounded-lg overflow-hidden relative">
+                <Image
+                  className="object-cover object-center"
+                  alt="Payment User"
+                  fill
+                  src={picture || ""}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
+            {nick ? (
+              <div className="bg-white w-full h-[60px] p-4 rounded-lg flex items-center justify-center">
+                <p>{nick}</p>
+              </div>
+            ) : (
+              <></>
+            )}
             {!isEmpty(socials) ? (
               <div className="bg-white w-full h-[60px] p-4 rounded-lg flex justify-center items-center gap-x-8">
                 {socialOrder.map((key) => {
