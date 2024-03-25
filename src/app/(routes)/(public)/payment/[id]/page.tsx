@@ -39,7 +39,7 @@ const PaymentPage = async (props: Page) => {
       <Image
         fill
         alt="Payment background"
-        src="/assets/images/payment-bg.png"
+        src="/assets/images/payment-bg-3.jpg"
         className="-z-10"
       />
       <header className="p-10 w-full flex items-center justify-center sm:justify-start">
